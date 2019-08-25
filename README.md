@@ -9,7 +9,7 @@ git clone https://github.com/vladim0105/Twitter-Analyzer.git
 # Go into the repository
 cd Twitter-Analyzer
 # Install dependencies
-yarn add
+yarn
 # Run the app
 yarn start
 ```
