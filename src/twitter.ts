@@ -1,4 +1,14 @@
-export type TwitterData = {};
+export type TwitterUser = {
+  id: Number;
+  name: String;
+  screen_name: String;
+  description: String;
+};
+
+export type TwitterData = {
+  user: TwitterUser;
+  text: String;
+};
 
 export class TwitterAPI {
   /**
