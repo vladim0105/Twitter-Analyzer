@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="user.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdn.staticfile.org/angular.js/1.4.6/angular.min.js"></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="user.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
     <div class="bg">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="user.html">Twitter Analyzer</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="AboutUs.html">About Us</a>
-                </li>
-            </ul>
-        </nav>
-    <div class="container">
-        <br><br>
-          <h2>Enter The Twitter Info</h2>
+      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="user.html">Twitter Analyzer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="AboutUs.html">About Us</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="container">
+        <br /><br />
+        <h2>Enter The Twitter Info</h2>
 
+        <form
+          ng-app="myApp"
+          ng-controller="validateCtrl"
+          name="myForm"
+          novalidate
+        >
+          <div class="form-group">
+            <label for="email">Twitter Account:</label>
+            <input
+              type="email"
+              class="form-control"
+              id="user"
+              placeholder="Enter the user name"
+            />
+          </div>
 
-          <form ng-app="myApp"  ng-controller="validateCtrl"
-          name="myForm" novalidate>
-              <div class="form-group">
-                  <label for="email">Twitter Account:</label>
-                  <input type="email" class="form-control" id="user" placeholder="Enter the user name">
-              </div>
-              
-              <div class="button">
-                  <a href="" class="btn btn-info" role="button" ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||
-                  myForm.email.$dirty && myForm.email.$invalid">Start Analyzing</a>
-              </div>
+          <div class="button">
+            <a
+              href=""
+              class="btn btn-info"
+              role="button"
+              ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||
+                  myForm.email.$dirty && myForm.email.$invalid"
+              >Start Analyzing</a
+            >
+          </div>
 
-              <br>
-              <div class="result">
-                  <label for="email">Results:</label>
-              </div>
-                
-          
-          </form>
-        </div>
+          <br />
+          <div class="result">
+            <label for="email">Results:</label>
+          </div>
+        </form>
       </div>
-      <script>
-        function check(){
-            var a=document.getElementById("user").value;
-            if(a.length>15)
-                alert('No more than 15 characters or numbers are allowed!');
-        }
-      </script>
-</body>
+    </div>
+    <script>
+      function check() {
+        var a = document.getElementById("user").value;
+        if (a.length > 15)
+          alert("No more than 15 characters or numbers are allowed!");
+      }
+    </script>
+  </body>
 </html>
