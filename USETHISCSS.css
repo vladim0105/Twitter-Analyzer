@@ -1,0 +1,5 @@
+body    { background-color:cyan; color:red; }
+h1      { background-color:black; color:white; text-align:center; }
+p       { font-size:12pt; font-variant:small-caps; }
+p.f24pt { font-style:italic; font-size:24pt; text-indent:1cm; }
+#green  { color:green; }
