@@ -1,22 +1,24 @@
 <html>
+  <head>
+    <title>favorites / bookmark title goes here</title>
+    <link href="USETHISCSS.css" rel="stylesheet" />
+  </head>
+  <!-- This is just a default Page-->
 
-<head>
-<title> favorites / bookmark title goes here </title>
-<link href="USETHISCSS.css" rel="stylesheet">
-</head> <!-- This is just a default Page-->
-
-<body>
-
-<h1> Twitter Analyzer - FSDV CZ2006 Project </h1>
-<script>
-    require('./dist/renderer.js');
-</script>
-<form >
-    Enter Twitter Username here: <input type = "text" name = "Twitter Username" id = "username" placeholder="Only a-z, A-Z, 0-9 & _"/>
-    <input type = "submit" name = "submit" value = "Search" />
- </form>
- 
-
-</body>
-
+  <body>
+    <h1>Twitter Analyzer - FSDV CZ2006 Project</h1>
+    <form>
+      Enter Twitter Username here:
+      <input
+        type="text"
+        name="Twitter Username"
+        id="username"
+        placeholder="Only a-z, A-Z, 0-9 & _"
+      />
+    </form>
+    <input type="button" value="Search" id="submit" />
+    <script>
+      require("./dist/renderer.js");
+    </script>
+  </body>
 </html>

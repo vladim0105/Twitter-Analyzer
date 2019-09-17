@@ -8,13 +8,14 @@
     "start": "yarn run build && electron ./dist/main.js"
   },
   "devDependencies": {
+    "@types/jquery": "^3.3.31",
     "@types/request": "^2.48.3",
     "electron": "^2.0.2",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   },
   "dependencies": {
-    "@google-cloud/language": "^3.3.0",
+    "jquery": "^3.4.1",
     "request": "^2.88.0"
   }
 }

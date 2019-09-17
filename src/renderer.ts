@@ -1,4 +1,12 @@
-//import { NLPAPI } from "./nlp";
-let test = { content: "Hello", type: "PLAIN_TEXT" };
-console.log(JSON.stringify(test));
-//new NLPAPI();
+import { NLPAPI } from "./nlp";
+import * as $ from "jquery";
+
+let nlp = new NLPAPI();
+/** 
+$(document).ready(function() {
+  console.log($("#submit"));
+  $("#submit").click(function() {
+    nlp.fetch($("#username").val() as String);
+  });
+});
+*/
