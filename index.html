@@ -45,14 +45,7 @@
           </div>
 
           <div class="button">
-            <a
-              href=""
-              class="btn btn-info"
-              role="button"
-              ng-disabled="myForm.user.$dirty && myForm.user.$invalid ||
-                  myForm.email.$dirty && myForm.email.$invalid"
-              >Start Analyzing</a
-            >
+            <a href="" class="btn btn-info" role="button">Start Analyzing</a>
           </div>
 
           <br />
@@ -62,12 +55,5 @@
         </form>
       </div>
     </div>
-    <script>
-      function check() {
-        var a = document.getElementById("user").value;
-        if (a.length > 15)
-          alert("No more than 15 characters or numbers are allowed!");
-      }
-    </script>
   </body>
 </html>
