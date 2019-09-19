@@ -41,8 +41,6 @@ export class TwitterAPI {
         if (error) {
           console.log(error);
         } else {
-          console.log("Response from Twitter:");
-          console.log(response);
           callback(JSON.parse(body));
         }
       }
@@ -57,7 +55,6 @@ export class TwitterAPI {
     username: String,
     callback: (data: TweetData[]) => void
   ) {
-    console.log(authToken);
     Request(
       {
         url: "https://api.twitter.com/1.1/statuses/user_timeline.json",
