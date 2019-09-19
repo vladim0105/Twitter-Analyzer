@@ -3,11 +3,16 @@ import * as Request from "request";
 export type NLPData = {
   documentSentiment: Sentiment;
   language: String;
+  sentences: Sentence[];
 };
 
 export type Sentiment = {
   magnitude: Number; //Emotion
   score: Number; //Positivity
+};
+export type Sentence = {
+  text: string;
+  sentiment: Sentiment;
 };
 
 const apiKey = "AIzaSyAazERmq44usU8UkExRTQ0N7ODWZ2yDCqQ";
