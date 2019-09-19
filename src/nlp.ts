@@ -1,38 +1,52 @@
 import * as Request from "request";
 
-export type NLPData = {
+export type NLPSentimentData = {
+  /** Sentiment for the whole text */
   documentSentiment: Sentiment;
   language: String;
+  /** The sentences that make up this text */
   sentences: Sentence[];
 };
-
-export type Sentiment = {
-  magnitude: Number; //Emotion
-  score: Number; //Positivity
+export type NLPEntityData = {
+  entities: Entity[];
+  language: String;
 };
-export type Sentence = {
+type Entity = {
+  name: string;
+  type: string;
+  /** How noticable/important this entity is */
+  salience: Number;
+  /** Sentiment for the entity */
+  sentiment: Sentiment;
+};
+type Sentiment = {
+  /** Represents the emotion */
+  magnitude: Number;
+  /** Represent positivity, is in range [-1, 1] */
+  score: Number;
+};
+type Sentence = {
   text: string;
+  /** Sentiment for the sentence */
   sentiment: Sentiment;
 };
 
 const apiKey = "AIzaSyAazERmq44usU8UkExRTQ0N7ODWZ2yDCqQ";
-
+const sentimentAnalysisURL =
+  "https://language.googleapis.com/v1beta2/documents:analyzeSentiment?key=" +
+  apiKey;
+const entityAnalysisURL =
+  "https://language.googleapis.com/v1beta2/documents:analyzeEntitySentiment?key=" +
+  apiKey;
 export class NLPAPI {
-  /**
-   * GET Request the NLPAPI, returns a NLPData object.
-   * Will probably take a string (the text of a tweet) as input argument.
-   */
-  constructor() {}
-  public fetch(text: String, callback: (data: NLPData) => void) {
+  private fetchData(url: string, text: String, callback: (data: any) => void) {
     let postData = {
       content: text,
       type: "PLAIN_TEXT"
     };
     Request(
       {
-        url:
-          "https://language.googleapis.com/v1beta2/documents:analyzeSentiment?key=" +
-          apiKey,
+        url: url,
         method: "POST",
         json: true, // <--Very important!!!
         body: { document: postData }
@@ -47,5 +61,23 @@ export class NLPAPI {
         }
       }
     );
+  }
+  /**
+   * Analyzes the given text for sentiment. Later returns the results in the callback method.
+   */
+  public fetchSentimentAnalysis(
+    text: String,
+    callback: (data: NLPSentimentData) => void
+  ) {
+    this.fetchData(sentimentAnalysisURL, text, callback);
+  }
+  /**
+   * Analyzes the given text for entities. Later returns the results in the callback method.
+   */
+  public fetchEntityAnalysis(
+    text: String,
+    callback: (data: NLPEntityData) => void
+  ) {
+    this.fetchData(entityAnalysisURL, text, callback);
   }
 }

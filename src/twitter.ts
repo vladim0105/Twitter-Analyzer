@@ -22,11 +22,8 @@ const consumerSecretKey = "HFGL588Q8EoTry7G2HY7zhnIVA1zX5ykbIxyRTkh0RSZWekH7H";
 
 const bearerToken = rcfEncode(consumerKey) + ":" + rcfEncode(consumerSecretKey);
 const base64_bearerToken = Buffer.from(bearerToken).toString("base64");
+
 export class TwitterAPI {
-  /**
-   * POST Request the TwitterAPI, returns a TwitterData object.
-   * Will probably take a string (a username) as input argument.
-   */
   public getAuthToken(callback: (data: TwitterAccessToken) => void) {
     Request(
       {
@@ -51,6 +48,10 @@ export class TwitterAPI {
       }
     );
   }
+  /**
+   * Requests the 200 newest tweets from the given user account.
+   * It will return them in the callback function when theyre ready.
+   */
   public fetchTweets(
     authToken: string,
     username: String,
@@ -63,7 +64,7 @@ export class TwitterAPI {
         method: "GET",
         qs: {
           screen_name: username,
-          count: 200
+          count: 200 //Max amount of tweets we can request.
         },
         headers: {
           Authorization: "Bearer " + authToken
