@@ -1,6 +1,14 @@
 import * as Request from "request";
 
-export type NLPData = {};
+export type NLPData = {
+  documentSentiment: Sentiment;
+  language: String;
+};
+
+export type Sentiment = {
+  magnitude: Number; //Emotion
+  score: Number; //Positivity
+};
 
 const apiKey = "AIzaSyAazERmq44usU8UkExRTQ0N7ODWZ2yDCqQ";
 
@@ -10,8 +18,8 @@ export class NLPAPI {
    * Will probably take a string (the text of a tweet) as input argument.
    */
   constructor() {}
-  public fetch(text: String) {
-    let test = {
+  public fetch(text: String, callback: (data: NLPData) => void) {
+    let postData = {
       content: text,
       type: "PLAIN_TEXT"
     };
@@ -22,10 +30,16 @@ export class NLPAPI {
           apiKey,
         method: "POST",
         json: true, // <--Very important!!!
-        body: { document: test }
+        body: { document: postData }
       },
       function(error, response, body) {
-        console.log(response);
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Response from Google:");
+          console.log(response);
+          callback(body);
+        }
       }
     );
   }
