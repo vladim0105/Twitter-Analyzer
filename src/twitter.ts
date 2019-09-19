@@ -2,14 +2,18 @@ import * as Request from "request";
 
 export type TwitterUser = {
   id: Number;
+  /** I believe this is the proper name e.g. "Donald Trump" */
   name: String;
+  /** This is the twitter handle e.g. "realDonaldTrump" */
   screen_name: String;
-  description: String; //Account bio/description
+  /** Account bio/description */
+  description: String;
 };
 
 export type TweetData = {
   user: TwitterUser;
-  text: String; //Tweet text contents
+  /** Contents of the tweet */
+  text: String;
 };
 
 export type TwitterAccessToken = {
