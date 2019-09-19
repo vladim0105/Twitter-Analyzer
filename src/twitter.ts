@@ -74,8 +74,6 @@ export class TwitterAPI {
         if (error) {
           console.log(error);
         } else {
-          console.log("Response from Twitter:");
-          console.log(JSON.parse(body));
           callback(JSON.parse(body));
         }
       }

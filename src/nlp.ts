@@ -55,8 +55,6 @@ export class NLPAPI {
         if (error) {
           console.log(error);
         } else {
-          console.log("Response from Google:");
-          console.log(response);
           callback(body);
         }
       }
