@@ -38,7 +38,7 @@ const sentimentAnalysisURL =
 const entityAnalysisURL =
   "https://language.googleapis.com/v1beta2/documents:analyzeEntitySentiment?key=" +
   apiKey;
-export class NLPAPI {
+export class NaturalLanguageProcessingAPI {
   private fetchData(url: string, text: String, callback: (data: any) => void) {
     let postData = {
       content: text,
