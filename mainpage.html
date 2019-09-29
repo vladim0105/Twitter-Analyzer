@@ -6,7 +6,7 @@
   <!-- This is just a default Page-->
 
   <body>
-    <h1>Twitter Analyzer - FSDV CZ2006 Project</h1>
+    <h1>Twitter Analyzer<br>FSDV CZ2006 Project</h1>
     <form>
       Enter Twitter Username here:
       <input
@@ -15,8 +15,14 @@
         id="username"
         placeholder="Only a-z, A-Z, 0-9 & _"
       />
+      <input type="button" value="Search" id="submit" />
     </form>
-    <input type="button" value="Search" id="submit" />
+
+    <form>
+      <textarea name="result" rows="10" cols="30">Results will be displayed here.</textarea>
+      <br>
+    </form>
+
     <script>
       require("./dist/renderer.js");
     </script>
