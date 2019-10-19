@@ -7,8 +7,13 @@
 
   <body>
     <h1>Twitter Analyzer - FSDV CZ2006 Project</h1>
-    <form>
-      Enter Twitter Username here:
+    <script src = "./dist/renderer.js"></script>
+    <script src = "./dist/renderer.ts"></script>
+
+
+
+    <form tooltip="The unique twitter handle. a-z, A-Z, 0-9, _">
+      Enter Twitter Username:
       <input
         type="text"
         name="Twitter Username"
@@ -16,7 +21,7 @@
         placeholder="Only a-z, A-Z, 0-9 & _"
       />
     </form>
-    <input type="button" value="Search" id="submit" />
+    <input type="button" value="Search" id="submit" onclick="sanityTest()" />
     <script>
       require("./dist/renderer.js");
     </script>

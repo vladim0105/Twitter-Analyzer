@@ -1,6 +1,7 @@
 import * as Request from "request";
 
 export type TwitterUser = {
+  /** Unique user ID */
   id: Number;
   /** I believe this is the proper name e.g. "Donald Trump" */
   name: String;
@@ -8,6 +9,8 @@ export type TwitterUser = {
   screen_name: String;
   /** Account bio/description */
   description: String;
+  /** Followers **/
+  followers_count: Number; 
 };
 
 export type TweetData = {

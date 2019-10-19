@@ -17,6 +17,7 @@ function onReceivedAuthToken(data: TwitterAccessToken) {
 
 function twitterExample(data: TweetData[]) {
   console.log(data[0]);
+  console.log("Returned "+data.length+ " tweets");
   //Example usage of NLP api
   nlp.fetchEntityAnalysis(data[0].text, nlpExample);
 }
@@ -24,3 +25,15 @@ function twitterExample(data: TweetData[]) {
 function nlpExample(data: NLPEntityData) {
   console.log(data);
 }
+
+
+function sanityTest(){
+  console.log("Button was clicked!");
+}
+
+
+/*
+function displayBasicTweetInfo(data: String screen_name){
+  console.log()
+}
+*/
