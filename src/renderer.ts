@@ -1,8 +1,12 @@
-import { NLPAPI, NLPSentimentData, NLPEntityData } from "./nlp";
+import {
+  NaturalLanguageProcessingAPI,
+  NLPSentimentData,
+  NLPEntityData
+} from "./nlp";
 import * as $ from "jquery";
 import { TwitterAPI, TwitterAccessToken, TweetData } from "./twitter";
 
-let nlp = new NLPAPI();
+let nlp = new NaturalLanguageProcessingAPI();
 let twitter = new TwitterAPI();
 
 let twitterAuthToken = "";

@@ -1,29 +1,80 @@
 <html>
   <head>
-    <title>favorites / bookmark title goes here</title>
+    <title>Twitter Analyzer</title>
     <link href="USETHISCSS.css" rel="stylesheet" />
   </head>
-  <!-- This is just a default Page-->
+  <!-- This is for styling the overlay (for design purposes)-->
+  <!-- Note that overlay transition not made yet lol-->
+  <style>
+   .hero-image {
+    background-image: url("res/login.jpg");
+    height: 100%;
+  }
+  .hero-text {
+  text-align: center;
+  position: relative;
+  top: 30%;
+  }
+  </style>
 
   <body>
-    <h1>Twitter Analyzer - FSDV CZ2006 Project</h1>
-    <script src = "./dist/renderer.js"></script>
-    <script src = "./dist/renderer.ts"></script>
+    <!-- Hero Image/Overlay-->
+    <div class="hero-image" div id="overlay" onclick="off()">
+      <div class="hero-text">
+      <h1 style="font-size:50px">Twitter Analyzer</h1>
+      <p style="font-size:40px">A FSDV Project</p>
+      <p style="font-size:30px">Click anywhere to get Started</p>
+      </div>
+    </div>
 
+    <!-- Search Page-->
+    <div id = "mainBody" style= "display: none">
+    <!-- Header-->
+    <h1>Twitter Analyzer<br>A FSDV CZ2006 Project</h1>
 
-
-    <form tooltip="The unique twitter handle. a-z, A-Z, 0-9, _">
-      Enter Twitter Username:
+    <!-- Input Search Box-->
+    <form>
+      Enter Twitter Username here:
       <input
         type="text"
         name="Twitter Username"
         id="username"
         placeholder="Only a-z, A-Z, 0-9 & _"
       />
+      <input type="button" value="Search" id="submit" />
     </form>
-    <input type="button" value="Search" id="submit" onclick="sanityTest()" />
+    
+    <!-- Input Search Box 2 if clicked-->
+    <!--<form>
+      Enter 2nd Twitter Username here:
+      <input
+        type="text"
+        name="Twitter Username"
+        id="username"
+        placeholder="Only a-z, A-Z, 0-9 & _"
+      />
+      <input type="button" value="Search" id="submit" />
+    </form>
+  -->
+    
+  <!-- This displays the result-->
+    <form>
+      Result:
+      <br>
+      <textarea name="result" placeholder="Results will be displayed here." rows="10" cols="30"></textarea>
+      <br>
+    </form>
+
+    </div>
     <script>
+      //This calls the renderer
       require("./dist/renderer.js");
+    //Function to remove the overlay
+
+    function off() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("mainBody").style.display = "block";
+    }
     </script>
   </body>
 </html>

@@ -1,5 +1,6 @@
-body    { background-color:rgb(141, 197, 197); color:red; }
+body    { background-color:rgb(255, 255, 255); color:blue; }
 h1      { background-color:black; color:white; text-align:center; }
 p       { font-size:12pt; font-variant:small-caps; }
 p.f24pt { font-style:italic; font-size:24pt; text-indent:1cm; }
 #green  { color:green; }
+
