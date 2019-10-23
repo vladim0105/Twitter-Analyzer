@@ -10,7 +10,7 @@
 
   <body>
     <!-- Hero Image/Overlay-->
-    <div class="hero-image" div id="overlay" onclick="off()">
+    <div class="hero-image" div id="overlay">
       <p id = "GroupName">FSDV Productions</p>
       <div class="hero-text">
         <img src="https://image.flaticon.com/icons/svg/124/124021.svg">
@@ -22,7 +22,7 @@
     <!-- Search Page-->
     <div id = "mainBody" style= "display: none">
     <!-- Header-->
-    <i class="fa fa-arrow-circle-o-left" style="font-size:36px" onclick=" on()"></i>
+    <i id="entry" class="fa fa-arrow-circle-o-left" style="font-size:36px" ></i>
     <h1 id="header2">Twitter Analyzer<br>A FSDV CZ2006 Project</h1>
 
     <!-- Input Search Box-->
@@ -63,14 +63,7 @@
       //This calls the renderer
       require("./dist/renderer.js");
     //Function to remove the overlay
-
-    function off() {
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("mainBody").style.display = "block"; //hi
-    }
-    function on(){
-      document.getElementById("overlay").style.display = "block";
-    }
+    
     </script>
   </body>
 </html>

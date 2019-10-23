@@ -34,10 +34,26 @@ function nlpExample(data: NLPEntityData) {
 function sanityTest(){
   console.log("Button was clicked!");
 }
+//Button click
+function hideOverlay() {
+  $("#overlay").css("display", "none");
+  $("#mainBody").css("display", "block");
+}
+function showOverlay(){
+  $("#overlay").css("display", "block");
+  $("#mainBody").css("display",  "none");
+}
 
-
+function setupEvents(){
+  $("#entry").on("click", showOverlay);
+  $("#overlay").on("click", hideOverlay);
+}
 /*
 function displayBasicTweetInfo(data: String screen_name){
   console.log()
 }
 */
+
+$(document).ready(() => {
+  setupEvents();
+});
