@@ -1,6 +1,73 @@
-body    { background-color:rgb(255, 255, 255); color:blue; }
-h1      { background-color:black; color:white; text-align:center; }
-p       { font-size:12pt; font-variant:small-caps; }
-p.f24pt { font-style:italic; font-size:24pt; text-indent:1cm; }
-#green  { color:green; }
 
+.hero-image {
+            background-image: url("res/login.jpg");
+            height: 100%;
+}
+.hero-text {
+            text-align: center;
+            position: relative;
+            top: 15%
+  
+}
+
+#GroupName{ 
+            color:gold;
+            text-align: right;
+            font-size: 30px;
+            text-transform: uppercase; 
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            padding-right: 15px;
+            padding-top: 10px;
+            font-weight: 400;
+}
+
+h1 {    
+        color:rgb(83, 212, 221); 
+        text-align:center;
+        text-decoration: underline;
+        font-size: 80px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-weight: 800; 
+        margin:auto;
+}
+
+#clickAny{  
+            color:rgb(245, 49, 49);
+            font-size: 30px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            padding-top: 20px;
+            
+}
+
+i{
+    color:blueviolet;
+}
+
+img{
+    display: block;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header2{
+        font-size: 50px;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        color:rgb(8, 34, 180);
+}
+
+#form1{
+      padding-top: 20px;
+      text-align: center;
+}
+
+#username{
+        width: 200px;
+        border: none;
+        background-color: rgb(255, 49, 117);
+        padding: 10px 5px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size:15px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}

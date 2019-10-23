@@ -2,44 +2,37 @@
   <head>
     <title>Twitter Analyzer</title>
     <link href="USETHISCSS.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <!-- This is for styling the overlay (for design purposes)-->
   <!-- Note that overlay transition not made yet lol-->
-  <style>
-   .hero-image {
-    background-image: url("res/login.jpg");
-    height: 100%;
-  }
-  .hero-text {
-  text-align: center;
-  position: relative;
-  top: 30%;
-  }
-  </style>
+  
 
   <body>
     <!-- Hero Image/Overlay-->
     <div class="hero-image" div id="overlay" onclick="off()">
+      <p id = "GroupName">FSDV Productions</p>
       <div class="hero-text">
-      <h1 style="font-size:50px">Twitter Analyzer</h1>
-      <p style="font-size:40px">A FSDV Project</p>
-      <p style="font-size:30px">Click anywhere to get Started</p>
+        <img src="https://image.flaticon.com/icons/svg/124/124021.svg">
+        <h1>The Twitter Analyser</h1>
+      <p id = "clickAny">(Click anywhere to start!)</p>
       </div>
     </div>
 
     <!-- Search Page-->
     <div id = "mainBody" style= "display: none">
     <!-- Header-->
-    <h1>Twitter Analyzer<br>A FSDV CZ2006 Project</h1>
+    <i class="fa fa-arrow-circle-o-left" style="font-size:36px" onclick=" on()"></i>
+    <h1 id="header2">Twitter Analyzer<br>A FSDV CZ2006 Project</h1>
 
     <!-- Input Search Box-->
-    <form>
-      Enter Twitter Username here:
+    <form id="form1">
+      Enter Twitter username:
       <input
         type="text"
         name="Twitter Username"
         id="username"
-        placeholder="Only a-z, A-Z, 0-9 & _"
+        placeholder="Username"
       />
       <input type="button" value="Search" id="submit" />
     </form>
@@ -74,6 +67,9 @@
     function off() {
       document.getElementById("overlay").style.display = "none";
       document.getElementById("mainBody").style.display = "block"; //hi
+    }
+    function on(){
+      document.getElementById("overlay").style.display = "block";
     }
     </script>
   </body>
