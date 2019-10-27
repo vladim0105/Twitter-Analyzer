@@ -36,11 +36,11 @@ function sanityTest(){
 }
 //Button click
 function hideOverlay() {
-  $("#overlay").css("display", "none");
+  $("#overlay").fadeOut("slow");
   $("#mainBody").css("display", "block");
 }
 function showOverlay(){
-  $("#overlay").css("display", "block");
+  $("#overlay").fadeIn("slow");
   $("#mainBody").css("display",  "none");
 }
 
