@@ -37,6 +37,7 @@ function sanityTest(){
 //Button click
 function hideOverlay() {
   $("#overlay").fadeOut("slow");
+  $("#resultPanel").fadeOut("slow");
   $("#mainBody").css("display", "block");
 }
 function showOverlay(){
@@ -44,9 +45,14 @@ function showOverlay(){
   $("#mainBody").css("display",  "none");
 }
 
+function animatedResult(){
+  $("#resultPanel").fadeIn("slow");
+}
+
 function setupEvents(){
   $("#entry").on("click", showOverlay);
   $("#overlay").on("click", hideOverlay);
+  $("#submit").on("click", animatedResult);
 }
 /*
 function displayBasicTweetInfo(data: String screen_name){
