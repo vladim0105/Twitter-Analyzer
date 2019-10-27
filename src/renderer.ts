@@ -39,10 +39,15 @@ function hideOverlay() {
   $("#overlay").fadeOut("slow");
   $("#resultPanel").fadeOut("slow");
   $("#mainBody").css("display", "block");
+  setTimeout(function(){ $("#header2").fadeIn("slow"); }, 1000);
+  setTimeout(function(){ $("#form1").fadeIn("slow"); }, 2000);
+  
 }
 function showOverlay(){
   $("#overlay").fadeIn("slow");
-  $("#mainBody").css("display",  "none");
+  $("#mainBody").css("display", "none");
+  $("#header2").fadeOut("fast");
+  $("#form1").fadeOut("fast");
 }
 
 function animatedResult(){
@@ -53,6 +58,8 @@ function setupEvents(){
   $("#entry").on("click", showOverlay);
   $("#overlay").on("click", hideOverlay);
   $("#submit").on("click", animatedResult);
+  $("#header2").fadeOut("fast");
+  $("#form1").fadeOut("fast");
 }
 /*
 function displayBasicTweetInfo(data: String screen_name){
@@ -62,4 +69,5 @@ function displayBasicTweetInfo(data: String screen_name){
 
 $(document).ready(() => {
   setupEvents();
+  
 });
