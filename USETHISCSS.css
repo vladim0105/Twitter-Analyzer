@@ -3,6 +3,12 @@
             background-image: url("res/daylight.jpg");
             height: 100%;
 }
+
+.aboutUsBg {
+        background-color: red;
+        height: 100%;
+}
+
 .hero-text {
             text-align: center;
             position: relative;

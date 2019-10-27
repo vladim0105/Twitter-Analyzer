@@ -39,9 +39,9 @@ function hideOverlay() {
   $("#overlay").fadeOut("slow");
   $("#resultPanel").fadeOut("slow");
   $("#mainBody").css("display", "block");
+  $("#aboutUsPage").fadeOut("fast");
   setTimeout(function(){ $("#header2").fadeIn("slow"); }, 1000);
   setTimeout(function(){ $("#form1").fadeIn("slow"); }, 2000);
-  
 }
 function showOverlay(){
   $("#overlay").fadeIn("slow");
@@ -54,12 +54,20 @@ function animatedResult(){
   $("#resultPanel").fadeIn("slow");
 }
 
+function aboutUs(){
+  $("#mainBody").css("display", "none");
+  $("#aboutUsPage").fadeIn("slow");
+}
+
 function setupEvents(){
   $("#entry").on("click", showOverlay);
   $("#overlay").on("click", hideOverlay);
   $("#submit").on("click", animatedResult);
+  $("#aboutUs").on("click", aboutUs);
+  $("#returnToSearchPage").on("click", hideOverlay);
   $("#header2").fadeOut("fast");
   $("#form1").fadeOut("fast");
+  $("#aboutUsPage").fadeOut("fast");
 }
 /*
 function displayBasicTweetInfo(data: String screen_name){
