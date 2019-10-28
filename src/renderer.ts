@@ -18,7 +18,6 @@ twitter.getAuthToken(onReceivedAuthToken);
 function onReceivedAuthToken(data: TwitterAccessToken) {
   twitterAuthToken = data.access_token;
   //Example usage of twitter api
-  twitter.fetchTweets(twitterAuthToken, "realDonaldTrump", twitterExample);
 }
 
 function twitterExample(data: TweetData[]) {
@@ -48,6 +47,35 @@ function twitterExample(data: TweetData[]) {
 function nlpExample(data: NLPEntityData) {
   console.log(data);
 }
+
+function compileText(data: TweetData[]) {
+  let text = data[0].text;
+  for (let i = 1; i < data.length; i++) {
+    text += data[i].text;
+  }
+  return text;
+}
+function onSearch() {
+  //Clear the results
+  $("#resultContainer").empty();
+  //Show loader
+  $(".loader").animate({ opacity: 1 }, "slow");
+
+  let handle = $("#username").val() as string;
+  console.log(handle);
+  twitter.fetchTweets(twitterAuthToken, handle, (tweets: TweetData[]) => {
+    let text = compileText(tweets);
+    nlp.fetchSentimentAnalysis(text, (sentimentAnalysis: NLPSentimentData) => {
+      let panel = new SummaryPanel({
+        user: tweets[0].user,
+        sentimentResult: sentimentAnalysis,
+        entityResult: null
+      });
+      panel.appendTo($("#resultContainer"));
+      $(".loader").animate({ opacity: 0 }, "slow");
+    });
+  });
+}
 //Button click
 function hideOverlay() {
   $("#overlay").fadeOut("slow");
@@ -70,6 +98,7 @@ function showOverlay() {
 
 function animatedResult() {
   $("#resultPanel").fadeIn("slow");
+  onSearch();
 }
 
 function aboutUs() {
