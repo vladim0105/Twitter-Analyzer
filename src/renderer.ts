@@ -7,6 +7,8 @@ import * as $ from "jquery";
 import { TwitterAPI, TwitterAccessToken, TweetData } from "./twitter";
 import { SummaryPanel } from "./panels/summary_panel";
 import { TweetPanel } from "./panels/tweet_panel";
+import { ErrorPanel } from "./panels/error_panel";
+import { Panel } from "./panels/panel";
 
 let nlp = new NaturalLanguageProcessingAPI();
 let twitter = new TwitterAPI();
@@ -18,34 +20,6 @@ twitter.getAuthToken(onReceivedAuthToken);
 function onReceivedAuthToken(data: TwitterAccessToken) {
   twitterAuthToken = data.access_token;
   //Example usage of twitter api
-}
-
-function twitterExample(data: TweetData[]) {
-  console.log(data[0]);
-  console.log("Returned " + data.length + " tweets");
-  let sentimentData: NLPSentimentData = {
-    documentSentiment: { magnitude: 10, score: 0 },
-    language: "en",
-    sentences: null
-  };
-  let panel = new SummaryPanel({
-    user: data[0].user,
-    sentimentResult: sentimentData,
-    entityResult: null
-  });
-  let tweet = new TweetPanel({
-    tweetData: data[0],
-    sentimentData: sentimentData,
-    entityData: null
-  });
-  panel.appendTo($("#resultsContainer"));
-  tweet.appendTo($("#resultsContainer"));
-  //Example usage of NLP api
-  nlp.fetchEntityAnalysis(data[0].text, nlpExample);
-}
-
-function nlpExample(data: NLPEntityData) {
-  console.log(data);
 }
 
 function compileText(data: TweetData[]) {
@@ -62,8 +36,18 @@ function onSearch() {
   $(".loader").animate({ opacity: 1 }, "slow");
 
   let handle = $("#username").val() as string;
-  console.log(handle);
+  let panel: Panel;
   twitter.fetchTweets(twitterAuthToken, handle, (tweets: TweetData[]) => {
+    //Convert tweets to any-type in order to check if an error has been returned.
+    let error = tweets as any;
+    if (error.error) {
+      panel = new ErrorPanel("Error test 23456");
+      $("#resultContainer").fadeIn("slow");
+      panel.appendTo($("#resultContainer"));
+      $(".loader").animate({ opacity: 0 }, "slow");
+      return;
+    }
+    //If no error, proceed as normal:
     let text = compileText(tweets);
     nlp.fetchSentimentAnalysis(text, (sentimentAnalysis: NLPSentimentData) => {
       let panel = new SummaryPanel({
