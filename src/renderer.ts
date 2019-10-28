@@ -69,7 +69,7 @@ function showOverlay() {
 }
 
 function animatedResult() {
-  $("#resultPanel").fadeIn("slow");
+  $("#resultsContainer").fadeIn("slow");
 }
 
 function aboutUs() {
@@ -85,6 +85,7 @@ function setupEvents() {
   $("#returnToSearchPage").on("click", hideOverlay);
   $("#header2").fadeOut("fast");
   $("#form1").fadeOut("fast");
+  $("#resultsContainer").fadeOut("fast");
   $("#aboutUsPage").fadeOut("fast");
 }
 
