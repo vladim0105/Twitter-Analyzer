@@ -62,6 +62,7 @@ function hideOverlay() {
   }, 2000);
 }
 function showOverlay() {
+  $("#resultsContainer").fadeOut("fast");
   $("#overlay").fadeIn("slow");
   $("#mainBody").css("display", "none");
   $("#header2").fadeOut("fast");
