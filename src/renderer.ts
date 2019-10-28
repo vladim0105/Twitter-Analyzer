@@ -5,6 +5,8 @@ import {
 } from "./nlp";
 import * as $ from "jquery";
 import { TwitterAPI, TwitterAccessToken, TweetData } from "./twitter";
+import { SummaryPanel } from "./panels/summary_panel";
+import { TweetPanel } from "./panels/tweet_panel";
 
 let nlp = new NaturalLanguageProcessingAPI();
 let twitter = new TwitterAPI();
@@ -21,7 +23,24 @@ function onReceivedAuthToken(data: TwitterAccessToken) {
 
 function twitterExample(data: TweetData[]) {
   console.log(data[0]);
-  console.log("Returned "+data.length+ " tweets");
+  console.log("Returned " + data.length + " tweets");
+  let sentimentData: NLPSentimentData = {
+    documentSentiment: { magnitude: 10, score: 0 },
+    language: "en",
+    sentences: null
+  };
+  let panel = new SummaryPanel({
+    user: data[0].user,
+    sentimentResult: sentimentData,
+    entityResult: null
+  });
+  let tweet = new TweetPanel({
+    tweetData: data[0],
+    sentimentData: sentimentData,
+    entityData: null
+  });
+  panel.appendTo($("#resultsContainer"));
+  tweet.appendTo($("#resultsContainer"));
   //Example usage of NLP api
   nlp.fetchEntityAnalysis(data[0].text, nlpExample);
 }
@@ -29,30 +48,20 @@ function twitterExample(data: TweetData[]) {
 function nlpExample(data: NLPEntityData) {
   console.log(data);
 }
-
-
-function sanityTest(){
-  console.log("Button was clicked!");
-}
 //Button click
 function hideOverlay() {
   $("#overlay").css("display", "none");
   $("#mainBody").css("display", "block");
 }
-function showOverlay(){
+function showOverlay() {
   $("#overlay").css("display", "block");
-  $("#mainBody").css("display",  "none");
+  $("#mainBody").css("display", "none");
 }
 
-function setupEvents(){
+function setupEvents() {
   $("#entry").on("click", showOverlay);
   $("#overlay").on("click", hideOverlay);
 }
-/*
-function displayBasicTweetInfo(data: String screen_name){
-  console.log()
-}
-*/
 
 $(document).ready(() => {
   setupEvents();

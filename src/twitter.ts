@@ -4,19 +4,21 @@ export type TwitterUser = {
   /** Unique user ID */
   id: Number;
   /** I believe this is the proper name e.g. "Donald Trump" */
-  name: String;
+  name: string;
   /** This is the twitter handle e.g. "realDonaldTrump" */
-  screen_name: String;
+  screen_name: string;
   /** Account bio/description */
-  description: String;
+  description: string;
   /** Followers **/
-  followers_count: Number; 
+  followers_count: Number;
+  /** URL to profile picture */
+  profile_image_url_https: string;
 };
 
 export type TweetData = {
   user: TwitterUser;
   /** Contents of the tweet */
-  text: String;
+  text: string;
 };
 
 export type TwitterAccessToken = {

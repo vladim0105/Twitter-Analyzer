@@ -2,43 +2,49 @@
   <head>
     <title>Twitter Analyzer</title>
     <link href="USETHISCSS.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
   </head>
   <!-- This is for styling the overlay (for design purposes)-->
   <!-- Note that overlay transition not made yet lol-->
-  
 
   <body>
     <!-- Hero Image/Overlay-->
     <div class="hero-image" div id="overlay">
-      <p id = "GroupName">FSDV Productions</p>
+      <p id="GroupName">FSDV Productions</p>
       <div class="hero-text">
-        <img src="https://image.flaticon.com/icons/svg/124/124021.svg">
+        <img src="https://image.flaticon.com/icons/svg/124/124021.svg" />
         <h1>The Twitter Analyser</h1>
-      <p id = "clickAny">(Click anywhere to start!)</p>
+        <p id="clickAny">(Click anywhere to start!)</p>
       </div>
     </div>
 
     <!-- Search Page-->
-    <div id = "mainBody" style= "display: none">
-    <!-- Header-->
-    <i id="entry" class="fa fa-arrow-circle-o-left" style="font-size:36px" ></i>
-    <h1 id="header2">Twitter Analyzer<br>A FSDV CZ2006 Project</h1>
+    <div id="mainBody" style="display: none">
+      <!-- Header-->
+      <i
+        id="entry"
+        class="fa fa-arrow-circle-o-left"
+        style="font-size:36px"
+      ></i>
+      <h1 id="header2">Twitter Analyzer<br />A FSDV CZ2006 Project</h1>
 
-    <!-- Input Search Box-->
-    <form id="form1">
-      Enter Twitter username:
-      <input
-        type="text"
-        name="Twitter Username"
-        id="username"
-        placeholder="Username"
-      />
-      <input type="button" value="Submit" id="submit" />
-    </form>
-    
-    <!-- Input Search Box 2 if clicked-->
-    <!--<form>
+      <!-- Input Search Box-->
+      <form id="form1">
+        Enter Twitter username:
+        <input
+          type="text"
+          name="Twitter Username"
+          id="username"
+          placeholder="Username"
+        />
+        <input type="button" value="Submit" id="submit" />
+      </form>
+
+      <!-- Input Search Box 2 if clicked-->
+      <!--<form>
       Enter 2nd Twitter Username here:
       <input
         type="text"
@@ -49,21 +55,14 @@
       <input type="button" value="Search" id="submit" />
     </form>
   -->
-    
-  <!-- This displays the result-->
-    <form>
-      Result:
-      <br>
-      <textarea name="result" placeholder="Results will be displayed here." rows="10" cols="30"></textarea>
-      <br>
-    </form>
 
+      <!-- This displays the result-->
+      <div id="resultsContainer"></div>
     </div>
     <script>
       //This calls the renderer
       require("./dist/renderer.js");
-    //Function to remove the overlay
-    
+      //Function to remove the overlay
     </script>
   </body>
 </html>
