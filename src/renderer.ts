@@ -71,6 +71,7 @@ function onSearch() {
         sentimentResult: sentimentAnalysis,
         entityResult: null
       });
+      $("#resultContainer").fadeIn("slow");
       panel.appendTo($("#resultContainer"));
       $(".loader").animate({ opacity: 0 }, "slow");
     });
@@ -90,15 +91,11 @@ function hideOverlay() {
   }, 2000);
 }
 function showOverlay() {
+  $("#resultsContainer").fadeOut("fast");
   $("#overlay").fadeIn("slow");
   $("#mainBody").css("display", "none");
   $("#header2").fadeOut("fast");
   $("#form1").fadeOut("fast");
-}
-
-function animatedResult() {
-  $("#resultPanel").fadeIn("slow");
-  onSearch();
 }
 
 function aboutUs() {
@@ -109,11 +106,12 @@ function aboutUs() {
 function setupEvents() {
   $("#entry").on("click", showOverlay);
   $("#overlay").on("click", hideOverlay);
-  $("#submit").on("click", animatedResult);
+  $("#submit").on("click", onSearch);
   $("#aboutUs").on("click", aboutUs);
   $("#returnToSearchPage").on("click", hideOverlay);
   $("#header2").fadeOut("fast");
   $("#form1").fadeOut("fast");
+  $("#resultsContainer").fadeOut("fast");
   $("#aboutUsPage").fadeOut("fast");
 }
 
