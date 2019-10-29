@@ -57,6 +57,7 @@ function onSearch() {
       });
       $("#resultContainer").fadeIn("slow");
       panel.appendTo($("#resultContainer"));
+      console.log("AAA");
       $(".loader").animate({ opacity: 0 }, "slow");
     });
   });
