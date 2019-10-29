@@ -64,7 +64,7 @@ function onSearch() {
 //Button click
 function hideOverlay() {
   $("#overlay").fadeOut("slow");
-  $("#resultPanel").fadeOut("slow");
+  $("#mainResultContainer").fadeIn("slow");
   $("#mainBody").css("display", "block");
   $("#aboutUsPage").fadeOut("fast");
   setTimeout(function() {
@@ -75,7 +75,7 @@ function hideOverlay() {
   }, 2000);
 }
 function showOverlay() {
-  $("#resultsContainer").fadeOut("fast");
+  $("#mainResultContainer").fadeOut("fast");
   $("#overlay").fadeIn("slow");
   $("#mainBody").css("display", "none");
   $("#header2").fadeOut("fast");
@@ -95,7 +95,7 @@ function setupEvents() {
   $("#returnToSearchPage").on("click", hideOverlay);
   $("#header2").fadeOut("fast");
   $("#form1").fadeOut("fast");
-  $("#resultsContainer").fadeOut("fast");
+  $("#mainResultContainer").fadeOut("fast");
   $("#aboutUsPage").fadeOut("fast");
 }
 
