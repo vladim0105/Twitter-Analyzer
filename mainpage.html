@@ -22,7 +22,7 @@
     </div>
 
     <!-- About Us Page-->
-    <div class="aboutUsBg" div id="aboutUsPage">
+    <div class="aboutUsBg" id="aboutUsPage">
       <i
         id="returnToSearchPage"
         class="fa fa-arrow-circle-o-left"
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Search Page-->
-    <div id="mainBody" style="display: none">
+    <div id="mainBody">
       <!-- Header-->
       <i
         id="entry"
@@ -50,16 +50,15 @@
       <h1 id="header2">Twitter Analyzer<br />A FSDV CZ2006 Project</h1>
 
       <!-- Input Search Box-->
-      <form id="form1">
-        Enter Twitter username:
-        <input
-          type="text"
-          name="Twitter Username"
-          id="username"
-          placeholder="Username"
-        />
-        <input type="button" value="Submit" id="submit" />
-      </form>
+
+      Enter Twitter username:
+      <input
+        type="text"
+        name="Twitter Username"
+        id="username"
+        placeholder="Username"
+      />
+      <input type="button" value="Submit" id="submit" />
 
       <!-- Input Search Box 2 if clicked-->
       <!--<form>
@@ -74,6 +73,7 @@
     </form>
   -->
       <!-- This displays the result-->
+
       <div id="mainResultContainer">
         <div id="resultContainer"></div>
         <div class="loader"></div>

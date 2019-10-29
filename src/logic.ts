@@ -19,42 +19,55 @@ export class Logic {
     this.setupEvents();
   }
   private setupEvents() {
-    $("#entry").on("click", this.showOverlay.bind(this));
-    $("#overlay").on("click", this.hideOverlay.bind(this));
+    $("#entry").on("click", () => {
+      this.showOverlay(true);
+    });
+    $("#overlay").on("click", () => {
+      this.showSearch(true);
+    });
     $("#submit").on("click", this.onSearch.bind(this));
-    $("#aboutUs").on("click", this.aboutUs.bind(this));
-    $("#returnToSearchPage").on("click", this.hideOverlay.bind(this));
-    $("#header2").fadeOut("fast");
-    $("#form1").fadeOut("fast");
-    $("#mainResultContainer").fadeOut("fast");
-    $("#aboutUsPage").fadeOut("fast");
+    $("#aboutUs").on("click", () => {
+      this.showAboutUs(true);
+    });
+    $("#returnToSearchPage").on("click", () => {
+      this.showSearch(true);
+    });
   }
-  private aboutUs() {
-    $("#mainBody").css("display", "none");
-    $("#aboutUsPage").fadeIn("slow");
+  private showOverlay(show: boolean) {
+    let opacity = show ? 1 : 0;
+    let pointer = show ? "auto" : "none";
+    $("#overlay")
+      .animate({ opacity: opacity }, "slow")
+      .css("pointer-events", pointer);
+    if (show) {
+      this.showSearch(false);
+      this.showAboutUs(false);
+    }
   }
-
-  //Button click
-  private hideOverlay() {
-    $("#overlay").fadeOut("slow");
-    $("#mainResultContainer").fadeIn("slow");
-    $("#mainBody").css("display", "block");
-    $("#aboutUsPage").fadeOut("fast");
-    setTimeout(function() {
-      $("#header2").fadeIn("slow");
-    }, 1000);
-    setTimeout(function() {
-      $("#form1").fadeIn("slow");
-    }, 1500);
+  private showSearch(show: boolean) {
+    let opacity = show ? 1 : 0;
+    let pointer = show ? "auto" : "none";
+    $("#mainBody")
+      .animate({ opacity: opacity }, "slow")
+      .css("pointer-events", pointer);
+    //$("#header2").css("opacity", opacity);
+    //$("#form1").css("opacity", opacity);
+    if (show) {
+      this.showAboutUs(false);
+      this.showOverlay(false);
+    }
   }
-  private showOverlay() {
-    $("#mainResultContainer").fadeOut("fast");
-    $("#overlay").fadeIn("slow");
-    $("#mainBody").css("display", "none");
-    $("#header2").fadeOut("fast");
-    $("#form1").fadeOut("fast");
+  private showAboutUs(show: boolean) {
+    let opacity = show ? 1 : 0;
+    let pointer = show ? "auto" : "none";
+    $("#aboutUsPage")
+      .animate({ opacity: opacity }, "slow")
+      .css("pointer-events", pointer);
+    if (show) {
+      this.showSearch(false);
+      this.showOverlay(false);
+    }
   }
-
   //Get the Authorization token from twitter, this is then used as a password for doing API requests.
   private onReceivedAuthToken(data: TwitterAccessToken) {
     this.twitterAuthToken = data.access_token;
@@ -99,6 +112,7 @@ export class Logic {
               sentimentResult: sentimentAnalysis,
               entityResult: null
             });
+            this.createTweetPanels(tweets, 5);
             $("#resultContainer").fadeIn("slow");
             panel.appendTo($("#resultContainer"));
             $(".loader").animate({ opacity: 0 }, "slow");
@@ -106,5 +120,21 @@ export class Logic {
         );
       }
     );
+  }
+  private createTweetPanels(tweets: TweetData[], numTweets: number) {
+    let actualNumTweets = Math.min(tweets.length, numTweets);
+
+    for (let i = 0; i < actualNumTweets; i++) {
+      let tweet = tweets[i];
+      this.nlp.fetchSentimentAnalysis(tweet.text, (data: NLPSentimentData) => {
+        let tweetData: TweetSummaryData = {
+          tweetData: tweet,
+          sentimentData: data,
+          entityData: null
+        };
+        let panel = new TweetPanel(tweetData);
+        panel.appendTo($("#resultContainer"));
+      });
+    }
   }
 }

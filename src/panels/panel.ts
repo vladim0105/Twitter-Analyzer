@@ -9,6 +9,7 @@ export class Panel {
 
   public appendTo(target: JQuery<HTMLElement>) {
     target.append(this.main);
+    this.getMain().animate({ opacity: 1 }, "slow");
   }
   protected getMain() {
     return this.main;
@@ -18,5 +19,9 @@ export class Panel {
     "margin-top": "2%",
     "margin-bottom": "2%"
   };
-  private mainStyle = { display: "flex", "flex-direction": "column" };
+  private mainStyle = {
+    display: "flex",
+    "flex-direction": "column",
+    opacity: 0
+  };
 }
