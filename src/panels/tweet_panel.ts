@@ -2,7 +2,6 @@ import { Panel } from "./panel";
 import { TweetData } from "../twitter";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
 import * as $ from "jquery";
-import { isMainThread } from "worker_threads";
 export type TweetSummaryData = {
   tweetData: TweetData;
   sentimentData: NLPSentimentData;
