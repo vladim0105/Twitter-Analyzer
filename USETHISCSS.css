@@ -1,3 +1,4 @@
+
 .hero-image {
   background-image: url("res/daylight.jpg");
   height: 100%;
@@ -5,109 +6,111 @@
 .hero-text {
   text-align: center;
   position: relative;
-  top: 15%;
+  top: 15%
+
 }
 
-#GroupName {
-  color: gold;
+#GroupName{ 
+  color:gold;
   text-align: right;
   font-size: 30px;
-  text-transform: uppercase;
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  text-transform: uppercase; 
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   padding-right: 15px;
   padding-top: 10px;
   font-weight: 400;
 }
 
-h1 {
-  color: rgb(83, 212, 221);
-  text-align: center;
-  text-decoration: underline;
-  font-size: 80px;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  font-weight: 800;
-  margin: auto;
+h1 {    
+color:rgb(34, 218, 231); 
+text-align:center;
+font-size: 80px;
+font-family: Georgia, 'Times New Roman', Times, serif;
+font-weight: 800; 
+margin:auto;
 }
 
-#clickAny {
-  color: rgb(245, 49, 49);
+#clickAny{  
+  color:rgb(245, 49, 49);
   font-size: 30px;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  padding-top: 20px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  padding-top: 75px;
+  text-decoration: underline;
+  font-weight: 200px;
 }
 
-i {
-  color: blueviolet;
+i{
+color:rgb(212, 176, 247);
 }
 
-img {
-  display: block;
-  width: 100px;
-  margin-left: auto;
-  margin-right: auto;
+i:hover{
+color:blueviolet;
 }
 
-#header2 {
-  font-size: 50px;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  color: rgb(8, 34, 180);
+img{
+display: block;
+width: 100px;
+margin-left: auto;
+margin-right: auto;
 }
 
-#form1 {
-  padding-top: 20px;
-  text-align: center;
+#header2{
+font-size: 50px;
+font-family: Georgia, 'Times New Roman', Times, serif;
+color:rgb(8, 34, 180);
 }
 
-#username {
-  width: 500px;
-  border: none;
-  background-color: #f8f8f8;
-  padding: 10px 5px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 15px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+#form1{
+padding-top: 20px;
+text-align: center;
 }
 
-#backbutton {
-  cursor: pointer;
+#username{
+width: 500px;
+border: none;
+background-color: #f8f8f8;
+padding: 10px 5px;
+border-radius: 5px;
+box-sizing: border-box;
+font-size:15px;
+font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-#submit {
-  cursor: pointer;
-  padding: 10px 10px;
-  font-size: 20px;
-  transition: 0.5s;
-  border-radius: 10px;
-  text-align: center;
-}
-#mainResultContainer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-#resultContainer {
-  width: 100%;
-}
-.loader {
-  opacity: 0;
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #3498db; /* Blue */
-  border-radius: 50%;
-  position: absolute;
-  animation: spin 2s linear infinite;
-  width: 5vw;
-  height: 5vw;
-  z-index: 10;
+#entry{
+cursor: pointer;
+padding-top: 15px;
+padding-left: 10px;
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+#returnToSearchPage{
+cursor: pointer;
+padding-top: 15px;
+padding-left: 10px;
+}
+
+#aboutus{
+cursor: pointer;
+padding-top: 15px;
+padding-right: 10px;
+position: absolute;
+top: 8px;
+right: 16px;
+}
+
+#submit{
+cursor: pointer;
+padding: 10px 10px;
+font-size: 20px;
+transition: 0.5s;
+border-radius: 10px;
+text-align: center;
+background-color: rgb(135, 212, 243);
+color:rgb(255, 242, 242);
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}
+
+#submit:hover{
+color: white;
+background-color:rgb(16, 169, 216);
 }
