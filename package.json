@@ -8,9 +8,9 @@
     "start": "yarn run build && electron ./dist/main.js"
   },
   "devDependencies": {
+    "@types/chart.js": "^2.8.9",
     "@types/jquery": "^3.3.31",
     "@types/request": "^2.48.3",
-    "@types/chart.js": "^2.8.9",
     "electron": "^2.0.2",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"

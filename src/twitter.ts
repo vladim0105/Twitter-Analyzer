@@ -26,6 +26,7 @@ export type TwitterAccessToken = {
   access_token: string;
 };
 
+
 const consumerKey = "YrR8eb5C5vlWHl3bv1iWvk25P";
 const consumerSecretKey = "HFGL588Q8EoTry7G2HY7zhnIVA1zX5ykbIxyRTkh0RSZWekH7H";
 
