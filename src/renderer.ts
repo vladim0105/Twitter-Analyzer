@@ -8,7 +8,7 @@ import {
   TEST_DATA,
   TEST_ENTITYDATA
 } from "./nlp";
-import { ChartGen } from "./chartgen";
+import { ChartGen } from "./chart_generator";
 
 $(document).ready(() => {
   new Logic();

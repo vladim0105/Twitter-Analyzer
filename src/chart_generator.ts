@@ -142,7 +142,20 @@ export class ChartGen {
       type: "pie",
       data: {
         labels: keys,
-        datasets: [{ label: "Entity Types", data: values }]
+        datasets: [
+          {
+            label: "Entity Types",
+            data: values,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)"
+            ]
+          }
+        ]
       }
     });
   }
@@ -193,7 +206,15 @@ export class ChartGen {
 
     let chart = new ChartJS(ctx, {
       type: "bubble",
-      data: { datasets: [{ label: "Likeable entities", data: plotData }] },
+      data: {
+        datasets: [
+          {
+            label: "Likeable entities",
+            data: plotData,
+            backgroundColor: "#00acee"
+          }
+        ]
+      },
       options: {
         maintainAspectRatio: false,
         scales: {

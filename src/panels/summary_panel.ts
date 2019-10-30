@@ -2,7 +2,7 @@ import { Panel } from "./panel";
 import { TweetData, TwitterUser } from "../twitter";
 import * as $ from "jquery";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
-import { ChartGen } from "../chartgen";
+import { ChartGen } from "../chart_generator";
 import { createGzip } from "zlib";
 import { autoUpdater } from "electron";
 
