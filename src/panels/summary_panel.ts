@@ -5,6 +5,7 @@ import { NLPSentimentData, NLPEntityData } from "../nlp";
 import { ChartGen } from "../chartgen";
 import { createGzip } from "zlib";
 import { autoUpdater } from "electron";
+
 export type SummaryData = {
   user: TwitterUser;
   overallSentiment: NLPSentimentData;
