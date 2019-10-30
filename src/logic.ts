@@ -26,6 +26,11 @@ export class Logic {
       this.showSearch(true);
     });
     $("#submit").on("click", this.onSearch.bind(this));
+    $("#username").keypress(event => {
+      if (event.key == "Enter") {
+        this.onSearch();
+      }
+    });
     $("#aboutUs").on("click", () => {
       this.showAboutUs(true);
     });
