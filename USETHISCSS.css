@@ -116,7 +116,7 @@ img {
   font-size: 20px;
   transition: 0.5s;
   border-radius: 10px;
-  text-align: center;
+  /*text-align: center;*/
   background-color: rgb(135, 212, 243);
   color: rgb(255, 242, 242);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -167,3 +167,13 @@ img {
     transform: rotate(360deg);
   }
 }
+
+#username_input{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  justify-items: center;
+}
+
+
+
