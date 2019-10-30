@@ -8,6 +8,7 @@ import { autoUpdater } from "electron";
 
 export type SummaryData = {
   user: TwitterUser;
+  compiledText: string;
   overallSentiment: NLPSentimentData;
   tweets: { tweetData: TweetData; sentimentData: NLPSentimentData }[];
   entityResult: NLPEntityData;
@@ -27,11 +28,7 @@ export class SummaryPanel extends Panel {
       flex: "0 0 50px"
     });
     let sentimentContainer = $("<div>").css({ "text-align": "center" });
-    let canvasContainer = $("<div>").css({
-      margin: "auto",
-      width: "600px",
-      "min-height": "600px"
-    });
+
     let img = $("<img>")
       .attr("src", this.data.user.profile_image_url_https)
       .css(this.profilePictureStyle)
@@ -55,12 +52,11 @@ export class SummaryPanel extends Panel {
     let averageMagnitudeText = $("<p>").text(
       "Average Magnitude: " + avg.magnitude
     );
-    let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
-    let chart = new ChartGen().genEntityChart(this.data, ctx);
 
+    //ENTITY CHARTS-------------------------------------------------------------------
     nameContainer.append(name, handle);
     imageContainer.append(img);
-    canvasContainer.append(ctx.canvas);
+
     sentimentContainer.append(
       overallSentimentText,
       overallMagnitudeText,
@@ -71,7 +67,8 @@ export class SummaryPanel extends Panel {
     this.getMain().append(nameContainer);
     this.getMain().append(imageContainer);
     this.getMain().append(sentimentContainer);
-    this.getMain().append(canvasContainer);
+    this.getMain().append(this.createTimeCharts());
+    this.getMain().append(this.createEntityCharts());
     this.getMain()
       .css("border", "2px solid gray")
       .css("border-radius", "5px");
@@ -96,4 +93,58 @@ export class SummaryPanel extends Panel {
 
     return avg;
   }
+  private createTimeCharts() {
+    let tweetTimeContainer = $("<div>").css(doubleChartParent);
+    let tweetHourContainer = $("<div>").css(doubleChartChild);
+    let bubbleContainer = $("<div>").css(doubleChartChild);
+    let tweetHourCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let tweetHourChart = new ChartGen().genHourLineGraph(
+      this.data,
+      tweetHourCanvas.getContext("2d")
+    );
+    tweetHourContainer.append(tweetHourCanvas);
+
+    let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let bubbleChart = new ChartGen().genDayLineGraph(
+      this.data,
+      bubbleCanvas.getContext("2d")
+    );
+    bubbleContainer.append(bubbleCanvas);
+    tweetTimeContainer.append(tweetHourContainer, bubbleContainer);
+
+    return tweetTimeContainer;
+  }
+  private createEntityCharts() {
+    let entityChartContainer = $("<div>").css(doubleChartParent);
+    let pieContainer = $("<div>").css(doubleChartChild);
+    let bubbleContainer = $("<div>").css(doubleChartChild);
+    let pieCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let pieChart = new ChartGen().genEntityTypePieChart(
+      this.data,
+      pieCanvas.getContext("2d")
+    );
+    pieContainer.append(pieCanvas);
+
+    let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let bubbleChart = new ChartGen().genEntityChart(
+      this.data,
+      bubbleCanvas.getContext("2d")
+    );
+    bubbleContainer.append(bubbleCanvas);
+    entityChartContainer.append(pieContainer, bubbleContainer);
+
+    return entityChartContainer;
+  }
 }
+const doubleChartParent = {
+  display: "flex",
+  "flex-direction": "row",
+  width: "100%",
+  "margin-bottom": "5%"
+};
+const doubleChartChild = {
+  "flex-grow": 0,
+  "flex-basis": "50%",
+  "margin-left": "5%",
+  "margin-right": "2.5%"
+};

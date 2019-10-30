@@ -1,6 +1,7 @@
 import { SummaryData } from "./panels/summary_panel";
 
 import * as ChartJS from "chart.js";
+import { Entity } from "./nlp";
 
 export class ChartGen {
   public genScatterChart(
@@ -127,7 +128,6 @@ export class ChartGen {
     let entities = summaryData.entityResult.entities;
     let keys: string[] = [];
     let values: number[] = [];
-    console.log(entities);
     for (let i = 0; i < entities.length; i++) {
       let entity = entities[i];
       let index = keys.indexOf(entity.type);
@@ -151,54 +151,44 @@ export class ChartGen {
     summaryData: SummaryData,
     ctx: CanvasRenderingContext2D
   ) {
-    let plotData = [];
-    let tags: string[] = [];
+    let plotData: { x: number; y: number; r: number }[] = [];
 
-    let totalMentions = 0;
-
-    console.log(
-      ">> Analyzing " +
-        summaryData.entityResult.entities.length +
-        " different entities"
-    );
+    let keys: string[] = [];
+    let values: { entity: Entity; count: number; totalSalience: number }[] = [];
     for (let i = 0; i < summaryData.entityResult.entities.length; i++) {
-      let ent = summaryData.entityResult.entities[i];
-      totalMentions += ent.mentions.length;
+      let entity = summaryData.entityResult.entities[i];
+      if (entity.type == "OTHER") {
+        continue;
+      }
+      let index = keys.indexOf(entity.name);
+      if (index == -1) {
+        keys.push(entity.name);
+        values.push({
+          entity: entity,
+          count: entity.mentions.length,
+          totalSalience: entity.salience
+        });
+      } else {
+        values[index].count += entity.mentions.length;
+        values[index].totalSalience += entity.salience;
+      }
     }
-    console.log(">> Total entity mentions of all: " + totalMentions);
-    console.log(
-      "Analyzing " + summaryData.entityResult.entities.length + " entities..."
-    );
-    for (let i = 0; i < summaryData.entityResult.entities.length; i++) {
-      let ent = summaryData.entityResult.entities[i];
-      //if (ent.type == "OTHER" || ent.type == "UNKNOWN") continue; //Skip
-      //let entScore = ent.salience * ent.sentiment.magnitude * ent.sentiment.score;
-      //if (entScore == 0) continue;
-      plotData.push({
-        x: ent.sentiment.score,
-        y: ent.sentiment.magnitude,
-        r: ctx.canvas.width * (ent.mentions.length / totalMentions)
-      });
-      tags.push(ent.name);
-
-      //if (entScore > maxScore)
-      console.log(
-        "Ent: " +
-          ent.name +
-          " is " +
-          ent.type +
-          " -->" +
-          ent.salience +
-          " (" +
-          ent.sentiment.score +
-          "*" +
-          ent.sentiment.magnitude +
-          ")"
-      );
-      plotData.push({
-        x: ent.name,
-        y: ent.sentiment.score
-      });
+    let totalMentions = 0;
+    for (let i = 0; i < values.length; i++) {
+      totalMentions += values[i].count;
+    }
+    for (let i = 0; i < keys.length; i++) {
+      let value = values[i];
+      let avgSalience = value.totalSalience / value.count;
+      let data = {
+        x: value.entity.sentiment.score,
+        y: value.entity.sentiment.magnitude,
+        r:
+          (0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
+          ctx.canvas.width *
+          2
+      };
+      plotData.push(data);
     }
 
     let chart = new ChartJS(ctx, {
@@ -223,7 +213,15 @@ export class ChartGen {
               tootipItem: ChartJS.ChartTooltipItem,
               data: ChartJS.ChartData
             ) {
-              return tags[tootipItem.index];
+              let value = values[tootipItem.index];
+              return (
+                keys[tootipItem.index] +
+                "{" +
+                value.count +
+                "," +
+                value.totalSalience / value.count +
+                "}"
+              );
             }
           }
         }

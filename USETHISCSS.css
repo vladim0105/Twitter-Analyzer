@@ -1,3 +1,8 @@
+* {
+  padding: 0%;
+  margin: 0%;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -146,7 +151,7 @@ img {
   flex-grow: 1;
 }
 #resultContainer {
-  width: 100%;
+  width: 98%;
 }
 .loader {
   opacity: 0;
@@ -168,12 +173,9 @@ img {
   }
 }
 
-#username_input{
+#username_input {
   display: flex;
   width: 100%;
   justify-content: center;
   justify-items: center;
 }
-
-
-
