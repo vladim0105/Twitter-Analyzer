@@ -56,7 +56,7 @@ export class SummaryPanel extends Panel {
       "Average Magnitude: " + avg.magnitude
     );
     let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
-    let chart = new ChartGen().genEntityTypePieChart(this.data, ctx);
+    let chart = new ChartGen().genEntityChart(this.data, ctx);
 
     nameContainer.append(name, handle);
     imageContainer.append(img);
