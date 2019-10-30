@@ -2,7 +2,7 @@ import { Panel } from "./panel";
 import { TweetData, TwitterUser } from "../twitter";
 import * as $ from "jquery";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
-import { ChartGen } from "../chartgen";
+import { ChartGen } from "../chart_generator";
 import { createGzip } from "zlib";
 import { autoUpdater } from "electron";
 
@@ -56,7 +56,7 @@ export class SummaryPanel extends Panel {
       "Average Magnitude: " + avg.magnitude
     );
     let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
-    let chart = new ChartGen().genEntityChart(this.data, ctx);
+    let chart = new ChartGen().genEntityTypePieChart(this.data, ctx);
 
     nameContainer.append(name, handle);
     imageContainer.append(img);
