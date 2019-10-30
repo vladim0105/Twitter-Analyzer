@@ -1,5 +1,9 @@
 import { SummaryData } from "./panels/summary_panel";
-import { NaturalLanguageProcessingAPI, NLPEntityData } from "./nlp";
+import {
+  NaturalLanguageProcessingAPI,
+  NLPEntityData,
+  NLPSentimentData
+} from "./nlp";
 
 import * as ChartJS from "chart.js";
 
@@ -43,5 +47,47 @@ export class ChartGen {
         }
       }
     });
+  }
+
+  public genScatterChart(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+    let plotData = [];
+    for (let i = 0; i < summaryData.tweets.length; i++) {
+      let tweetData = summaryData.tweets[i];
+      plotData.push({
+        x: tweetData.sentimentData.documentSentiment.score,
+        y: tweetData.sentimentData.documentSentiment.magnitude
+      });
+    }
+    let chart = new ChartJS(ctx, {
+      type: "scatter",
+      data: { datasets: [{ label: "Tweet Sentiments", data: plotData }] },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: { display: true, labelString: "Score" },
+              type: "linear",
+              position: "bottom"
+            }
+          ],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }]
+        },
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+              return summaryData.tweets[tootipItem.index].tweetData.text;
+            }
+          }
+        }
+      }
+    });
+    return chart;
   }
 }

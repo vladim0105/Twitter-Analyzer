@@ -5,7 +5,7 @@ import {
   NLPEntityData
 } from "./nlp";
 import { TwitterAPI, TwitterAccessToken, TweetData } from "./twitter";
-import { SummaryPanel } from "./panels/summary_panel";
+import { SummaryPanel, SummaryData } from "./panels/summary_panel";
 import { TweetPanel, TweetSummaryData } from "./panels/tweet_panel";
 import { ErrorPanel } from "./panels/error_panel";
 import { Panel } from "./panels/panel";
@@ -104,37 +104,73 @@ export class Logic {
         }
         //If no error, proceed as normal:
         let text = this.compileText(tweets);
+        let summaryData: SummaryData = {
+          user: tweets[0].user,
+          overallSentiment: null,
+          tweets: new Array(tweets.length),
+          entityResult: null
+        };
+        let overallDone = false;
+        this.nlp.fetchSentimentAnalysis(text, (result: NLPSentimentData) => {
+          summaryData.overallSentiment = result;
+          overallDone = true;
+          if (overallDone && tweetsDone == tweets.length) {
+            overallDone = false;
+            tweetsDone = 0;
+            this.displayPanels(summaryData);
+          }
+        });
+        let tweetsDone = 0;
+        for (let i = 0; i < tweets.length; i++) {
+          let tweet = tweets[i];
+          this.nlp.fetchSentimentAnalysis(
+            tweet.text,
+            (result: NLPSentimentData) => {
+              summaryData.tweets[i] = {
+                tweetData: tweet,
+                sentimentData: result
+              };
+              tweetsDone++;
+              if (overallDone && tweetsDone == tweets.length) {
+                overallDone = false;
+                tweetsDone = 0;
+                this.displayPanels(summaryData);
+              }
+            }
+          );
+        }
+        /** 
         this.nlp.fetchSentimentAnalysis(
           text,
           (sentimentAnalysis: NLPSentimentData) => {
-            let panel = new SummaryPanel({
-              user: tweets[0].user,
-              sentimentResult: sentimentAnalysis,
-              entityResult: null
-            });
-            this.createTweetPanels(tweets, 5);
-            $("#resultContainer").fadeIn("slow");
-            panel.appendTo($("#resultContainer"));
-            $(".loader").animate({ opacity: 0 }, "slow");
+            
           }
-        );
+        ); **/
       }
     );
   }
-  private createTweetPanels(tweets: TweetData[], numTweets: number) {
-    let actualNumTweets = Math.min(tweets.length, numTweets);
+  private createTweetPanels(
+    dataArr: { tweetData: TweetData; sentimentData: NLPSentimentData }[],
+    numTweets: number
+  ) {
+    let actualNumTweets = Math.min(dataArr.length, numTweets);
 
     for (let i = 0; i < actualNumTweets; i++) {
-      let tweet = tweets[i];
-      this.nlp.fetchSentimentAnalysis(tweet.text, (data: NLPSentimentData) => {
-        let tweetData: TweetSummaryData = {
-          tweetData: tweet,
-          sentimentData: data,
-          entityData: null
-        };
-        let panel = new TweetPanel(tweetData);
-        panel.appendTo($("#resultContainer"));
-      });
+      let data = dataArr[i];
+      let tweetData: TweetSummaryData = {
+        tweetData: data.tweetData,
+        sentimentData: data.sentimentData,
+        entityData: null
+      };
+      let panel = new TweetPanel(tweetData);
+      panel.appendTo($("#resultContainer"));
     }
+  }
+  private displayPanels(data: SummaryData) {
+    let panel = new SummaryPanel(data);
+    panel.appendTo($("#resultContainer"));
+    this.createTweetPanels(data.tweets, 5);
+    $("#resultContainer").fadeIn("slow");
+    $(".loader").animate({ opacity: 0 }, "slow");
   }
 }

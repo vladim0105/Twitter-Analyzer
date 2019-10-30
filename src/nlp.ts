@@ -15,15 +15,15 @@ export type Entity = {
   name: string;
   type: string;
   /** How noticable/important this entity is */
-  salience: Number;
+  salience: number;
   /** Sentiment for the entity */
   sentiment: Sentiment;
 };
 export type Sentiment = {
   /** Represents the emotion */
-  magnitude: Number;
+  magnitude: number;
   /** Represent positivity, is in range [-1, 1] */
-  score: Number;
+  score: number;
 };
 type Sentence = {
   text: string;
@@ -32,29 +32,29 @@ type Sentence = {
 };
 
 // ===== Test Data below ====
-let sentipos : Sentiment = {
-  magnitude: 0.8, score: 42
-}
-let sente : Sentence = {
+let sentipos: Sentiment = {
+  magnitude: 0.8,
+  score: 42
+};
+let sente: Sentence = {
   text: "I love pizza",
-  sentiment: sentipos 
-}
+  sentiment: sentipos
+};
 export const TEST_DATA: NLPSentimentData = {
   documentSentiment: sentipos,
   language: "US-EN",
   sentences: [sente, sente]
-}
+};
 let TEST_ENTITY: Entity = {
   name: "positive-thing",
   type: "a-thing",
   salience: 50,
   sentiment: sentipos
-}
+};
 export const TEST_ENTITYDATA: NLPEntityData = {
-  entities : [TEST_ENTITY, TEST_ENTITY, TEST_ENTITY],
+  entities: [TEST_ENTITY, TEST_ENTITY, TEST_ENTITY],
   language: "EN-US"
-}
-
+};
 
 // ===== Test Data above ====
 
