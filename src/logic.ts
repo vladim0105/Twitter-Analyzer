@@ -123,7 +123,7 @@ export class Logic {
         this.nlp.fetchEntityAnalysis(text, (result: NLPEntityData) => {
           summaryData.entityResult = result;
           overallDone++;
-          if (overallDone == 0 && tweetsDone == tweets.length) {
+          if (overallDone == 2 && tweetsDone == tweets.length) {
             overallDone = 0;
             tweetsDone = 0;
             this.displayPanels(summaryData);
