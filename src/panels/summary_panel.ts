@@ -20,7 +20,7 @@ export class SummaryPanel extends Panel {
   }
 
   private init() {
-    let self = this;
+    let avg = this.calculateAvgSentiment(this.data.tweets);
     let nameContainer = $("<div>").css({ "text-align": "center" });
     let imageContainer = $("<div>").css({
       flex: "0 0 50px"
@@ -28,8 +28,8 @@ export class SummaryPanel extends Panel {
     let sentimentContainer = $("<div>").css({ "text-align": "center" });
     let canvasContainer = $("<div>").css({
       margin: "auto",
-      width: "50vh",
-      "min-height": "50vh"
+      width: "600px",
+      "min-height": "600px"
     });
     let img = $("<img>")
       .attr("src", this.data.user.profile_image_url_https)
@@ -43,20 +43,29 @@ export class SummaryPanel extends Panel {
       .text("@" + this.data.user.screen_name)
       .css(this.nameStyle)
       .css("color", "gray");
-    let sentimentText = $("<p>").text(
+    let overallSentimentText = $("<p>").text(
       "Overall Sentiment: " + this.data.overallSentiment.documentSentiment.score
     );
-    let magnitudeText = $("<p>").text(
+    let overallMagnitudeText = $("<p>").text(
       "Overall Magnitude: " +
         this.data.overallSentiment.documentSentiment.magnitude
     );
+    let averageSentimentText = $("<p>").text("Average Sentiment: " + avg.score);
+    let averageMagnitudeText = $("<p>").text(
+      "Average Magnitude: " + avg.magnitude
+    );
     let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
-    let chart = new ChartGen().genScatterChart(this.data, ctx);
+    let chart = new ChartGen().genEntityTypePieChart(this.data, ctx);
 
     nameContainer.append(name, handle);
     imageContainer.append(img);
     canvasContainer.append(ctx.canvas);
-    sentimentContainer.append(sentimentText, magnitudeText);
+    sentimentContainer.append(
+      overallSentimentText,
+      overallMagnitudeText,
+      averageSentimentText,
+      averageMagnitudeText
+    );
 
     this.getMain().append(nameContainer);
     this.getMain().append(imageContainer);
@@ -68,4 +77,22 @@ export class SummaryPanel extends Panel {
   }
 
   private nameStyle = { display: "block", margin: 0 };
+
+  private calculateAvgSentiment(
+    data: { tweetData: TweetData; sentimentData: NLPSentimentData }[]
+  ) {
+    let avg = { score: 0, magnitude: 0 };
+    for (let i = 0; i < data.length; i++) {
+      avg.score += data[i].sentimentData.documentSentiment.score;
+      avg.magnitude += data[i].sentimentData.documentSentiment.magnitude;
+    }
+
+    avg.score /= data.length;
+    avg.magnitude /= data.length;
+
+    avg.score = +avg.score.toFixed(2);
+    avg.magnitude = +avg.magnitude.toFixed(2);
+
+    return avg;
+  }
 }

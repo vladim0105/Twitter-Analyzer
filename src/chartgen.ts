@@ -90,4 +90,108 @@ export class ChartGen {
     });
     return chart;
   }
+  public genHourLineGraph(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+    let labels = [
+      "00:00-02:00",
+      "02:00-04:00",
+      "04:00-06:00",
+      "06:00-08:00",
+      "08:00-10:00",
+      "10:00-12:00",
+      "12:00-14:00",
+      "14:00-16:00",
+      "16:00-18:00",
+      "18:00-20:00",
+      "20:00-22:00",
+      "22:00-24:00"
+    ];
+    let data: number[] = new Array();
+    for (let val in labels) {
+      data.push(0);
+    }
+
+    for (let i = 0; i < summaryData.tweets.length; i++) {
+      let tweetTime = summaryData.tweets[i].tweetData.created_at;
+      let hour = new Date(tweetTime).getUTCHours();
+      let index = hour % labels.length;
+      data[index]++;
+    }
+
+    let chart = new ChartJS(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{ label: "Tweet Hours (UTC)", data: data }]
+      }
+    });
+
+    return chart;
+  }
+  public genDayLineGraph(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+    let labels = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
+    let data: number[] = new Array();
+    for (let val in labels) {
+      data.push(0);
+    }
+
+    for (let i = 0; i < summaryData.tweets.length; i++) {
+      let tweetTime = summaryData.tweets[i].tweetData.created_at;
+      let day = new Date(tweetTime).getUTCDay();
+      let index = day % labels.length;
+      data[index]++;
+    }
+
+    let chart = new ChartJS(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{ label: "Tweet Days (UTC)", data: data }]
+      }
+    });
+
+    return chart;
+  }
+
+  public genEntityTypePieChart(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+    let entities = summaryData.entityResult.entities;
+    let keys: string[] = [];
+    let values: number[] = [];
+    console.log(entities);
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      let index = keys.indexOf(entity.type);
+      if (index == -1) {
+        keys.push(entity.type);
+        values.push(1);
+      } else {
+        values[index]++;
+      }
+    }
+    let chart = new ChartJS(ctx, {
+      type: "pie",
+      data: {
+        labels: keys,
+        datasets: [{ label: "Entity Types", data: values }]
+      }
+    });
+
+    return chart;
+  }
 }

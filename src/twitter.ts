@@ -19,13 +19,13 @@ export type TweetData = {
   user: TwitterUser;
   /** Contents of the tweet */
   text: string;
+  created_at: string;
 };
 
 export type TwitterAccessToken = {
   token_type: string;
   access_token: string;
 };
-
 
 const consumerKey = "YrR8eb5C5vlWHl3bv1iWvk25P";
 const consumerSecretKey = "HFGL588Q8EoTry7G2HY7zhnIVA1zX5ykbIxyRTkh0RSZWekH7H";
