@@ -18,6 +18,7 @@ export type Entity = {
   salience: number;
   /** Sentiment for the entity */
   sentiment: Sentiment;
+  mentions: Mention[];
 };
 export type Sentiment = {
   /** Represents the emotion */
@@ -30,7 +31,10 @@ type Sentence = {
   /** Sentiment for the sentence */
   sentiment: Sentiment;
 };
-
+type Mention = {
+  sentiment: Sentiment;
+  type: String;
+};
 // ===== Test Data below ====
 let sentipos: Sentiment = {
   magnitude: 0.8,
@@ -49,7 +53,8 @@ let TEST_ENTITY: Entity = {
   name: "positive-thing",
   type: "a-thing",
   salience: 50,
-  sentiment: sentipos
+  sentiment: sentipos,
+  mentions: null
 };
 export const TEST_ENTITYDATA: NLPEntityData = {
   entities: [TEST_ENTITY, TEST_ENTITY, TEST_ENTITY],
