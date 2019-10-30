@@ -6,8 +6,12 @@ import { ChartGen } from "./chartgen";
 
 $(document).ready(() => {
   new Logic();
-  let test = $("#entityCanvas")[0];
+/*
+let test = $("#entityCanvas")[0];
 let ctx = (test as HTMLCanvasElement).getContext("2d");
 let cg:ChartGen = new ChartGen();
 cg.tweetGraph(TEST_ENTITYDATA, ctx)
+*/
+
+
 });

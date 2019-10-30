@@ -5,6 +5,7 @@ import { NLPSentimentData, NLPEntityData } from "../nlp";
 import { ChartGen } from "../chartgen";
 import { createGzip } from "zlib";
 import { autoUpdater } from "electron";
+
 export type SummaryData = {
   user: TwitterUser;
   overallSentiment: NLPSentimentData;
@@ -50,12 +51,16 @@ export class SummaryPanel extends Panel {
       "Overall Magnitude: " +
         this.data.overallSentiment.documentSentiment.magnitude
     );
-    let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
-    let chart = new ChartGen().genScatterChart(this.data, ctx);
+    let ctx1 = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
+    let chartScatter = new ChartGen().genEntityChart(this.data, ctx1);
+
+    //let ctx2 = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
+    //let chartEntities = new ChartGen().genEntityChart(this.data, ctx2);
 
     nameContainer.append(name, handle);
     imageContainer.append(img);
-    canvasContainer.append(ctx.canvas);
+    canvasContainer.append(ctx1.canvas);
+    //canvasContainer.append(ctx2.canvas);
     sentimentContainer.append(sentimentText, magnitudeText);
 
     this.getMain().append(nameContainer);

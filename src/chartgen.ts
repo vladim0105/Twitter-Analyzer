@@ -6,6 +6,7 @@ import {
 } from "./nlp";
 
 import * as ChartJS from "chart.js";
+import { ENGINE_METHOD_DIGESTS } from "constants";
 
 export class ChartGen {
   public tweetGraph(data: NLPEntityData, ctx: CanvasRenderingContext2D) {
@@ -86,6 +87,77 @@ export class ChartGen {
             }
           }
         }
+      }
+    });
+    return chart;
+  }
+
+
+  public genEntityChart(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+
+    let plotData = [];
+    let tags : string[] = [];
+
+    let totalMentions = 0;
+
+    console.log(">> Analyzing "+summaryData.entityResult.entities.length+" different entities");
+    for (let i = 0; i < summaryData.entityResult.entities.length; i++){
+      let ent = summaryData.entityResult.entities[i];
+      totalMentions += ent.mentions.length;
+    }
+    console.log(">> Total entity mentions of all: "+totalMentions);
+    console.log("Analyzing "+summaryData.entityResult.entities.length+ " entities...");
+    for (let i = 0; i < summaryData.entityResult.entities.length; i++) { 
+      let ent = summaryData.entityResult.entities[i];
+      //if (ent.type == "OTHER" || ent.type == "UNKNOWN") continue; //Skip
+      //let entScore = ent.salience * ent.sentiment.magnitude * ent.sentiment.score;
+      //if (entScore == 0) continue;
+      plotData.push({
+        x: ent.sentiment.score,
+        y: ent.sentiment.magnitude,
+        r: ctx.canvas.width*(ent.mentions.length / totalMentions)
+      });
+      tags.push(ent.name);
+
+      //if (entScore > maxScore)
+      console.log("Ent: "+ent.name+" is "+ent.type+" -->" + ent.salience+" ("+ent.sentiment.score+"*"+ent.sentiment.magnitude+")");
+      plotData.push({
+        x: ent.name,
+        y: ent.sentiment.score
+      });
+      
+    }
+
+    let chart = new ChartJS(ctx, {
+      type: "bubble",
+      data: { datasets: [{ label: "Likeable entities", data: plotData}] },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: { display: true, labelString: "Score" },
+              type: "linear",
+              position: "bottom"
+            }
+          ],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }]
+        },
+        
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+              return tags[tootipItem.index];
+            }
+          }
+        }
+        
       }
     });
     return chart;
