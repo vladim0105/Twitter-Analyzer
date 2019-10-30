@@ -111,6 +111,7 @@ export class Logic {
         let text = this.compileText(tweets);
         let summaryData: SummaryData = {
           user: tweets[0].user,
+          compiledText: text,
           overallSentiment: null,
           tweets: new Array(tweets.length),
           entityResult: null
