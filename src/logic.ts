@@ -110,12 +110,21 @@ export class Logic {
           tweets: new Array(tweets.length),
           entityResult: null
         };
-        let overallDone = false;
+        let overallDone = 0;
         this.nlp.fetchSentimentAnalysis(text, (result: NLPSentimentData) => {
           summaryData.overallSentiment = result;
-          overallDone = true;
-          if (overallDone && tweetsDone == tweets.length) {
-            overallDone = false;
+          overallDone++;
+          if (overallDone == 2 && tweetsDone == tweets.length) {
+            overallDone = 0;
+            tweetsDone = 0;
+            this.displayPanels(summaryData);
+          }
+        });
+        this.nlp.fetchEntityAnalysis(text, (result: NLPEntityData) => {
+          summaryData.entityResult = result;
+          overallDone++;
+          if (overallDone == 0 && tweetsDone == tweets.length) {
+            overallDone = 0;
             tweetsDone = 0;
             this.displayPanels(summaryData);
           }
@@ -131,8 +140,8 @@ export class Logic {
                 sentimentData: result
               };
               tweetsDone++;
-              if (overallDone && tweetsDone == tweets.length) {
-                overallDone = false;
+              if (overallDone == 2 && tweetsDone == tweets.length) {
+                overallDone = 0;
                 tweetsDone = 0;
                 this.displayPanels(summaryData);
               }
