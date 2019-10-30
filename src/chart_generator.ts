@@ -1,6 +1,16 @@
 import { SummaryData } from "./panels/summary_panel";
 
 import * as ChartJS from "chart.js";
+import { start } from "repl";
+import { TweetPanel } from "./panels/tweet_panel";
+
+let defaultColors : string[] = [
+  "#E27E7D","#D79F7D","#DDD798","#A7DD98",
+  "#98DADD","#90B3DA","#9093DA","#C18CD9",
+  "#9D3634","#956332","#8C8E2F","#2F8E2F",
+  "#2E828A","#2E548A","#3A2E8A","#6A2E8A"
+]
+
 
 export class ChartGen {
   public genScatterChart(
@@ -78,7 +88,7 @@ export class ChartGen {
       type: "line",
       data: {
         labels: labels,
-        datasets: [{ label: "Tweet Hours (UTC)", data: data }]
+        datasets: [{ label: "Tweet Hours (UTC)", data: data, backgroundColor:defaultColors}]
       }
     });
 
@@ -113,7 +123,11 @@ export class ChartGen {
       type: "line",
       data: {
         labels: labels,
-        datasets: [{ label: "Tweet Days (UTC)", data: data }]
+        datasets: [{ label: "Tweet Days (UTC)", data: data, 
+        backgroundColor:defaultColors,
+        fill: "start",
+        pointRadius: 5,
+        }]
       }
     });
 
@@ -142,15 +156,7 @@ export class ChartGen {
       type: "pie",
       data: {
         labels: keys,
-        datasets: [{ label: "Entity Types", data: values, 
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-      ] }]
+        datasets: [{ label: "Entity Types", data: values, backgroundColor:defaultColors}]
       }
     });
   }
@@ -241,4 +247,94 @@ export class ChartGen {
     });
     return chart;
   }
+
+  //TODO: Fix this method. Line chart only displays two almost-zero values.
+  public genPopularityChart(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+    let retweets: number[] = new Array();
+    let favorites: number[] = new Array();
+
+    console.log("Charting rt and favs of "+summaryData.tweets.length+" tweets...")
+    for (let i = 0; i < summaryData.tweets.length; i++) {
+      let td = summaryData.tweets[i].tweetData;
+      //Todo: If tweet <24h, skip.
+      retweets.push(td.retweet_count);
+      favorites.push(td.favorite_count);
+    }
+    
+    let chart = new ChartJS(ctx, {
+      type: "line",
+      data: {
+        datasets: [
+          { label: "Retweets", data: retweets, backgroundColor:"#ff6666"},
+          { label: "Favorites", data: favorites, backgroundColor:"#6666ff"}
+        ]
+      },
+      options: {
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+              return summaryData.tweets[tootipItem.index].tweetData.text
+            }
+          }
+        }
+      }
+    });
+  
+    return chart;
+  }
+
+  //TODO: Fix this method. Line chart only displays two almost-zero values.
+  public genSentimentDevelopment(
+    summaryData: SummaryData,
+    ctx: CanvasRenderingContext2D
+  ) {
+    let mood = [];
+    
+    console.log("Charting sentiment of "+summaryData.tweets.length+" tweets...")
+    for (let i = 0; i < summaryData.tweets.length; i++) {
+      let tw = summaryData.tweets[i];
+      let positivity: number = 0;
+      tw.sentimentData.sentences.forEach(sentence => {
+        positivity += sentence.sentiment.score * (0.1+sentence.sentiment.magnitude);
+      });
+      mood.push({x: i, y: positivity});
+    }
+    console.log("mood.length: "+mood.length);
+    console.log(mood); //debug
+
+    let chart = new ChartJS(ctx, {
+      type: "line",
+      data: {
+        datasets: [
+          { label: "Sentiment", data: mood, backgroundColor:"#6666ff"}
+        ]
+      },
+      
+      options: {
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+              return summaryData.tweets[tootipItem.index].tweetData.text;
+            }
+          }
+        },
+        scales: {
+          xAxes: [{scaleLabel: { display: true, labelString: "Time" }}],
+          yAxes: [{scaleLabel: { display: true, labelString: "Positivity" }}]
+        }
+      }
+    });
+  
+    return chart;
+  }
 }
+

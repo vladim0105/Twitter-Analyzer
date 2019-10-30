@@ -20,6 +20,9 @@ export type TweetData = {
   /** Contents of the tweet */
   text: string;
   created_at: string;
+  retweet_count: number;
+  favorite_count: number;
+  coordinates: Coordinates;
 };
 
 export type TwitterAccessToken = {
