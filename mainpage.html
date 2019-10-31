@@ -51,21 +51,21 @@
       ></i>
       <i id="aboutUs" class="fa fa-info-circle" style="font-size:36px"></i>
       <h1 id="header2">Twitter Analyzer<br></h1>
-    </div>
 
       <!-- Input Search Box-->
-    <div id="username_input">
+      <div id="username_input">
         <div>
           Enter Twitter Handle:<br>
           <input
             type="text"
-            name="Twitter Handle"
+            name="Twitter Username"
             id="username"
-            placeholder="Twitter Handle"
+            placeholder="Username"
           />
           <input type="button" value="Submit" id="submit" />
-          </div>
-    </div>
+        </div>
+      </div>
+
       <!-- Input Search Box 2 if clicked-->
       <!--<form>
       Enter 2nd Twitter Username here:
@@ -79,11 +79,12 @@
     </form>
   -->
       <!-- This displays the result-->
+
       <div id="mainResultContainer">
         <div id="resultContainer"></div>
         <div class="loader"></div>
       </div>
-    
+    </div>
     <script>
       //This calls the renderer
       require("./dist/renderer.js");

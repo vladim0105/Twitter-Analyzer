@@ -56,11 +56,11 @@ h1 {
 }
 
 i {
-  color: rgb(63, 109, 235);
+  color: rgb(212, 176, 247);
 }
 
 i:hover {
-  color: rgb(20, 23, 231);
+  color: blueviolet;
 }
 
 img {
@@ -98,9 +98,6 @@ img {
   cursor: pointer;
   padding-top: 15px;
   padding-left: 10px;
-  top: 0;
-  position: sticky;
-  z-index: 5000;
 }
 
 #returnToSearchPage {
@@ -149,7 +146,6 @@ img {
   position: relative;
   opacity: 1;
 }
-
 #mainResultContainer {
   width: 100%;
   min-height: 100%;
@@ -183,10 +179,8 @@ img {
 }
 
 #username_input {
-  width: 100%;
   display: flex;
+  width: 100%;
   justify-content: center;
-  align-items: flex-start;
-  position: relative;
-  flex-grow: 1;
+  justify-items: center;
 }

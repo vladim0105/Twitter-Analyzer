@@ -55,25 +55,20 @@ export class Logic {
     $("#mainBody")
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
-    $("#header2").animate({ opacity: opacity }, "slow");
-    $("#mainResultContainer")
-      .animate({ opacity: opacity }, "slow")
-      .css("pointer-events", pointer);
+      $("#header2").animate({ opacity: opacity }, "slow");
     //$("#form1").css("opacity", opacity);
     if (show) {
       this.showAboutUs(false);
       this.showOverlay(false);
     }
   }
+  private animateHeader2() {
+   
+    }
 
   private showAboutUs(show: boolean) {
     let opacity = show ? 1 : 0;
-    let opacity2 = !show ? 1: 0;
     let pointer = show ? "auto" : "none";
-    
-    $("#username_input")
-      .animate({ opacity: opacity2 }, "slow")
-      .css("pointer-events", pointer);
     $("#aboutUsPage")
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
@@ -96,9 +91,6 @@ export class Logic {
     return text;
   }
   private onSearch() {
-    //Hide overlay
-    this.showSearch(true);
-    this.showOverlay(false);
     //Clear the results
     $("#resultContainer").empty();
     //Show loader
