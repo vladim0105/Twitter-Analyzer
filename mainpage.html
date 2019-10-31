@@ -24,21 +24,20 @@
     </div>
     <!-- Intro Page-->
     <div class="hero-image" div id="overlay" style="z-index: 1000;">
-      <p id="GroupName">FSDV Productions</p>
       <div class="hero-text">
         <img src="res/twitterlogo.svg" />
         <!--https://image.flaticon.com/icons/svg/124/124021.svg-->
-        <h1>The Twitter Analyzer</h1>
-        <div id="username_input">
+        <h1>Twitter Analyzer</h1>
+        <div>
           <div>
             Enter Twitter Handle:<br />
             <input
               type="text"
-              name="Twitter Username"
-              id="startingHandle"
-              placeholder="Username"
+              name="Twitter handle"
+              class="handle_input"
+              placeholder="handle"
             />
-            <input type="button" value="Submit" id="submit" />
+            <input type="button" value="Submit" class="handle_submit" />
           </div>
         </div>
       </div>
@@ -75,44 +74,29 @@
       <h1 id="header2">Twitter Analyzer<br /></h1>
 
       <!-- Input Search Box-->
-      <div class="handle_input_field">
+      <div class="handle_input_field" id="search_input_field">
         <div>
           <input
             autofocus
             type="text"
-            name="Twitter Username"
-            id="username"
+            name="Twitter handle"
             class="handle_input"
-            placeholder="Username"
+            placeholder="handle"
           />
-          <input type="button" value="Submit" id="submit" />
+          <input type="button" value="Submit" class="handle_submit" />
         </div>
       </div>
       <div class="handle_input_field" id="compare_input_field">
         <div>
           <input
             type="text"
-            name="Twitter Username"
-            id="compare_username"
+            name="Twitter handle"
             class="handle_input"
-            placeholder="Username"
+            placeholder="handle"
           />
-          <input type="button" value="Compare" id="submit" />
+          <input type="button" value="Compare" class="handle_submit" />
         </div>
       </div>
-
-      <!-- Input Search Box 2 if clicked-->
-      <!--<form>
-      Enter 2nd Twitter Username here:
-      <input
-        type="text"
-        name="Twitter Username"
-        id="username"
-        placeholder="Only a-z, A-Z, 0-9 & _"
-      />
-      <input type="button" value="Search" id="submit" />
-    </form>
-  -->
       <!-- This displays the result-->
 
       <div id="mainResultContainer">
@@ -123,7 +107,6 @@
     <script>
       //This calls the renderer
       require("./dist/renderer.js");
-      //Function to remove the overlay
     </script>
   </body>
 </html>

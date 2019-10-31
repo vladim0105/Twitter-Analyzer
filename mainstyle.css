@@ -163,17 +163,6 @@ img {
   opacity: 0;
 }
 
-#startingHandle {
-  width: 500px;
-  border: none;
-  background-color: #f8f8f8;
-  padding: 10px 5px;
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 15px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-}
-
 .handle_input_field {
   display: flex;
   width: 100%;
@@ -212,7 +201,7 @@ img {
   width: 100%;
   height: 100%;
 }
-#submit {
+.handle_submit {
   cursor: pointer;
   padding: 10px 10px;
   font-size: 20px;

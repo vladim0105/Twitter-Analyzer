@@ -8,7 +8,6 @@ import { TwitterAPI, TwitterAccessToken, TweetData } from "./twitter";
 import { SummaryPanel, SummaryData } from "./panels/summary_panel";
 import { TweetPanel, TweetSummaryData } from "./panels/tweet_panel";
 import { ErrorPanel } from "./panels/error_panel";
-import { Panel } from "./panels/panel";
 export class Logic {
   private nlp = new NaturalLanguageProcessingAPI();
   private twitter = new TwitterAPI();
@@ -23,13 +22,26 @@ export class Logic {
       this.showOverlay(true);
     });
 
-    $("#submit").on("click", this.onSearch.bind(this));
-    $("#username").keypress(event => {
+    $("#search_input_field .handle_submit").on(
+      "click",
+      this.onSearch.bind(this)
+    );
+    $("#search_input_field .handle_input").keypress(event => {
       if (event.key == "Enter") {
         this.onSearch();
       }
     });
-    $("#compare_username").keypress(event => {
+    $("#overlay .handle_submit").on("click", this.overlaySearch.bind(this));
+    $("#overlay .handle_input").keypress(event => {
+      if (event.key == "Enter") {
+        this.overlaySearch();
+      }
+    });
+    $("#compare_input_field .handle_submit").on(
+      "click",
+      this.onCompare.bind(this)
+    );
+    $("#compare_input_field .handle_input").keypress(event => {
       if (event.key == "Enter") {
         this.onCompare();
       }
@@ -64,7 +76,6 @@ export class Logic {
       this.showAboutUs(false);
       this.showOverlay(false);
     }
-    document.getElementById("username").focus();
   }
 
   private showAboutUs(show: boolean) {
@@ -100,13 +111,7 @@ export class Logic {
     //Show loader
     $(".loader").animate({ opacity: 1 }, "slow");
 
-    let handle = $("#username").val() as string;
-    if (handle == null) {
-      $("#username").val($("#startingHandle").val() as string);
-      let handle = $("#username").val() as string;
-    } else {
-      $("#startingHandle").val($("#username").val() as string);
-    }
+    let handle = $("#search_input_field .handle_input").val() as string;
     this.fetchSummaryData(handle, (data: SummaryData) => {
       this.displayPanels(data);
     });
@@ -121,8 +126,8 @@ export class Logic {
     $(".loader").animate({ opacity: 1 }, "slow");
 
     let handles = [
-      $("#username").val() as string,
-      $("#compare_username").val() as string
+      $("#search_input_field .handle_input").val() as string,
+      $("#compare_input_field .handle_input").val() as string
     ];
     let summaryDataArr: SummaryData[] = [];
     handles.forEach(handle => {
@@ -133,6 +138,12 @@ export class Logic {
         }
       });
     });
+  }
+  private overlaySearch() {
+    $("#search_input_field .handle_input").val(
+      $("#overlay .handle_input").val()
+    );
+    this.onSearch();
   }
   private createTweetPanels(
     dataArr: { tweetData: TweetData; sentimentData: NLPSentimentData }[],
