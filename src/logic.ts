@@ -9,6 +9,7 @@ import { SummaryPanel, SummaryData } from "./panels/summary_panel";
 import { TweetPanel, TweetSummaryData } from "./panels/tweet_panel";
 import { ErrorPanel } from "./panels/error_panel";
 import { Panel } from "./panels/panel";
+import { isNull } from "util";
 export class Logic {
   private nlp = new NaturalLanguageProcessingAPI();
   private twitter = new TwitterAPI();
@@ -22,9 +23,7 @@ export class Logic {
     $("#entry").on("click", () => {
       this.showOverlay(true);
     });
-    $("#overlay").on("click", () => {
-      this.showSearch(true);
-    });
+    
     $("#submit").on("click", this.onSearch.bind(this));
     $("#username").keypress(event => {
       if (event.key == "Enter") {
@@ -63,9 +62,6 @@ export class Logic {
     }
     document.getElementById("username").focus(); 
   }
-  private animateHeader2() {
-   
-    }
 
   private showAboutUs(show: boolean) {
     let opacity = show ? 1 : 0;
@@ -91,13 +87,25 @@ export class Logic {
     }
     return text;
   }
+
+
   private onSearch() {
+    //Hide Overlay
+    this.showOverlay(false);
+    this.showSearch(true);
     //Clear the results
     $("#resultContainer").empty();
     //Show loader
     $(".loader").animate({ opacity: 1 }, "slow");
 
     let handle = $("#username").val() as string;
+    if (handle == null){
+      $("#username").val($("#startingHandle").val() as string);
+      let handle = $("#username").val() as string;
+    }
+    else{
+      $("#startingHandle").val($("#username").val() as string);
+    }
     let panel: Panel;
     this.twitter.fetchTweets(
       this.twitterAuthToken,
