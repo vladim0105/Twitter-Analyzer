@@ -41,6 +41,10 @@ export class SummaryPanel extends Panel {
       .text("@" + this.data.user.screen_name)
       .css(this.nameStyle)
       .css("color", "gray");
+    let bio = $("<p>")
+      .text(this.data.user.description)
+      .css(this.nameStyle)
+      .css("color", "gray")
     let overallSentimentText = $("<p>").text(
       "Overall Sentiment: " + this.data.overallSentiment.documentSentiment.score
     );
@@ -52,9 +56,10 @@ export class SummaryPanel extends Panel {
     let averageMagnitudeText = $("<p>").text(
       "Average Magnitude: " + avg.magnitude
     );
+    let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
+    let chart = new ChartGen().genSentimentDevelopment(this.data, ctx);
 
-    //ENTITY CHARTS-------------------------------------------------------------------
-    nameContainer.append(name, handle);
+    nameContainer.append(name, handle, bio);
     imageContainer.append(img);
 
     sentimentContainer.append(
