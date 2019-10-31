@@ -16,6 +16,8 @@ export class TweetPanel extends Panel {
   }
 
   private init() {
+    console.log("🐦 Displaying tweet:");
+    console.log(this.data.tweetData);
     let textContainer = $("<div>");
     let analysisContainer = $("<div>");
     let text = $("<p>")
