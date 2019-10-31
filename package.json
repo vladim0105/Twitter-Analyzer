@@ -2,16 +2,28 @@
   "name": "twitter-analyzer",
   "version": "0.0.1",
   "description": "Description",
+  "main": "./dist/main.js",
   "scripts": {
     "build": "tsc",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "yarn run build && electron ./dist/main.js"
+    "start": "yarn run build && electron ./dist/main.js",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "your.id",
+    "mac": {
+      "category": "your.app.category.type"
+    },
+    "directories": {
+      "output": "bin"
+    }
   },
   "devDependencies": {
     "@types/chart.js": "^2.8.9",
     "@types/jquery": "^3.3.31",
     "@types/request": "^2.48.3",
     "electron": "^2.0.2",
+    "electron-builder": "^22.1.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   },
