@@ -55,7 +55,7 @@ export class Logic {
     $("#mainBody")
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
-    //$("#header2").css("opacity", opacity);
+    $("#header2").animate({ opacity: opacity }, "slow")
     //$("#form1").css("opacity", opacity);
     if (show) {
       this.showAboutUs(false);
