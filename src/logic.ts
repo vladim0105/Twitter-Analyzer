@@ -62,9 +62,6 @@ export class Logic {
       this.showOverlay(false);
     }
   }
-  private animateHeader2() {
-   
-    }
 
   private showAboutUs(show: boolean) {
     let opacity = show ? 1 : 0;
