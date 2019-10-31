@@ -9,6 +9,7 @@ import { SummaryPanel, SummaryData } from "./panels/summary_panel";
 import { TweetPanel, TweetSummaryData } from "./panels/tweet_panel";
 import { ErrorPanel } from "./panels/error_panel";
 import { Panel } from "./panels/panel";
+import { isNull } from "util";
 export class Logic {
   private nlp = new NaturalLanguageProcessingAPI();
   private twitter = new TwitterAPI();
@@ -87,6 +88,8 @@ export class Logic {
     }
     return text;
   }
+
+
   private onSearch() {
     //Hide Overlay
     this.showOverlay(false);
@@ -97,6 +100,13 @@ export class Logic {
     $(".loader").animate({ opacity: 1 }, "slow");
 
     let handle = $("#username").val() as string;
+    if (handle == null){
+      $("#username").val($("#startingHandle").val() as string);
+      let handle = $("#username").val() as string;
+    }
+    else{
+      $("#startingHandle").val($("#username").val() as string);
+    }
     let panel: Panel;
     this.twitter.fetchTweets(
       this.twitterAuthToken,
