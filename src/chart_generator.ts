@@ -48,6 +48,7 @@ export class ChartGen {
       type: "scatter",
       data: { datasets: userdatas },
       options: {
+        title: { display: true, text: "Sentiment of tweets" },
         maintainAspectRatio: false,
         scales: {
           xAxes: [
@@ -115,6 +116,13 @@ export class ChartGen {
     let chart = new ChartJS(ctx, {
       type: "line",
       data: { labels: labels, datasets: userdatas },
+      options: {
+        title: { display: true, text: "Tweets by time of day" },
+        scales: {
+          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets" } }]
+        }
+      }
       /*
       data: {
         labels: labels,
@@ -127,12 +135,6 @@ export class ChartGen {
         ]
       }
       */
-      options: {
-        scales: {
-          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets" } }]
-        }
-      }
     });
 
     return chart;
@@ -170,6 +172,13 @@ export class ChartGen {
     let chart = new ChartJS(ctx, {
       type: "line",
       data: { labels: labels, datasets: userdatas },
+      options: {
+        title: { display: true, text: "Tweets by weekday" },
+        scales: {
+          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Positivity" } }]
+        }
+      }
       /*
       data: {
         labels: labels,
@@ -179,12 +188,7 @@ export class ChartGen {
         fill: "start",
         pointRadius: 5
         }]
-      */ options: {
-        scales: {
-          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Positivity" } }]
-        }
-      }
+      */
     });
 
     return chart;
@@ -221,7 +225,11 @@ export class ChartGen {
 
     let chart = new ChartJS(ctx, {
       type: "pie",
-      data: { labels: typeLabels, datasets: userdatas }
+      data: { labels: typeLabels, datasets: userdatas },
+      options: {
+        title: { display: true, text: "Text entity composition" }
+      }
+
       /*
       data: {
         labels: keys,
@@ -321,6 +329,7 @@ export class ChartGen {
       */
       options: {
         maintainAspectRatio: false,
+        title: { display: true, text: "Sentiment of text entities" },
         scales: {
           xAxes: [
             {
