@@ -114,7 +114,7 @@ export class ChartGen {
 
     let chart = new ChartJS(ctx, {
       type: "line",
-      data: { datasets: userdatas },
+      data: { labels: labels, datasets: userdatas },
       /*
       data: {
         labels: labels,
@@ -169,11 +169,11 @@ export class ChartGen {
 
     let chart = new ChartJS(ctx, {
       type: "line",
-      data: { datasets: userdatas },
+      data: { labels: labels, datasets: userdatas },
       /*
       data: {
         labels: labels,
-        datasets: [{ label: "Tweet Days (UTC)", data: data, 
+       
         backgroundColor: defaultFill,
         pointBackgroundColor:defaultColors,
         fill: "start",
@@ -195,6 +195,7 @@ export class ChartGen {
     ...summaryData: SummaryData[]
   ) {
     let userdatas: { label: string; data: any[] }[] = [];
+    let typeLabels: string[] = [];
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
       let entities = sumdat.entityResult.entities;
@@ -204,6 +205,9 @@ export class ChartGen {
       for (let i = 0; i < entities.length; i++) {
         let entity = entities[i];
         let index = keys.indexOf(entity.type);
+        if (typeLabels.indexOf(entity.type) == -1) {
+          typeLabels.push(entity.type);
+        }
         if (index == -1) {
           keys.push(entity.type);
           values.push(1);
@@ -212,12 +216,12 @@ export class ChartGen {
         }
       }
 
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
+      userdatas.push({ label: sumdat.user.screen_name, data: values });
     });
 
     let chart = new ChartJS(ctx, {
       type: "pie",
-      data: { datasets: userdatas }
+      data: { labels: typeLabels, datasets: userdatas }
       /*
       data: {
         labels: keys,
