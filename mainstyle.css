@@ -56,11 +56,11 @@ h1 {
 }
 
 i {
-  color: rgb(212, 176, 247);
+  color: rgb(63, 109, 235);
 }
 
 i:hover {
-  color: blueviolet;
+  color: rgb(20, 23, 231);
 }
 
 img {
@@ -98,6 +98,9 @@ img {
   cursor: pointer;
   padding-top: 15px;
   padding-left: 10px;
+  top: 0;
+  position: sticky;
+  z-index: 5000;
 }
 
 #returnToSearchPage {
