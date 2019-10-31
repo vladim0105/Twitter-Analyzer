@@ -23,9 +23,7 @@ export class Logic {
     $("#entry").on("click", () => {
       this.showOverlay(true);
     });
-    $("#overlay").on("click", () => {
-      this.showSearch(true);
-    });
+    
     $("#submit").on("click", this.onSearch.bind(this));
     $("#username").keypress(event => {
       if (event.key == "Enter") {
