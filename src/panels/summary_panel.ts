@@ -102,16 +102,16 @@ export class SummaryPanel extends Panel {
     let tweetHourContainer = $("<div>").css(doubleChartChild);
     let bubbleContainer = $("<div>").css(doubleChartChild);
     let tweetHourCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let tweetHourChart = new ChartGen().genHourLineGraph(
-      this.data,
-      tweetHourCanvas.getContext("2d")
+    let tweetHourChart = new ChartGen().genHourLine(
+      tweetHourCanvas.getContext("2d"),
+      this.data
     );
     tweetHourContainer.append(tweetHourCanvas);
 
     let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let bubbleChart = new ChartGen().genDayLineGraph(
-      this.data,
-      bubbleCanvas.getContext("2d")
+    let bubbleChart = new ChartGen().genDayLine(
+      bubbleCanvas.getContext("2d"),
+      this.data
     );
     bubbleContainer.append(bubbleCanvas);
     tweetTimeContainer.append(tweetHourContainer, bubbleContainer);
@@ -123,16 +123,16 @@ export class SummaryPanel extends Panel {
     let pieContainer = $("<div>").css(doubleChartChild);
     let bubbleContainer = $("<div>").css(doubleChartChild);
     let pieCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let pieChart = new ChartGen().genEntityTypePieChart(
-      this.data,
-      pieCanvas.getContext("2d")
+    let pieChart = new ChartGen().genEntityTypePie(
+      pieCanvas.getContext("2d"),
+      this.data
     );
     pieContainer.append(pieCanvas);
 
     let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let bubbleChart = new ChartGen().genEntityBubbleChart(
-      this.data,
-      bubbleCanvas.getContext("2d")
+    let bubbleChart = new ChartGen().genEntityBubble(
+      bubbleCanvas.getContext("2d"),
+      this.data
     );
     bubbleContainer.append(bubbleCanvas);
     entityChartContainer.append(pieContainer, bubbleContainer);
@@ -142,9 +142,9 @@ export class SummaryPanel extends Panel {
   private createScatterChart() {
     let scatterChartHolder = $("<div>").css(doubleChartParent);
     let scatterCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let scatterChart = new ChartGen().genScatterChart(
-      this.data,
-      scatterCanvas.getContext("2d")
+    let scatterChart = new ChartGen().genScatter(
+      scatterCanvas.getContext("2d"),
+      this.data
     );
 
     scatterChartHolder.append(scatterCanvas);
