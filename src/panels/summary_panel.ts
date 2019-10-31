@@ -14,8 +14,8 @@ export type SummaryData = {
   entityResult: NLPEntityData;
 };
 export class SummaryPanel extends Panel {
-  private data: SummaryData;
-  constructor(data: SummaryData) {
+  private data: SummaryData[];
+  constructor(...data: SummaryData[]) {
     super("100%", "auto");
     this.data = data;
     this.init();
