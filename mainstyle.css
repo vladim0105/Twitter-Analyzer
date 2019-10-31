@@ -146,6 +146,7 @@ img {
   position: relative;
   opacity: 1;
 }
+
 #mainResultContainer {
   width: 100%;
   min-height: 100%;
@@ -179,8 +180,10 @@ img {
 }
 
 #username_input {
-  display: flex;
   width: 100%;
+  display: flex;
   justify-content: center;
-  justify-items: center;
+  align-items: flex-start;
+  position: relative;
+  flex-grow: 1;
 }

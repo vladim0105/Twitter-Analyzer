@@ -17,7 +17,6 @@
       <div class="hero-text">
         <img src="res/twitterlogo.svg" /> <!--https://image.flaticon.com/icons/svg/124/124021.svg-->
         <h1>The Twitter Analyzer</h1>
-        <p id="clickAny">Click anywhere to start!</p>
       </div>
     </div>
 
@@ -52,21 +51,21 @@
       ></i>
       <i id="aboutUs" class="fa fa-info-circle" style="font-size:36px"></i>
       <h1 id="header2">Twitter Analyzer<br></h1>
+    </div>
 
       <!-- Input Search Box-->
-      <div id="username_input">
+    <div id="username_input">
         <div>
-          Enter Twitter username:<br>
+          Enter Twitter Handle:<br>
           <input
             type="text"
-            name="Twitter Handler"
+            name="Twitter Handle"
             id="username"
-            placeholder="Twitter Handler"
+            placeholder="Twitter Handle"
           />
           <input type="button" value="Submit" id="submit" />
-        </div>
-      </div>
-
+          </div>
+    </div>
       <!-- Input Search Box 2 if clicked-->
       <!--<form>
       Enter 2nd Twitter Username here:
@@ -80,12 +79,11 @@
     </form>
   -->
       <!-- This displays the result-->
-
       <div id="mainResultContainer">
         <div id="resultContainer"></div>
         <div class="loader"></div>
       </div>
-    </div>
+    
     <script>
       //This calls the renderer
       require("./dist/renderer.js");
