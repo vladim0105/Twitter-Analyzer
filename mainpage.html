@@ -11,15 +11,27 @@
   <!-- Note that overlay transition not made yet lol-->
 
   <body>
+    <div style="width: 100%; top: 0; z-index: 5000; position: sticky;">
+      <div id="entry">
+        ⬅
+      </div>
+      <div id="backtotop">
+        Back to top ↑
+      </div>
+      <div id="aboutUs">
+        i
+      </div>
+    </div>
     <!-- Intro Page-->
     <div class="hero-image" div id="overlay" style="z-index: 1000;">
       <p id="GroupName">FSDV Productions</p>
       <div class="hero-text">
-        <img src="res/twitterlogo.svg" /> <!--https://image.flaticon.com/icons/svg/124/124021.svg-->
+        <img src="res/twitterlogo.svg" />
+        <!--https://image.flaticon.com/icons/svg/124/124021.svg-->
         <h1>The Twitter Analyzer</h1>
         <div id="username_input">
           <div>
-            Enter Twitter Handle:<br>
+            Enter Twitter Handle:<br />
             <input
               type="text"
               name="Twitter Username"
@@ -45,10 +57,13 @@
         <h2>
           CZ2006 Project by Team FSDV:
           <ul>
-          <li>Fremont Teng</li><li>Damien Goh</li><li>Donghui Sun</li>
-          <li>Steinar V. Pedersen</li><li>Vladimir Monakhov</li>
-        </ul>
-        Made using nodejs, chartjs, [tech], [tech]
+            <li>Fremont Teng</li>
+            <li>Damien Goh</li>
+            <li>Donghui Sun</li>
+            <li>Steinar V. Pedersen</li>
+            <li>Vladimir Monakhov</li>
+          </ul>
+          Made using nodejs, chartjs, [tech], [tech]
         </h2>
       </div>
     </div>
@@ -56,25 +71,33 @@
     <!-- Search Page-->
     <div id="mainBody">
       <!-- Header-->
-      <i
-        id="entry"
-        class="fa fa-arrow-circle-o-left"
-        style="font-size:40px"
-      ></i>
-      <i id="aboutUs" class="fa fa-info-circle" style="font-size:36px"></i>
-      <h1 id="header2">Twitter Analyzer<br></h1>
+
+      <h1 id="header2">Twitter Analyzer<br /></h1>
 
       <!-- Input Search Box-->
-      <div id="username_input">
+      <div class="handle_input_field">
         <div>
-          Enter Twitter Handle:<br>
-          <input autofocus
+          <input
+            autofocus
             type="text"
             name="Twitter Username"
             id="username"
+            class="handle_input"
             placeholder="Username"
           />
           <input type="button" value="Submit" id="submit" />
+        </div>
+      </div>
+      <div class="handle_input_field" id="compare_input_field">
+        <div>
+          <input
+            type="text"
+            name="Twitter Username"
+            id="compare_username"
+            class="handle_input"
+            placeholder="Username"
+          />
+          <input type="button" value="Compare" id="submit" />
         </div>
       </div>
 

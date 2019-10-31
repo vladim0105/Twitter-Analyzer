@@ -1,3 +1,7 @@
+:root {
+  --buttonColor: rgb(245, 125, 215);
+  --buttonHoverColor: rgb(241, 28, 188);
+}
 * {
   padding: 0%;
   margin: 0%;
@@ -9,7 +13,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("res/legalhexagons2.png")
+  background-image: url("res/legalhexagons2.png");
   /*img: http://www.commentnation.com/background.php?MyFile=aqua_and_white_hexagon_tile_seamless_background_pattern.php*/
 }
 
@@ -64,6 +68,81 @@ i:hover {
   color: blueviolet;
 }
 
+#entry {
+  top: 10px;
+  left: 10px;
+  position: absolute;
+  z-index: 5000;
+  background-color: var(--buttonColor);
+  border-radius: 50%;
+  border: 1px solid var(--buttonColor);
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 25px;
+  text-align: center;
+  display: inline-flex;
+  width: 35px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 100%;
+}
+
+#entry:hover {
+  background-color: var(--buttonHoverColor);
+}
+
+#aboutus {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  z-index: 5000;
+  background-color: var(--buttonColor);
+  border-radius: 50%;
+  border: 1px solid var(--buttonColor);
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+  display: inline-flex;
+  width: 35px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
+  margin-left: 100%;
+}
+
+#aboutus:hover {
+  background-color: var(--buttonHoverColor);
+}
+
+#backtotop {
+  top: 10px;
+  margin-left: 42%;
+  box-shadow: 0px 1px 0px 0px #f0f7fa;
+  background: linear-gradient(to bottom, #33bdef 5%, #019ad2 100%);
+  background-color: #33bdef;
+  border-radius: 6px;
+  border: 1px solid #057fd0;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 6px 24px;
+  text-decoration: none;
+  text-shadow: 0px -1px 0px #5b6178;
+}
+
+#backtotop:hover {
+  background: linear-gradient(to bottom, #019ad2 5%, #33bdef 100%);
+  background-color: #019ad2;
+}
+
 img {
   display: block;
   width: 100px;
@@ -95,7 +174,13 @@ img {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
-#username {
+.handle_input_field {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  justify-items: center;
+}
+.handle_input {
   width: 500px;
   border: none;
   background-color: #f8f8f8;
@@ -105,7 +190,10 @@ img {
   font-size: 15px;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
-
+#compare_input_field {
+  opacity: 0;
+  pointer-events: none;
+}
 #entry {
   cursor: pointer;
   padding-top: 15px;
@@ -118,14 +206,6 @@ img {
   padding-left: 10px;
 }
 
-#aboutus {
-  cursor: pointer;
-  padding-top: 15px;
-  padding-right: 10px;
-  position: absolute;
-  top: 8px;
-  right: 16px;
-}
 #aboutUsPage {
   position: absolute;
   opacity: 0;
@@ -160,7 +240,7 @@ img {
 }
 #mainResultContainer {
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -188,11 +268,4 @@ img {
   100% {
     transform: rotate(360deg);
   }
-}
-
-#username_input {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  justify-items: center;
 }

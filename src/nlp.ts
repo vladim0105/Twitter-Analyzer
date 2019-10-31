@@ -1,4 +1,5 @@
 import * as Request from "request";
+import { displayError } from "./logic";
 
 export type NLPSentimentData = {
   /** Sentiment for the whole text */
@@ -86,6 +87,7 @@ export class NaturalLanguageProcessingAPI {
       function(error, response, body) {
         if (error) {
           console.log(error);
+          displayError("Error connecting to the Google API.");
         } else {
           callback(body);
         }

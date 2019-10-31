@@ -3,8 +3,6 @@ import { TweetData, TwitterUser } from "../twitter";
 import * as $ from "jquery";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
 import { ChartGen } from "../chart_generator";
-import { createGzip } from "zlib";
-import { autoUpdater } from "electron";
 
 export type SummaryData = {
   user: TwitterUser;
@@ -14,15 +12,16 @@ export type SummaryData = {
   entityResult: NLPEntityData;
 };
 export class SummaryPanel extends Panel {
-  private data: SummaryData;
-  constructor(data: SummaryData) {
+  private data: SummaryData[];
+  constructor(data: SummaryData[]) {
     super("100%", "auto");
     this.data = data;
+    console.log(data);
     this.init();
   }
 
   private init() {
-    let avg = this.calculateAvgSentiment(this.data.tweets);
+    let avg = { score: 0, magnitude: 0 };
     let nameContainer = $("<div>").css({ "text-align": "center" });
     let imageContainer = $("<div>").css({
       flex: "0 0 50px"
@@ -30,27 +29,28 @@ export class SummaryPanel extends Panel {
     let sentimentContainer = $("<div>").css({ "text-align": "center" });
 
     let img = $("<img>")
-      .attr("src", this.data.user.profile_image_url_https)
+      .attr("src", this.data[0].user.profile_image_url_https)
       .css(this.profilePictureStyle)
       .css("zoom", "50%");
     let name = $("<p>")
-      .text(this.data.user.name)
+      .text(this.data[0].user.name)
       .css(this.nameStyle)
       .css("font-size", "20px");
     let handle = $("<p>")
-      .text("@" + this.data.user.screen_name)
+      .text("@" + this.data[0].user.screen_name)
       .css(this.nameStyle)
       .css("color", "gray");
     let bio = $("<p>")
-      .text(this.data.user.description)
+      .text(this.data[0].user.description)
       .css(this.nameStyle)
       .css("color", "gray");
     let overallSentimentText = $("<p>").text(
-      "Overall Sentiment: " + this.data.overallSentiment.documentSentiment.score
+      "Overall Sentiment: " +
+        this.data[0].overallSentiment.documentSentiment.score
     );
     let overallMagnitudeText = $("<p>").text(
       "Overall Magnitude: " +
-        this.data.overallSentiment.documentSentiment.magnitude
+        this.data[0].overallSentiment.documentSentiment.magnitude
     );
     let averageSentimentText = $("<p>").text("Average Sentiment: " + avg.score);
     let averageMagnitudeText = $("<p>").text(
@@ -104,14 +104,14 @@ export class SummaryPanel extends Panel {
     let tweetHourCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let tweetHourChart = new ChartGen().genHourLine(
       tweetHourCanvas.getContext("2d"),
-      this.data
+      ...this.data
     );
     tweetHourContainer.append(tweetHourCanvas);
 
     let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let bubbleChart = new ChartGen().genDayLine(
       bubbleCanvas.getContext("2d"),
-      this.data
+      ...this.data
     );
     bubbleContainer.append(bubbleCanvas);
     tweetTimeContainer.append(tweetHourContainer, bubbleContainer);
@@ -125,14 +125,14 @@ export class SummaryPanel extends Panel {
     let pieCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let pieChart = new ChartGen().genEntityTypePie(
       pieCanvas.getContext("2d"),
-      this.data
+      ...this.data
     );
     pieContainer.append(pieCanvas);
 
     let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let bubbleChart = new ChartGen().genEntityBubble(
       bubbleCanvas.getContext("2d"),
-      this.data
+      ...this.data
     );
     bubbleContainer.append(bubbleCanvas);
     entityChartContainer.append(pieContainer, bubbleContainer);
@@ -141,13 +141,17 @@ export class SummaryPanel extends Panel {
   }
   private createScatterChart() {
     let scatterChartHolder = $("<div>").css(doubleChartParent);
+    let scatterChartChild = $("<div>")
+      .css(doubleChartChild)
+      .css({ height: "50vh", margin: "auto" });
     let scatterCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let scatterChart = new ChartGen().genScatter(
       scatterCanvas.getContext("2d"),
-      this.data
+      ...this.data
     );
 
-    scatterChartHolder.append(scatterCanvas);
+    scatterChartChild.append(scatterCanvas);
+    scatterChartHolder.append(scatterChartChild);
     return scatterChartHolder;
   }
 }
