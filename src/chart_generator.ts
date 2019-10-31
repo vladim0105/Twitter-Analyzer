@@ -1,8 +1,6 @@
 import { SummaryData } from "./panels/summary_panel";
 
 import * as ChartJS from "chart.js";
-import { start } from "repl";
-import { TweetPanel } from "./panels/tweet_panel";
 
 let defaultColors: string[] = [
   "#E27E7D",
