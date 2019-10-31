@@ -12,4 +12,5 @@ import { ChartGen } from "./chart_generator";
 
 $(document).ready(() => {
   new Logic();
+  document.getElementById("username").focus();
 });

@@ -60,6 +60,7 @@ export class Logic {
       this.showAboutUs(false);
       this.showOverlay(false);
     }
+    document.getElementById("username").focus(); 
   }
 
   private showAboutUs(show: boolean) {
