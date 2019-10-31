@@ -52,6 +52,17 @@ export class Logic {
     $("#returnToSearchPage").on("click", () => {
       this.showSearch(true);
     });
+    $("#backtotop").on("click", () => {
+      $("body").scrollTop(0);
+    });
+    $("body").scroll(event => {
+      let scrollPos = $("body").scrollTop();
+      if (scrollPos > 100) {
+        $("#backtotop").css({ opacity: 1, "pointer-events": "all" });
+      } else {
+        $("#backtotop").css({ opacity: 0, "pointer-events": "none" });
+      }
+    });
   }
   private showOverlay(show: boolean) {
     let opacity = show ? 1 : 0;
@@ -71,7 +82,9 @@ export class Logic {
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
     $("#header2").animate({ opacity: opacity }, "slow");
-    //$("#form1").css("opacity", opacity);
+    $("#navbar")
+      .animate({ opacity: opacity }, "slow")
+      .css("pointer-events", pointer);
     if (show) {
       this.showAboutUs(false);
       this.showOverlay(false);
