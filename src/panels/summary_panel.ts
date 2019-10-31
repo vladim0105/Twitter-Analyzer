@@ -141,13 +141,17 @@ export class SummaryPanel extends Panel {
   }
   private createScatterChart() {
     let scatterChartHolder = $("<div>").css(doubleChartParent);
+    let scatterChartChild = $("<div>")
+      .css(doubleChartChild)
+      .css({ height: "50vh", margin: "auto" });
     let scatterCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let scatterChart = new ChartGen().genScatterChart(
       this.data,
       scatterCanvas.getContext("2d")
     );
 
-    scatterChartHolder.append(scatterCanvas);
+    scatterChartChild.append(scatterCanvas);
+    scatterChartHolder.append(scatterChartChild);
     return scatterChartHolder;
   }
 }

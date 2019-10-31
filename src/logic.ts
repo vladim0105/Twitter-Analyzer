@@ -55,16 +55,13 @@ export class Logic {
     $("#mainBody")
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
-      $("#header2").animate({ opacity: opacity }, "slow");
+    $("#header2").animate({ opacity: opacity }, "slow");
     //$("#form1").css("opacity", opacity);
     if (show) {
       this.showAboutUs(false);
       this.showOverlay(false);
     }
   }
-  private animateHeader2() {
-   
-    }
 
   private showAboutUs(show: boolean) {
     let opacity = show ? 1 : 0;
@@ -105,10 +102,9 @@ export class Logic {
         //Convert tweets to any-type in order to check if an error has been returned.
         let error = tweets as any;
         if (error.error) {
-          panel = new ErrorPanel("Error test 23456");
-          $("#resultContainer").fadeIn("slow");
-          panel.appendTo($("#resultContainer"));
-          $(".loader").animate({ opacity: 0 }, "slow");
+          displayError(
+            "Error fetching tweets from Twitter, this is usually caused by searching for nonexisting Twitter-accounts."
+          );
           return;
         }
         //If no error, proceed as normal:
@@ -122,6 +118,11 @@ export class Logic {
         };
         let overallDone = 0;
         this.nlp.fetchSentimentAnalysis(text, (result: NLPSentimentData) => {
+          //Error occurs when result is null
+          if (!result || !result.documentSentiment) {
+            displayError("Error fetching sentiment data from Google.");
+            return;
+          }
           summaryData.overallSentiment = result;
           overallDone++;
           if (overallDone == 2 && tweetsDone == tweets.length) {
@@ -131,6 +132,11 @@ export class Logic {
           }
         });
         this.nlp.fetchEntityAnalysis(text, (result: NLPEntityData) => {
+          //Error occurs when result is null
+          if (!result) {
+            displayError("Error fetching entity data from Google.");
+            return;
+          }
           summaryData.entityResult = result;
           overallDone++;
           if (overallDone == 2 && tweetsDone == tweets.length) {
@@ -145,6 +151,11 @@ export class Logic {
           this.nlp.fetchSentimentAnalysis(
             tweet.text,
             (result: NLPSentimentData) => {
+              //Error occurs when result is null
+              if (!result || !result.documentSentiment) {
+                displayError("Error fetching sentiment data from Google.");
+                return;
+              }
               summaryData.tweets[i] = {
                 tweetData: tweet,
                 sentimentData: result
@@ -192,4 +203,10 @@ export class Logic {
     $("#resultContainer").fadeIn("slow");
     $(".loader").animate({ opacity: 0 }, "slow");
   }
+}
+export function displayError(msg: string) {
+  let errorPanel = new ErrorPanel(msg);
+  errorPanel.appendTo($("#resultContainer"));
+  $("#resultContainer").fadeIn("slow");
+  $(".loader").animate({ opacity: 0 }, "slow");
 }

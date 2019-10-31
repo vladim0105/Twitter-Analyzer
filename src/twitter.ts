@@ -1,5 +1,8 @@
 import * as Request from "request";
 import * as isDev from "electron-is-dev";
+import { ErrorPanel } from "./panels/error_panel";
+import * as $ from "jquery";
+import { Logic, displayError } from "./logic";
 export type TwitterUser = {
   /** Unique user ID */
   id: Number;
@@ -53,6 +56,7 @@ export class TwitterAPI {
       function(error, response, body) {
         if (error) {
           console.log(error);
+          displayError("Error connecting to Twitter API");
         } else {
           callback(JSON.parse(body));
         }
@@ -83,6 +87,7 @@ export class TwitterAPI {
       function(error, response, body) {
         if (error) {
           console.log(error);
+          displayError("Error connecting to Twitter API");
         } else {
           callback(JSON.parse(body));
         }
