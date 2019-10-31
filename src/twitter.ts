@@ -1,28 +1,41 @@
 import * as Request from "request";
 import * as isDev from "electron-is-dev";
 export type TwitterUser = {
-  /** Unique user ID */
-  id: Number;
-  /** I believe this is the proper name e.g. "Donald Trump" */
-  name: string;
-  /** This is the twitter handle e.g. "realDonaldTrump" */
-  screen_name: string;
-  /** Account bio/description */
-  description: string;
-  /** Followers **/
-  followers_count: Number;
-  /** URL to profile picture */
-  profile_image_url_https: string;
+  // === Identifying data
+  id: Number; // unique internal numeral ID
+  name: string; // Pretty-printed name, eg "Donald Trump"
+  screen_name: string; // unique twitter handle, eg: realDonaldTrump
+  description: string; // bio/description
+
+  profile_image_url_https: string; //url to profiile pic
+
+  // === Stats
+  verified: Boolean; // Verified public figure
+  followers_count: Number; // following this user
+  friends_count: Number; // friends of user
+  statuses_count: Number; // tweets posted
+  listed_count: Number; // public lists
+
+  //TODO: Number or number here?
 };
+
+//TODO: Fix experimental export:
+export type TweetEntities = {
+  hashtags: any[];
+  media: any[];
+  symbols: any[];
+  urls: any[];
+  user_mentions: any[];
+}
 
 export type TweetData = {
   user: TwitterUser;
   /** Contents of the tweet */
   text: string;
   created_at: string;
-  retweet_count: number;
-  favorite_count: number;
-  coordinates: Coordinates;
+  retweet_count: number; 
+  coordinates: Coordinates; //?null
+  entities: TweetEntities[];
 };
 
 export type TwitterAccessToken = {
