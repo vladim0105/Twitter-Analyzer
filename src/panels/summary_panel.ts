@@ -21,55 +21,7 @@ export class SummaryPanel extends Panel {
   }
 
   private init() {
-    let avg = { score: 0, magnitude: 0 };
-    let nameContainer = $("<div>").css({ "text-align": "center" });
-    let imageContainer = $("<div>").css({
-      flex: "0 0 50px"
-    });
-    let sentimentContainer = $("<div>").css({ "text-align": "center" });
-
-    let img = $("<img>")
-      .attr("src", this.data[0].user.profile_image_url_https)
-      .css(this.profilePictureStyle)
-      .css("zoom", "50%");
-    let name = $("<p>")
-      .text(this.data[0].user.name)
-      .css(this.nameStyle)
-      .css("font-size", "20px");
-    let handle = $("<p>")
-      .text("@" + this.data[0].user.screen_name)
-      .css(this.nameStyle)
-      .css("color", "gray");
-    let bio = $("<p>")
-      .text(this.data[0].user.description)
-      .css(this.nameStyle)
-      .css("color", "gray");
-    let overallSentimentText = $("<p>").text(
-      "Overall Sentiment: " +
-        this.data[0].overallSentiment.documentSentiment.score
-    );
-    let overallMagnitudeText = $("<p>").text(
-      "Overall Magnitude: " +
-        this.data[0].overallSentiment.documentSentiment.magnitude
-    );
-    let averageSentimentText = $("<p>").text("Average Sentiment: " + avg.score);
-    let averageMagnitudeText = $("<p>").text(
-      "Average Magnitude: " + avg.magnitude
-    );
-
-    nameContainer.append(name, handle, bio);
-    imageContainer.append(img);
-
-    sentimentContainer.append(
-      overallSentimentText,
-      overallMagnitudeText,
-      averageSentimentText,
-      averageMagnitudeText
-    );
-
-    this.getMain().append(nameContainer);
-    this.getMain().append(imageContainer);
-    this.getMain().append(sentimentContainer);
+    this.getMain().append(this.createProfiles());
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createEntityCharts());
     this.getMain().append(this.createScatterChart());
@@ -96,6 +48,69 @@ export class SummaryPanel extends Panel {
     avg.magnitude = +avg.magnitude.toFixed(2);
 
     return avg;
+  }
+  private createProfiles() {
+    let profilesContainer = $("<div>").css({
+      display: "flex",
+      "flex-direction": "row",
+      width: "100%"
+    });
+    this.data.forEach(value => {
+      let profileContainer = $("<div>").css({ "flex-grow": 1 });
+      let avg = this.calculateAvgSentiment(value.tweets);
+      let nameContainer = $("<div>").css({ "text-align": "center" });
+      let imageContainer = $("<div>").css({
+        flex: "0 0 50px"
+      });
+      let sentimentContainer = $("<div>").css({ "text-align": "center" });
+
+      let img = $("<img>")
+        .attr("src", value.user.profile_image_url_https)
+        .css(this.profilePictureStyle)
+        .css("zoom", "50%");
+      let name = $("<p>")
+        .text(value.user.name)
+        .css(this.nameStyle)
+        .css("font-size", "20px");
+      let handle = $("<p>")
+        .text("@" + value.user.screen_name)
+        .css(this.nameStyle)
+        .css("color", "gray");
+      let bio = $("<p>")
+        .text(value.user.description)
+        .css(this.nameStyle)
+        .css("color", "gray");
+      let overallSentimentText = $("<p>").text(
+        "Overall Sentiment: " + value.overallSentiment.documentSentiment.score
+      );
+      let overallMagnitudeText = $("<p>").text(
+        "Overall Magnitude: " +
+          value.overallSentiment.documentSentiment.magnitude
+      );
+      let averageSentimentText = $("<p>").text(
+        "Average Sentiment: " + avg.score
+      );
+      let averageMagnitudeText = $("<p>").text(
+        "Average Magnitude: " + avg.magnitude
+      );
+
+      nameContainer.append(name, handle, bio);
+      imageContainer.append(img);
+
+      sentimentContainer.append(
+        overallSentimentText,
+        overallMagnitudeText,
+        averageSentimentText,
+        averageMagnitudeText
+      );
+      profileContainer.append(
+        nameContainer,
+        imageContainer,
+        sentimentContainer
+      );
+      profilesContainer.append(profileContainer);
+    });
+    return profilesContainer;
   }
   private createTimeCharts() {
     let tweetTimeContainer = $("<div>").css(doubleChartParent);
