@@ -16,7 +16,9 @@ export class TweetPanel extends Panel {
   }
 
   private init() {
-    console.log("🐦 Displaying tweet:");
+    console.log("🐦 Displaying tweet with "+this.data.tweetData.retweet_count+" retweets");
+    console.log("Entities:");
+    console.log(this.data.tweetData.entities);
     console.log(this.data.tweetData);
     let textContainer = $("<div>");
     let analysisContainer = $("<div>");

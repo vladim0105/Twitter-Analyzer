@@ -2,7 +2,18 @@ import { SummaryData } from "./panels/summary_panel";
 
 import * as ChartJS from "chart.js";
 
-let defaultColors: string[] = [
+/*
+declare interface Math{
+  log10(x: number): number;
+}*/
+const natlog10 = Math.log(10);
+function log10(n: number){
+  return (Math.log(n) / natlog10);
+}
+
+
+/*
+let pointColors: string[] = [
   "#E27E7D",
   "#D79F7D",
   "#DDD798",
@@ -19,8 +30,32 @@ let defaultColors: string[] = [
   "#2E548A",
   "#3A2E8A",
   "#6A2E8A"
-];
-let defaultFill: string = "rgba(64, 128, 255, 0.5)";
+];*/
+
+let pointColors: string[]= [
+  "rgba(215,159,125, 0.8)",
+  "rgba(221,215,152, 0.8)",
+  "rgba(167,221,152, 0.8)",
+  "rgba(152,218,221, 0.8)",
+  "rgba(144,179,218, 0.8)",
+  "rgba(144,147,218, 0.8)",
+  "rgba(193,140,217, 0.8)",
+  "rgba(157,54,52, 0.8)",
+  "rgba(149,99,50, 0.8)",
+  "rgba(140,142,47, 0.8)",
+  "rgba(47,142,47, 0.8)",
+  "rgba(46,130,138, 0.8)",
+  "rgba(46,84,138, 0.8)",
+  "rgba(58,46,138, 0.8)",
+  "rgba(106,46,138, 0.8)"
+]
+
+let fillColors: string[] = []; 
+pointColors.forEach(color => { //Set 80% --> 40% opacity
+  fillColors.push(color.replace("0.8", "0.4"));
+});
+
+let defaultFill: string = "rgba(64, 128, 255, 0.25)";
 
 import { Entity } from "./nlp";
 
@@ -29,21 +64,24 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-    let userdatas: { label: string; data: any[] }[] = [];
+    let userdatas: { label: string; data: any[], 
+      backgroundColor: string[] }[] = [];
     summaryData.forEach(sumdat => {
       let plotData = [];
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tweetData = sumdat.tweets[i];
         plotData.push({
           x: tweetData.sentimentData.documentSentiment.score,
-          y: tweetData.sentimentData.documentSentiment.magnitude
+          y: tweetData.sentimentData.documentSentiment.magnitude,
+          r: 1+2*log10(tweetData.tweetData.retweet_count)
         });
       }
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
+      userdatas.push({ label: sumdat.user.screen_name, 
+        data: plotData, backgroundColor:pointColors});
     });
 
     let chart = new ChartJS(ctx, {
-      type: "scatter",
+      type: "bubble",
       data: { datasets: userdatas },
       options: {
         title: { display: true, text: "Sentiment of tweets" },
@@ -80,7 +118,7 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-    const labels = [
+    const labels : string[] = [
       "00:00-02:00",
       "02:00-04:00",
       "04:00-06:00",
@@ -95,7 +133,30 @@ export class ChartGen {
       "22:00-24:00"
     ];
 
-    let userdatas: { label: string; data: any[] }[] = [];
+    const daylight : string[] = [
+      "#010404",
+      "#122136",
+      "#1B4B50",
+      "#246B4C",
+      "#32956F",
+      "#97AC39",
+      "#D0CE71",
+      "#DBB994",
+      "#C27579",
+      "#BF4D40",
+      "#A13650",
+      "#732663",
+    ]
+
+    var gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
+    gradientFill.addColorStop(0, "rgba(0, 100, 150, 0.5)");
+    gradientFill.addColorStop(0.4, "rgba(220, 220, 50, 0.5)");
+    gradientFill.addColorStop(0.6, "rgba(220, 220, 50, 0.5)");
+    gradientFill.addColorStop(1, "rgba(50, 100, 150, 0.5)");
+
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string[],
+      backgroundColor: any}[] = []; //string-->any
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
       for (let val in labels) {
@@ -108,7 +169,9 @@ export class ChartGen {
         let index = hour % labels.length;
         plotData[index]++;
       }
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
+        pointBackgroundColor: daylight,
+        backgroundColor:gradientFill});
     });
 
     let chart = new ChartJS(ctx, {
@@ -127,7 +190,7 @@ export class ChartGen {
         datasets: 
           { label: "Tweet Hours (UTC)", data: userdatas, 
           backgroundColor:defaultFill,
-          pointBackgroundColor:defaultColors,
+          pointBackgroundColor:pointColors,
           fill: "start",
           pointRadius: 5}
         ]
@@ -151,7 +214,9 @@ export class ChartGen {
       "Sunday"
     ];
 
-    let userdatas: { label: string; data: any[] }[] = [];
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string[],
+      backgroundColor: string}[] = [];
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
       for (let val in labels) {
@@ -164,7 +229,8 @@ export class ChartGen {
         let index = day % labels.length;
         plotData[index]++;
       }
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
+        pointBackgroundColor:pointColors, backgroundColor: defaultFill });
     });
 
     let chart = new ChartJS(ctx, {
@@ -173,8 +239,8 @@ export class ChartGen {
       options: {
         title: { display: true, text: "Tweets by weekday" },
         scales: {
-          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Positivity" } }]
+          xAxes: [{ scaleLabel: { display: true, labelString: "Day" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets" } }]
         }
       }
       /*
@@ -182,7 +248,7 @@ export class ChartGen {
         labels: labels,
        
         backgroundColor: defaultFill,
-        pointBackgroundColor:defaultColors,
+        pointBackgroundColor:pointColors,
         fill: "start",
         pointRadius: 5
         }]
@@ -196,7 +262,9 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-    let userdatas: { label: string; data: any[] }[] = [];
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string[],
+      backgroundColor: string[]}[] = [];
     let typeLabels: string[] = [];
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
@@ -218,7 +286,9 @@ export class ChartGen {
         }
       }
 
-      userdatas.push({ label: sumdat.user.screen_name, data: values });
+      userdatas.push({ label: sumdat.user.screen_name, data: values, 
+        pointBackgroundColor: pointColors,
+        backgroundColor: fillColors });
     });
 
     let chart = new ChartJS(ctx, {
@@ -231,7 +301,7 @@ export class ChartGen {
       /*
       data: {
         labels: keys,
-        datasets: [{ label: "Entity Types", data: values, backgroundColor:defaultColors}]
+        datasets: [{ label: "Entity Types", data: values, backgroundColor:pointColors}]
       }
       */
     });
@@ -241,7 +311,9 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-    let userdatas: { label: string; data: any[] }[] = [];
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string[],
+      backgroundColor: string[]}[] = [];
     summaryData.forEach(sumdat => {
       let plotData: { x: number; y: number; r: number }[] = [];
 
@@ -304,10 +376,12 @@ export class ChartGen {
       let keyColors: string[] = [];
       values.forEach(val => {
         let colorIndex = entityTypeNames.indexOf(val.entityType);
-        keyColors.push(defaultColors[colorIndex]);
+        keyColors.push(pointColors[colorIndex]);
       });
 
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData,
+        pointBackgroundColor: pointColors,
+        backgroundColor: fillColors });
     });
 
     let chart = new ChartJS(ctx, {

@@ -5,7 +5,7 @@ import * as $ from "jquery";
 import { Logic, displayError } from "./logic";
 export type TwitterUser = {
   // === Identifying data
-  id: Number; // unique internal numeral ID
+  id: number; // unique internal numeral ID
   name: string; // Pretty-printed name, eg "Donald Trump"
   screen_name: string; // unique twitter handle, eg: realDonaldTrump
   description: string; // bio/description
@@ -14,10 +14,11 @@ export type TwitterUser = {
 
   // === Stats
   verified: Boolean; // Verified public figure
-  followers_count: Number; // following this user
-  friends_count: Number; // friends of user
-  statuses_count: Number; // tweets posted
-  listed_count: Number; // public lists
+  created_at: string; //Account creation date
+  followers_count: number; // following this user
+  friends_count: number; // friends of user
+  statuses_count: number; // tweets posted
+  listed_count: number; // public lists
 
   //TODO: Number or number here?
 };
