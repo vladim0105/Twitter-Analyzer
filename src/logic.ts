@@ -88,6 +88,9 @@ export class Logic {
     return text;
   }
   private onSearch() {
+    //Hide Overlay
+    this.showOverlay(false);
+    this.showSearch(true);
     //Clear the results
     $("#resultContainer").empty();
     //Show loader
