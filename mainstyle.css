@@ -174,7 +174,7 @@ img {
   justify-items: center;
 }
 .handle_input {
-  width: 500px;
+  width: 200px;
   border: none;
   background-color: #f8f8f8;
   padding: 10px 5px;
@@ -188,9 +188,11 @@ img {
   pointer-events: none;
 }
 #entry {
-  cursor: pointer;
-  padding-top: 15px;
-  padding-left: 10px;
+  cursor: pointer; 
+  /*Arrow appears misaligned. 
+  Looks alright for me when I remove padding.*/
+  padding-top: 0;/*15px;*/
+  padding-left: 0;/*10px;*/
 }
 
 #returnToSearchPage {
