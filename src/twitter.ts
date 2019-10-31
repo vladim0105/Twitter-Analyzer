@@ -1,5 +1,5 @@
 import * as Request from "request";
-
+import * as isDev from "electron-is-dev";
 export type TwitterUser = {
   /** Unique user ID */
   id: Number;
@@ -74,7 +74,7 @@ export class TwitterAPI {
         method: "GET",
         qs: {
           screen_name: username,
-          count: 200 //Max amount of tweets we can request.
+          count: isDev ? 50 : 200 //Max amount of tweets we can request.
         },
         headers: {
           Authorization: "Bearer " + authToken

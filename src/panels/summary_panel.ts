@@ -44,7 +44,7 @@ export class SummaryPanel extends Panel {
     let bio = $("<p>")
       .text(this.data.user.description)
       .css(this.nameStyle)
-      .css("color", "gray")
+      .css("color", "gray");
     let overallSentimentText = $("<p>").text(
       "Overall Sentiment: " + this.data.overallSentiment.documentSentiment.score
     );
@@ -56,8 +56,6 @@ export class SummaryPanel extends Panel {
     let averageMagnitudeText = $("<p>").text(
       "Average Magnitude: " + avg.magnitude
     );
-    let ctx = ($("<canvas>")[0] as HTMLCanvasElement).getContext("2d");
-    let chart = new ChartGen().genSentimentDevelopment(this.data, ctx);
 
     nameContainer.append(name, handle, bio);
     imageContainer.append(img);
@@ -74,6 +72,7 @@ export class SummaryPanel extends Panel {
     this.getMain().append(sentimentContainer);
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createEntityCharts());
+    this.getMain().append(this.createScatterChart());
     this.getMain()
       .css("border", "2px solid gray")
       .css("border-radius", "5px");
@@ -140,7 +139,19 @@ export class SummaryPanel extends Panel {
 
     return entityChartContainer;
   }
+  private createScatterChart() {
+    let scatterChartHolder = $("<div>").css(doubleChartParent);
+    let scatterCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let scatterChart = new ChartGen().genScatterChart(
+      this.data,
+      scatterCanvas.getContext("2d")
+    );
+
+    scatterChartHolder.append(scatterCanvas);
+    return scatterChartHolder;
+  }
 }
+
 const doubleChartParent = {
   display: "flex",
   "flex-direction": "row",

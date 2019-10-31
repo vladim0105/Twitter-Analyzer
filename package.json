@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "yarn run build && electron ./dist/main.js",
+    "start": "cross-env ELECTRON_IS_DEV=true && yarn run build && electron ./dist/main.js",
     "dist": "electron-builder"
   },
   "build": {
@@ -22,8 +22,10 @@
     "@types/chart.js": "^2.8.9",
     "@types/jquery": "^3.3.31",
     "@types/request": "^2.48.3",
+    "cross-env": "^6.0.3",
     "electron": "^2.0.2",
     "electron-builder": "^22.1.0",
+    "electron-is-dev": "^1.1.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   },
