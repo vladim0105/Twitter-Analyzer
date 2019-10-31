@@ -9,7 +9,8 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("res/subtlehex.jpg")
+  background-image: url("res/legalhexagons2.png")
+  /*img: http://www.commentnation.com/background.php?MyFile=aqua_and_white_hexagon_tile_seamless_background_pattern.php*/
 }
 
 .hero-image {

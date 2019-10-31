@@ -10,8 +10,10 @@ let defaultColors : string[] = [
   "#9D3634","#956332","#8C8E2F","#2F8E2F",
   "#2E828A","#2E548A","#3A2E8A","#6A2E8A"
 ]
+let defaultFill : string = "rgba(64, 128, 255, 0.5)";
 
 import { Entity } from "./nlp";
+import { Data } from "electron";
 
 export class ChartGen {
   public genScatterChart(
@@ -89,11 +91,18 @@ export class ChartGen {
       type: "line",
       data: {
         labels: labels,
-        datasets: [{ label: "Tweet Hours (UTC)", data: data, backgroundColor:defaultColors}]
+        datasets: [
+          { label: "Tweet Hours (UTC)", data: data, 
+          backgroundColor:defaultFill,
+          pointBackgroundColor:defaultColors,
+          fill: "start",
+          pointRadius: 5}
+        ]
       }
     });
 
     return chart;
+
   }
   public genDayLineGraph(
     summaryData: SummaryData,
@@ -125,9 +134,10 @@ export class ChartGen {
       data: {
         labels: labels,
         datasets: [{ label: "Tweet Days (UTC)", data: data, 
-        backgroundColor:defaultColors,
+        backgroundColor: defaultFill,
+        pointBackgroundColor:defaultColors,
         fill: "start",
-        pointRadius: 5,
+        pointRadius: 5
         }]
       }
     });
@@ -152,6 +162,7 @@ export class ChartGen {
         values[index]++;
       }
     }
+
     let chart = new ChartJS(ctx, {
       type: "pie",
       data: {
@@ -161,31 +172,42 @@ export class ChartGen {
     });
   }
 
-  public genEntityChart(
+  public genEntityBubbleChart(
     summaryData: SummaryData,
     ctx: CanvasRenderingContext2D
   ) {
     let plotData: { x: number; y: number; r: number }[] = [];
 
     let keys: string[] = [];
-    let values: { entity: Entity; count: number; totalSalience: number }[] = [];
+    let values: { entity: Entity; count: number; totalSalience: number, entityType: string}[] = [];
+    let entityTypeNames: string[] = [];
+
     for (let i = 0; i < summaryData.entityResult.entities.length; i++) {
       let entity = summaryData.entityResult.entities[i];
       if (entity.type == "OTHER") {
         continue;
       }
+
+      //Count entity
       let index = keys.indexOf(entity.name);
       if (index == -1) {
         keys.push(entity.name);
         values.push({
           entity: entity,
           count: entity.mentions.length,
-          totalSalience: entity.salience
+          totalSalience: entity.salience,
+          entityType: entity.type
         });
       } else {
         values[index].count += entity.mentions.length;
         values[index].totalSalience += entity.salience;
       }
+
+      //Register entity type
+      index = entityTypeNames.indexOf(entity.type);
+      if (index == -1) {
+        entityTypeNames.push(entity.type);
+      } 
     }
     let totalMentions = 0;
     for (let i = 0; i < values.length; i++) {
@@ -202,8 +224,16 @@ export class ChartGen {
           ctx.canvas.width *
           2
       };
+
       plotData.push(data);
     }
+
+    let keyColors: string[] = []
+    values.forEach(val => {
+      let colorIndex = entityTypeNames.indexOf(val.entityType);
+      keyColors.push(defaultColors[colorIndex]);
+    });
+
 
     let chart = new ChartJS(ctx, {
       type: "bubble",
@@ -212,7 +242,8 @@ export class ChartGen {
           {
             label: "Likeable entities",
             data: plotData,
-            backgroundColor: "#00acee"
+            pointBackgroundColor: keyColors,
+            backgroundColor: keyColors
           }
         ]
       },

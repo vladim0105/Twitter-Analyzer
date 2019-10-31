@@ -130,7 +130,7 @@ export class SummaryPanel extends Panel {
     pieContainer.append(pieCanvas);
 
     let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let bubbleChart = new ChartGen().genEntityChart(
+    let bubbleChart = new ChartGen().genEntityBubbleChart(
       this.data,
       bubbleCanvas.getContext("2d")
     );
