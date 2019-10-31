@@ -29,6 +29,11 @@ export class Logic {
         this.onSearch();
       }
     });
+    $("#compare_username").keypress(event => {
+      if (event.key == "Enter") {
+        this.onCompare();
+      }
+    });
     $("#aboutUs").on("click", () => {
       this.showAboutUs(true);
     });
@@ -59,7 +64,7 @@ export class Logic {
       this.showAboutUs(false);
       this.showOverlay(false);
     }
-    document.getElementById("username").focus(); 
+    document.getElementById("username").focus();
   }
 
   private showAboutUs(show: boolean) {
@@ -124,7 +129,7 @@ export class Logic {
       this.fetchSummaryData(handle, (data: SummaryData) => {
         summaryDataArr.push(data);
         if (summaryDataArr.length == handles.length) {
-          this.displayPanels(summaryDataArr);
+          this.displayPanels(...summaryDataArr);
         }
       });
     });
@@ -149,7 +154,7 @@ export class Logic {
   private displayPanels(...data: SummaryData[]) {
     let panel = new SummaryPanel(data);
     panel.appendTo($("#resultContainer"));
-    this.createTweetPanels(data.tweets, 5);
+    this.createTweetPanels(data[0].tweets, 5);
     $("#resultContainer").fadeIn("slow");
     $(".loader").animate({ opacity: 0 }, "slow");
     $("#compare_input_field").css({ opacity: 1, "pointer-events": "all" });

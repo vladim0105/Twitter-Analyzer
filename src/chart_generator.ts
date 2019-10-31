@@ -4,24 +4,34 @@ import * as ChartJS from "chart.js";
 import { start } from "repl";
 import { TweetPanel } from "./panels/tweet_panel";
 
-let defaultColors : string[] = [
-  "#E27E7D","#D79F7D","#DDD798","#A7DD98",
-  "#98DADD","#90B3DA","#9093DA","#C18CD9",
-  "#9D3634","#956332","#8C8E2F","#2F8E2F",
-  "#2E828A","#2E548A","#3A2E8A","#6A2E8A"
-]
-let defaultFill : string = "rgba(64, 128, 255, 0.5)";
+let defaultColors: string[] = [
+  "#E27E7D",
+  "#D79F7D",
+  "#DDD798",
+  "#A7DD98",
+  "#98DADD",
+  "#90B3DA",
+  "#9093DA",
+  "#C18CD9",
+  "#9D3634",
+  "#956332",
+  "#8C8E2F",
+  "#2F8E2F",
+  "#2E828A",
+  "#2E548A",
+  "#3A2E8A",
+  "#6A2E8A"
+];
+let defaultFill: string = "rgba(64, 128, 255, 0.5)";
 
 import { Entity } from "./nlp";
-import { Data } from "electron";
 
 export class ChartGen {
   public genScatter(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-
-    let userdatas: {label: string, data: any[]}[] = []
+    let userdatas: { label: string; data: any[] }[] = [];
     summaryData.forEach(sumdat => {
       let plotData = [];
       for (let i = 0; i < sumdat.tweets.length; i++) {
@@ -31,13 +41,12 @@ export class ChartGen {
           y: tweetData.sentimentData.documentSentiment.magnitude
         });
       }
-      userdatas.push({label: sumdat.user.screen_name, data:plotData})
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
     });
-
 
     let chart = new ChartJS(ctx, {
       type: "scatter",
-      data: { datasets: userdatas},
+      data: { datasets: userdatas },
       options: {
         maintainAspectRatio: false,
         scales: {
@@ -50,18 +59,19 @@ export class ChartGen {
           ],
           yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }]
         },
-        
+
         tooltips: {
           callbacks: {
             label: function(
               tootipItem: ChartJS.ChartTooltipItem,
               data: ChartJS.ChartData
             ) {
-              return summaryData[tootipItem.datasetIndex].tweets[tootipItem.index].tweetData.text;
+              return summaryData[tootipItem.datasetIndex].tweets[
+                tootipItem.index
+              ].tweetData.text;
             }
           }
         }
-        
       }
     });
     return chart;
@@ -71,7 +81,6 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-
     const labels = [
       "00:00-02:00",
       "02:00-04:00",
@@ -87,26 +96,25 @@ export class ChartGen {
       "22:00-24:00"
     ];
 
-
-    let userdatas: {label: string, data: any[]}[] = []
+    let userdatas: { label: string; data: any[] }[] = [];
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
       for (let val in labels) {
         plotData.push(0);
       }
-  
+
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tweetTime = sumdat.tweets[i].tweetData.created_at;
         let hour = new Date(tweetTime).getUTCHours();
         let index = hour % labels.length;
         plotData[index]++;
       }
-      userdatas.push({label: sumdat.user.screen_name, data:plotData});
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
     });
 
     let chart = new ChartJS(ctx, {
       type: "line",
-      data: { datasets: userdatas}
+      data: { datasets: userdatas },
       /*
       data: {
         labels: labels,
@@ -119,16 +127,15 @@ export class ChartGen {
         ]
       }
       */
-     ,options : {
-      scales: {
-        xAxes: [{scaleLabel: { display: true, labelString: "Time" }}],
-        yAxes: [{scaleLabel: { display: true, labelString: "Tweets" }}]
+      options: {
+        scales: {
+          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets" } }]
+        }
       }
-     }
     });
 
     return chart;
-
   }
   public genDayLine(
     ctx: CanvasRenderingContext2D,
@@ -144,26 +151,25 @@ export class ChartGen {
       "Sunday"
     ];
 
-    let userdatas: {label: string, data: any[]}[] = []
+    let userdatas: { label: string; data: any[] }[] = [];
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
       for (let val in labels) {
         plotData.push(0);
       }
-  
+
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tweetTime = sumdat.tweets[i].tweetData.created_at;
         let day = new Date(tweetTime).getUTCDay();
         let index = day % labels.length;
         plotData[index]++;
       }
-      userdatas.push({label: sumdat.user.screen_name, data:plotData});
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
     });
-
 
     let chart = new ChartJS(ctx, {
       type: "line",
-      data: { datasets: userdatas}
+      data: { datasets: userdatas },
       /*
       data: {
         labels: labels,
@@ -173,15 +179,12 @@ export class ChartGen {
         fill: "start",
         pointRadius: 5
         }]
-      */,
-      options: {
+      */ options: {
         scales: {
-          xAxes: [{scaleLabel: { display: true, labelString: "Time" }}],
-          yAxes: [{scaleLabel: { display: true, labelString: "Positivity" }}]
+          xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Positivity" } }]
         }
       }
-
-      
     });
 
     return chart;
@@ -191,8 +194,7 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-
-    let userdatas: {label: string, data: any[]}[] = []
+    let userdatas: { label: string; data: any[] }[] = [];
     summaryData.forEach(sumdat => {
       let plotData: number[] = new Array();
       let entities = sumdat.entityResult.entities;
@@ -210,12 +212,12 @@ export class ChartGen {
         }
       }
 
-      userdatas.push({label: sumdat.user.screen_name, data:plotData});
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
     });
 
     let chart = new ChartJS(ctx, {
       type: "pie",
-      data: { datasets: userdatas}
+      data: { datasets: userdatas }
       /*
       data: {
         labels: keys,
@@ -229,13 +231,17 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-
-    let userdatas: {label: string, data: any[]}[] = []
+    let userdatas: { label: string; data: any[] }[] = [];
     summaryData.forEach(sumdat => {
       let plotData: { x: number; y: number; r: number }[] = [];
 
       let keys: string[] = [];
-      let values: { entity: Entity; count: number; totalSalience: number, entityType: string}[] = [];
+      let values: {
+        entity: Entity;
+        count: number;
+        totalSalience: number;
+        entityType: string;
+      }[] = [];
       let entityTypeNames: string[] = [];
 
       for (let i = 0; i < sumdat.entityResult.entities.length; i++) {
@@ -243,7 +249,7 @@ export class ChartGen {
         if (entity.type == "OTHER") {
           continue;
         }
-  
+
         //Count entity
         let index = keys.indexOf(entity.name);
         if (index == -1) {
@@ -258,12 +264,12 @@ export class ChartGen {
           values[index].count += entity.mentions.length;
           values[index].totalSalience += entity.salience;
         }
-  
+
         //Register entity type
         index = entityTypeNames.indexOf(entity.type);
         if (index == -1) {
           entityTypeNames.push(entity.type);
-        } 
+        }
       }
       let totalMentions = 0;
       for (let i = 0; i < values.length; i++) {
@@ -280,24 +286,23 @@ export class ChartGen {
             ctx.canvas.width *
             2
         };
-  
+
         plotData.push(data);
       }
-  
+
       //TODO: Use KeyColors if single users, otherwise color each user different
-      let keyColors: string[] = []
+      let keyColors: string[] = [];
       values.forEach(val => {
         let colorIndex = entityTypeNames.indexOf(val.entityType);
         keyColors.push(defaultColors[colorIndex]);
       });
 
-      userdatas.push({label: sumdat.user.screen_name, data:plotData});
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData });
     });
-
 
     let chart = new ChartJS(ctx, {
       type: "bubble",
-      data: { datasets: userdatas},
+      data: { datasets: userdatas },
       /*
       data: {
         datasets: [
@@ -321,7 +326,7 @@ export class ChartGen {
             }
           ],
           yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }]
-        },
+        }
         /*
         tooltips: {
           callbacks: {
@@ -437,4 +442,3 @@ export class ChartGen {
   }
   */
 }
-
