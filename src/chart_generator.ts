@@ -610,6 +610,7 @@ export class ChartGen {
     return chart;
   }
 
+  //TODO: Fix running outa colors etc
   public genHashtags(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -617,7 +618,7 @@ export class ChartGen {
     let userdatas: { label: string; data: any[], 
       pointBackgroundColor: string[],
       backgroundColor: string[]}[] = [];
-    let typeLabels: string[] = [];
+    let tags: string[] = [];
 
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat = summaryData[sd];
@@ -632,7 +633,6 @@ export class ChartGen {
       let mention_count = 0;
 
       let hashtags_all : string[] = [];
-
       
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tw = sumdat.tweets[i].tweetData;
@@ -660,8 +660,8 @@ export class ChartGen {
           let tag = ht.name;
           hashtags_all.push(tag)
           let index = keys.indexOf(tag);
-          if (typeLabels.indexOf(tag) == -1) {
-            typeLabels.push(tag);
+          if (tags.indexOf(tag) == -1) {
+            tags.push(tag);
           }
           if (index == -1) {
             keys.push(tag);
@@ -714,7 +714,6 @@ export class ChartGen {
       +url_count+ " urls\n-",
       +mention_count + " mentions."
       );
-
       console.log("Hashtags:"+hashtags_all);
 
       userdatas.push({ label: sumdat.user.screen_name, data: values, 
@@ -722,11 +721,21 @@ export class ChartGen {
         backgroundColor: userColors });
     };
 
+    //TODO: Get this sort working
+    //https://www.npmjs.com/package/chartjs-plugin-sort
     let chart = new ChartJS(ctx, {
       type: "pie",
-      data: { labels: typeLabels, datasets: userdatas },
+      data: { labels: tags, datasets: userdatas },
       options: {
-        title: { display: true, text: "Hashtag usage" }
+        title: { display: true, text: "Hashtag usage" },
+        plugins: {
+          sort:
+              {
+                  enable: true,
+                  sortBy: 'label',
+                  order: 'desc',
+              }
+        }
       }
     });
   }  
