@@ -68,8 +68,7 @@ export class SummaryPanel extends Panel {
 
       let img = $("<img>")
         .attr("src", value.user.profile_image_url_https)
-        .css(this.profilePictureStyle)
-        .css("zoom", "50%");
+        .css(this.profilePictureStyle);
       let name = $("<p>")
         .text(value.user.name)
         .css(this.nameStyle)
@@ -217,6 +216,3 @@ const doubleChartChild = {
   "margin-left": "5%",
   "margin-right": "2.5%"
 };
-
-
-

@@ -158,27 +158,34 @@ export class Logic {
     );
     this.onSearch();
   }
-  private createTweetPanels(
-    dataArr: { tweetData: TweetData; sentimentData: NLPSentimentData }[],
-    numTweets: number
-  ) {
-    let actualNumTweets = Math.min(dataArr.length, numTweets);
+  private createTweetPanels(dataArr: SummaryData[], numTweets: number) {
+    let tweetSummaries: TweetSummaryData[] = [];
+    dataArr.forEach(value => {
+      let actualNumTweets = Math.min(value.tweets.length, numTweets);
+      for (let i = 0; i < actualNumTweets; i++) {
+        let tweetData: TweetSummaryData = {
+          tweetData: value.tweets[i].tweetData,
+          sentimentData: value.tweets[i].sentimentData,
+          entityData: null
+        };
 
-    for (let i = 0; i < actualNumTweets; i++) {
-      let data = dataArr[i];
-      let tweetData: TweetSummaryData = {
-        tweetData: data.tweetData,
-        sentimentData: data.sentimentData,
-        entityData: null
-      };
-      let panel = new TweetPanel(tweetData);
+        tweetSummaries.push(tweetData);
+      }
+    });
+    tweetSummaries.sort((a, b) => {
+      let aDate = new Date(a.tweetData.created_at);
+      let bDate = new Date(b.tweetData.created_at);
+      return bDate.getTime() - aDate.getTime();
+    });
+    tweetSummaries.forEach(value => {
+      let panel = new TweetPanel(value);
       panel.appendTo($("#resultContainer"));
-    }
+    });
   }
   private displayPanels(...data: SummaryData[]) {
     let panel = new SummaryPanel(data);
     panel.appendTo($("#resultContainer"));
-    this.createTweetPanels(data[0].tweets, 5);
+    this.createTweetPanels(data, 5);
     $("#resultContainer").fadeIn("slow");
     $(".loader").animate({ opacity: 0 }, "slow");
     $("#compare_input_field").css({ opacity: 1, "pointer-events": "all" });
