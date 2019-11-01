@@ -25,7 +25,7 @@ export class SummaryPanel extends Panel {
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createEntityCharts());
     this.getMain().append(this.createScatterChart());
-    this.getMain().append(this.createTweetDevCharts());
+    //this.getMain().append(this.createTweetDevCharts());
     this.getMain().append(this.genHashtagChart());
     this.getMain()
       .css("border", "2px solid gray")

@@ -37,7 +37,7 @@ let defaultFill: string = "rgba(64, 128, 255, 0.25)";
 let userColors: string[] = [
   "rgba(0,0,200,0.4)",
   "rgba(200,0,0,0.4)",
-  "rgba(0,0,200,0.4)",
+  "rgba(0,200,0,0.4)",
   "rgba(200,200,0,0.4)",
   "rgba(0,200,200,0.4)",
   "rgba(200,0,200,0.4)",
@@ -276,7 +276,7 @@ export class ChartGen {
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat : SummaryData = summaryData[sd];
 
-      let plotData: number[] = new Array();
+      //let plotData: number[] = new Array();
       let entities = sumdat.entityResult.entities;
       let keys: string[] = [];
       let values: number[] = [];
@@ -621,7 +621,8 @@ export class ChartGen {
 
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat = summaryData[sd];
-      let plotData: number[] = new Array();
+      //let plotData: number[] = new Array();
+
       let keys: string[] = [];
       let values: number[] = [];
 
@@ -631,6 +632,7 @@ export class ChartGen {
       let mention_count = 0;
 
       let hashtags_all : string[] = [];
+
       
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tw = sumdat.tweets[i].tweetData;
@@ -651,10 +653,40 @@ export class ChartGen {
           console.log("\n\nHOLY SHIT THIS TWEET HAS MEDIA IN IT!! (ent)\n\n");
         }
 
+        //Count mentions
+        //let sortedTags = ent.user_mentions.sort(); 
 
-        ent.hashtags.forEach(ht => {
-          hashtags_all.push(ht.text)
+        ent.user_mentions.forEach(ht => {
+          let tag = ht.name;
+          hashtags_all.push(tag)
+          let index = keys.indexOf(tag);
+          if (typeLabels.indexOf(tag) == -1) {
+            typeLabels.push(tag);
+          }
+          if (index == -1) {
+            keys.push(tag);
+            values.push(1);
+          } else {
+            values[index]++;
+          }
         });
+
+        /*
+        ent.hashtags.forEach(ht => {
+          let tag = "#"+ht.text.toLowerCase();
+          hashtags_all.push(tag)
+          let index = keys.indexOf(tag);
+          if (typeLabels.indexOf(tag) == -1) {
+            typeLabels.push(tag);
+          }
+          if (index == -1) {
+            keys.push(tag);
+            values.push(1);
+          } else {
+            values[index]++;
+          }
+        });
+        */
 
         hashtag_count += ent.hashtags.length;
         symbol_count += ent.symbols.length;
@@ -686,23 +718,16 @@ export class ChartGen {
       console.log("Hashtags:"+hashtags_all);
 
       userdatas.push({ label: sumdat.user.screen_name, data: values, 
-        pointBackgroundColor: pointColors,
-        backgroundColor: fillColors });
+        pointBackgroundColor: userColors,
+        backgroundColor: userColors });
     };
 
     let chart = new ChartJS(ctx, {
       type: "pie",
       data: { labels: typeLabels, datasets: userdatas },
       options: {
-        title: { display: true, text: "Text entity composition" }
+        title: { display: true, text: "Hashtag usage" }
       }
-
-      /*
-      data: {
-        labels: keys,
-        datasets: [{ label: "Entity Types", data: values, backgroundColor:pointColors}]
-      }
-      */
     });
   }  
 
