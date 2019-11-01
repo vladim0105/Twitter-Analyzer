@@ -175,7 +175,7 @@ img {
   justify-items: center;
 }
 .handle_input {
-  width: 200px;
+  min-width: 40%;
   border: none;
   background-color: #f8f8f8;
   padding: 10px 5px;
