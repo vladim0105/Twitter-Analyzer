@@ -10,28 +10,6 @@ const natlog10 = Math.log(10);
 function log10(n: number){
   return (Math.log(n) / natlog10);
 }
-
-
-/*
-let pointColors: string[] = [
-  "#E27E7D",
-  "#D79F7D",
-  "#DDD798",
-  "#A7DD98",
-  "#98DADD",
-  "#90B3DA",
-  "#9093DA",
-  "#C18CD9",
-  "#9D3634",
-  "#956332",
-  "#8C8E2F",
-  "#2F8E2F",
-  "#2E828A",
-  "#2E548A",
-  "#3A2E8A",
-  "#6A2E8A"
-];*/
-
 let pointColors: string[]= [
   "rgba(215,159,125, 0.8)",
   "rgba(221,215,152, 0.8)",
@@ -56,17 +34,36 @@ pointColors.forEach(color => { //Set 80% --> 40% opacity
 });
 
 let defaultFill: string = "rgba(64, 128, 255, 0.25)";
+let userColors: string[] = [
+  "rgba(0,0,200,0.4)",
+  "rgba(200,0,0,0.4)",
+  "rgba(0,0,200,0.4)",
+  "rgba(200,200,0,0.4)",
+  "rgba(0,200,200,0.4)",
+  "rgba(200,0,200,0.4)",
+  "rgba(0,0,100,0.4)",
+  "rgba(100,0,0,0.4)",
+  "rgba(0,0,100,0.4)",
+  "rgba(100,100,0,0.4)",
+  "rgba(0,100,100,0.4)",
+  "rgba(100,0,100,0.4)",
+]  
 
 import { Entity } from "./nlp";
+import { HashtagObject } from "./twitter";
 
 export class ChartGen {
+  
   public genScatter(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
     let userdatas: { label: string; data: any[], 
-      backgroundColor: string[] }[] = [];
-    summaryData.forEach(sumdat => {
+      backgroundColor: string}[] = [];
+
+    
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
       let plotData = [];
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tweetData = sumdat.tweets[i];
@@ -77,8 +74,8 @@ export class ChartGen {
         });
       }
       userdatas.push({ label: sumdat.user.screen_name, 
-        data: plotData, backgroundColor:pointColors});
-    });
+        data: plotData, backgroundColor:userColors[sd]});
+    };
 
     let chart = new ChartJS(ctx, {
       type: "bubble",
@@ -155,9 +152,12 @@ export class ChartGen {
     gradientFill.addColorStop(1, "rgba(50, 100, 150, 0.5)");
 
     let userdatas: { label: string; data: any[], 
-      pointBackgroundColor: string[],
+      pointBackgroundColor: string,
+      borderColor: string,
       backgroundColor: any}[] = []; //string-->any
-    summaryData.forEach(sumdat => {
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
       let plotData: number[] = new Array();
       for (let val in labels) {
         plotData.push(0);
@@ -170,9 +170,10 @@ export class ChartGen {
         plotData[index]++;
       }
       userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
-        pointBackgroundColor: daylight,
+        pointBackgroundColor: userColors[sd],
+        borderColor: userColors[sd],
         backgroundColor:gradientFill});
-    });
+    };
 
     let chart = new ChartJS(ctx, {
       type: "line",
@@ -215,9 +216,12 @@ export class ChartGen {
     ];
 
     let userdatas: { label: string; data: any[], 
-      pointBackgroundColor: string[],
+      pointBackgroundColor: string,
+      borderColor: string,
       backgroundColor: string}[] = [];
-    summaryData.forEach(sumdat => {
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
       let plotData: number[] = new Array();
       for (let val in labels) {
         plotData.push(0);
@@ -230,12 +234,14 @@ export class ChartGen {
         plotData[index]++;
       }
       userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
-        pointBackgroundColor:pointColors, backgroundColor: defaultFill });
-    });
+        pointBackgroundColor: userColors[sd], 
+        borderColor: userColors[sd], 
+        backgroundColor: defaultFill });
+    };
 
     let chart = new ChartJS(ctx, {
       type: "line",
-      data: { labels: labels, datasets: userdatas },
+      data: { labels: labels, datasets: userdatas, },
       options: {
         title: { display: true, text: "Tweets by weekday" },
         scales: {
@@ -266,7 +272,10 @@ export class ChartGen {
       pointBackgroundColor: string[],
       backgroundColor: string[]}[] = [];
     let typeLabels: string[] = [];
-    summaryData.forEach(sumdat => {
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
+
       let plotData: number[] = new Array();
       let entities = sumdat.entityResult.entities;
       let keys: string[] = [];
@@ -289,7 +298,7 @@ export class ChartGen {
       userdatas.push({ label: sumdat.user.screen_name, data: values, 
         pointBackgroundColor: pointColors,
         backgroundColor: fillColors });
-    });
+    };
 
     let chart = new ChartJS(ctx, {
       type: "pie",
@@ -312,9 +321,11 @@ export class ChartGen {
     ...summaryData: SummaryData[]
   ) {
     let userdatas: { label: string; data: any[], 
-      pointBackgroundColor: string[],
-      backgroundColor: string[]}[] = [];
-    summaryData.forEach(sumdat => {
+      pointBackgroundColor: string,
+      backgroundColor: string}[] = [];
+      
+    for (let sd = 0; sd < summaryData.length; sd++){
+      let sumdat: SummaryData = summaryData[sd];
       let plotData: { x: number; y: number; r: number }[] = [];
 
       let keys: string[] = [];
@@ -352,53 +363,42 @@ export class ChartGen {
         if (index == -1) {
           entityTypeNames.push(entity.type);
         }
-      }
-      let totalMentions = 0;
-      for (let i = 0; i < values.length; i++) {
-        totalMentions += values[i].count;
-      }
-      for (let i = 0; i < keys.length; i++) {
-        let value = values[i];
-        let avgSalience = value.totalSalience / value.count;
-        let data = {
-          x: value.entity.sentiment.score,
-          y: value.entity.sentiment.magnitude,
-          r:
-            (0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
-            ctx.canvas.width *
-            2
-        };
+        }
+        let totalMentions = 0;
+        for (let i = 0; i < values.length; i++) {
+          totalMentions += values[i].count;
+        }
+        for (let i = 0; i < keys.length; i++) {
+          let value = values[i];
+          let avgSalience = value.totalSalience / value.count;
+          let data = {
+            x: value.entity.sentiment.score,
+            y: value.entity.sentiment.magnitude,
+            r:
+              (0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
+              ctx.canvas.width *
+              2
+          };
 
-        plotData.push(data);
-      }
+          plotData.push(data);
+        }
 
-      //TODO: Use KeyColors if single users, otherwise color each user different
-      let keyColors: string[] = [];
-      values.forEach(val => {
-        let colorIndex = entityTypeNames.indexOf(val.entityType);
-        keyColors.push(pointColors[colorIndex]);
-      });
+        //TODO: Use KeyColors if single users, otherwise color each user different
+        /*
+        let keyColors: string[] = [];
+        values.forEach(val => {
+          let colorIndex = entityTypeNames.indexOf(val.entityType);
+          keyColors.push(pointColors[colorIndex]);
+        });*/
 
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData,
-        pointBackgroundColor: pointColors,
-        backgroundColor: fillColors });
-    });
+        userdatas.push({ label: sumdat.user.screen_name, data: plotData,
+          pointBackgroundColor: userColors[sd],
+          backgroundColor: userColors[sd] });
+     };
 
     let chart = new ChartJS(ctx, {
       type: "bubble",
       data: { datasets: userdatas },
-      /*
-      data: {
-        datasets: [
-          {
-            label: "Likeable entities",
-            data: plotData,
-            pointBackgroundColor: keyColors,
-            backgroundColor: keyColors
-          }
-        ]
-      },
-      */
       options: {
         maintainAspectRatio: false,
         title: { display: true, text: "Sentiment of text entities" },
@@ -411,28 +411,19 @@ export class ChartGen {
             }
           ],
           yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }]
-        }
-        /*
+        },
         tooltips: {
           callbacks: {
             label: function(
               tootipItem: ChartJS.ChartTooltipItem,
               data: ChartJS.ChartData
             ) {
-              //summaryData[tootipItem.datasetIndex].tweets[tootipItem.index].tweetData.text;
-              let value = values[tootipItem.index];
-              return (
-                keys[tootipItem.index] +
-                "{" +
-                value.count +
-                "," +
-                value.totalSalience / value.count +
-                "}"
-              );
+              return summaryData[tootipItem.datasetIndex].tweets[
+                tootipItem.index
+              ].tweetData.text;
             }
           }
-        }
-        */
+        }        
       }
     });
     return chart;
@@ -526,4 +517,193 @@ export class ChartGen {
     return chart;
   }
   */
+
+ public genRetweetLine1(
+  ctx: CanvasRenderingContext2D,
+  ...summaryData: SummaryData[]
+  ) {
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string,
+      borderColor: string,
+      backgroundColor: any}[] = []; //string-->any
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
+      let plotData: { x: number; y: number;}[] = [];
+
+      for (let i = 0; i < sumdat.tweets.length; i++) {
+        console.log("Adding tweet #"+i+": "+sumdat.tweets[i].tweetData.text);
+        let tw = sumdat.tweets[i];
+        let date = new Date(tw.tweetData.created_at).getUTCDate;
+        plotData.push({
+          x: i,
+          y: tw.tweetData.retweet_count
+        });
+      }
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
+        pointBackgroundColor: userColors[sd],
+        borderColor: userColors[sd],
+        backgroundColor:userColors[sd]});
+    };
+
+    userdatas.forEach(ud => {
+      console.log(ud.data.length+ " data entries");
+    });
+
+    let chart = new ChartJS(ctx, {
+      type: "line",
+      data: { datasets: userdatas },
+      options: {
+        title: { display: true, text: "Retweets popularity" },
+        scales: {
+          xAxes: [{ scaleLabel: { display: true, labelString: "Post" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Retweets" } }]
+        }
+      }
+    });
+
+    return chart;
+  }
+
+  //==== REEEEEEE ====
+  public genRetweetLine (
+    ctx: CanvasRenderingContext2D,
+    ...summaryData: SummaryData[]
+  ) {
+    //let labels : string[] = ["foo", "bar", "yee"];
+
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string,
+      borderColor: string,
+      backgroundColor: string}[] = [];
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
+      let plotData = [];
+
+      for (let i = 0; i < sumdat.tweets.length; i++) {
+        let tw = sumdat.tweets[i];
+        plotData.push(tw.tweetData.retweet_count);
+      }
+
+      console.log("Pushing plotdata: "+plotData);
+      console.log(plotData);
+      userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
+        pointBackgroundColor: userColors[sd], 
+        borderColor: userColors[sd], 
+        backgroundColor: defaultFill });
+        
+    };
+
+    let chart = new ChartJS(ctx, {
+      type: "line",
+      data: { datasets: userdatas },
+      options: {
+        title: { display: true, text: "debug debug debug" },
+        scales: {
+          xAxes: [{ scaleLabel: { display: true, labelString: "foofoo" } }],
+          yAxes: [{ scaleLabel: { display: true, labelString: "barbar" } }]
+        }
+      }
+    });
+
+    return chart;
+  }
+
+  public genHashtags(
+    ctx: CanvasRenderingContext2D,
+    ...summaryData: SummaryData[]
+  ) {
+    let userdatas: { label: string; data: any[], 
+      pointBackgroundColor: string[],
+      backgroundColor: string[]}[] = [];
+    let typeLabels: string[] = [];
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat = summaryData[sd];
+      let plotData: number[] = new Array();
+      let keys: string[] = [];
+      let values: number[] = [];
+
+      let hashtag_count = 0;
+      let symbol_count = 0;
+      let url_count = 0;
+      let mention_count = 0;
+
+      let hashtags_all : string[] = [];
+      
+      for (let i = 0; i < sumdat.tweets.length; i++) {
+        let tw = sumdat.tweets[i].tweetData;
+        let ent = tw.entities;
+        console.log("Tweet text:"+ tw.text);
+        console.log("This tweet has \n-"
+          +ent.hashtags.length+ " hashtags \n-",
+          +"ent.media.length+ " +"media\n-",
+          +ent.symbols.length+ " symbols\n-"
+          +ent.urls.length+ " urls\n-",
+          +ent.user_mentions.length + " mentions."
+          );
+
+        if (tw.hasOwnProperty("extended_entities")){
+          console.log("\n\nHOLY SHIT THIS TWEET HAS MEDIA IN IT!! (tw)\n\n");
+        }
+        if (ent.hasOwnProperty("media")){
+          console.log("\n\nHOLY SHIT THIS TWEET HAS MEDIA IN IT!! (ent)\n\n");
+        }
+
+
+        ent.hashtags.forEach(ht => {
+          hashtags_all.push(ht.text)
+        });
+
+        hashtag_count += ent.hashtags.length;
+        symbol_count += ent.symbols.length;
+        url_count += ent.urls.length;
+        mention_count += ent.user_mentions.length;
+
+        /*
+        let index = keys.indexOf(tw.type);
+        if (typeLabels.indexOf(entity.type) == -1) {
+          typeLabels.push(entity.type);
+        }
+        if (index == -1) {
+          keys.push(entity.type);
+          values.push(1);
+        } else {
+          values[index]++;
+        }
+        */
+      }
+
+      console.log("=== TOTAL TWEET ENTITIES OF "+sumdat.user.screen_name+" ===");
+      console.log("This user has in total \n-"
+      +hashtag_count+" hashtags \n-",
+      +symbol_count+ " symbols\n-"
+      +url_count+ " urls\n-",
+      +mention_count + " mentions."
+      );
+
+      console.log("Hashtags:"+hashtags_all);
+
+      userdatas.push({ label: sumdat.user.screen_name, data: values, 
+        pointBackgroundColor: pointColors,
+        backgroundColor: fillColors });
+    };
+
+    let chart = new ChartJS(ctx, {
+      type: "pie",
+      data: { labels: typeLabels, datasets: userdatas },
+      options: {
+        title: { display: true, text: "Text entity composition" }
+      }
+
+      /*
+      data: {
+        labels: keys,
+        datasets: [{ label: "Entity Types", data: values, backgroundColor:pointColors}]
+      }
+      */
+    });
+  }  
+
 }

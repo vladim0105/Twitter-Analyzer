@@ -13,7 +13,7 @@ export type TwitterUser = {
   profile_image_url_https: string; //url to profiile pic
 
   // === Stats
-  verified: Boolean; // Verified public figure
+  verified: boolean; // Verified public figure
   created_at: string; //Account creation date
   followers_count: number; // following this user
   friends_count: number; // friends of user
@@ -23,13 +23,26 @@ export type TwitterUser = {
   //TODO: Number or number here?
 };
 
+export type HashtagObject = {
+  text: string;
+}
+export type URLObject = {
+  display_url: string; //url as displayed
+  expanded_url: string; //expanded into browser
+}
+export type MentionObject = {
+  id: number; //id of mentioned user
+  name: string; //Display name of mentioned
+  screen_name: string; //Unique handle of mentioned
+}
+
 //TODO: Fix experimental export:
 export type TweetEntities = {
-  hashtags: any[];
-  media: any[];
-  symbols: any[];
-  urls: any[];
-  user_mentions: any[];
+  hashtags: HashtagObject[]; // #hashtag
+  media: any[]; // Note: Nonexistent if no embedded media
+  urls: URLObject[];
+  user_mentions: MentionObject[]; 
+  symbols: any[]; // ???
 }
 
 export type TweetData = {
@@ -39,7 +52,7 @@ export type TweetData = {
   created_at: string;
   retweet_count: number; 
   coordinates: Coordinates; //?null
-  entities: TweetEntities[];
+  entities: TweetEntities;
 };
 
 export type TwitterAccessToken = {

@@ -25,6 +25,8 @@ export class SummaryPanel extends Panel {
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createEntityCharts());
     this.getMain().append(this.createScatterChart());
+    this.getMain().append(this.createTweetDevCharts());
+    this.getMain().append(this.genHashtagChart());
     this.getMain()
       .css("border", "2px solid gray")
       .css("border-radius", "5px");
@@ -168,6 +170,38 @@ export class SummaryPanel extends Panel {
     scatterChartChild.append(scatterCanvas);
     scatterChartHolder.append(scatterChartChild);
     return scatterChartHolder;
+  }
+
+  private createTweetDevCharts(){
+    let retweetChartHolder = $("<div>").css(doubleChartParent);
+    let retweetChartChild = $("<div>")
+      .css(doubleChartChild)
+      .css({ height: "50vh", margin: "auto" });
+    let retweetCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let retweetChart = new ChartGen().genRetweetLine(
+      retweetCanvas.getContext("2d"),
+      ...this.data
+    );
+
+    retweetChartHolder.append(retweetCanvas);
+    retweetChartHolder.append(retweetChartChild);
+    return retweetChartHolder;
+  }
+
+  private genHashtagChart(){
+    let hashtagChartHolder = $("<div>").css(doubleChartParent);
+    let hashtagChartChild = $("<div>")
+      .css(doubleChartChild)
+      .css({ height: "50vh", margin: "auto" });
+    let hashtagCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let hashtagChart = new ChartGen().genHashtags(
+      hashtagCanvas.getContext("2d"),
+      ...this.data
+    );
+
+    hashtagChartHolder.append(hashtagCanvas);
+    hashtagChartHolder.append(hashtagChartChild);
+    return hashtagChartHolder;
   }
 }
 
