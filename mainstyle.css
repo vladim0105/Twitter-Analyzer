@@ -170,6 +170,7 @@ img {
 .handle_input_field {
   display: flex;
   width: 100%;
+  height: 30px;
   justify-content: center;
   justify-items: center;
 }
@@ -183,16 +184,27 @@ img {
   font-size: 15px;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
+.handle_submit {
+  cursor: pointer;
+  font-size: 20px;
+  transition: 0.5s;
+  border-radius: 10px;
+  /*text-align: center;*/
+  background-color: rgb(135, 212, 243);
+  color: rgb(255, 242, 242);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
 #compare_input_field {
   opacity: 0;
   pointer-events: none;
 }
 #entry {
-  cursor: pointer; 
+  cursor: pointer;
   /*Arrow appears misaligned. 
   Looks alright for me when I remove padding.*/
-  padding-top: 0;/*15px;*/
-  padding-left: 0;/*10px;*/
+  padding-top: 0; /*15px;*/
+  padding-left: 0; /*10px;*/
 }
 
 #returnToSearchPage {
@@ -214,18 +226,6 @@ img {
 #backtotop {
   opacity: 0;
   pointer-events: none;
-}
-.handle_submit {
-  cursor: pointer;
-  padding: 10px 10px;
-  font-size: 20px;
-  transition: 0.5s;
-  border-radius: 10px;
-  /*text-align: center;*/
-  background-color: rgb(135, 212, 243);
-  color: rgb(255, 242, 242);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 #submit:hover {

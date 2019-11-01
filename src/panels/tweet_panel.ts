@@ -16,10 +16,30 @@ export class TweetPanel extends Panel {
   }
 
   private init() {
-    console.log("🐦 Displaying tweet with "+this.data.tweetData.retweet_count+" retweets");
+    console.log(
+      "🐦 Displaying tweet with " +
+        this.data.tweetData.retweet_count +
+        " retweets"
+    );
     console.log("Entities:");
     console.log(this.data.tweetData.entities);
     console.log(this.data.tweetData);
+    let profileContainer = $("<div>").css("margin-left", "5%");
+    let profileImg = $("<img>")
+      .css(this.profilePictureStyle)
+      .attr("src", this.data.tweetData.user.profile_image_url_https);
+    let handle = $("<p>").text(this.data.tweetData.user.name);
+    let screenName = $("<p>").text(this.data.tweetData.user.screen_name);
+    profileContainer.append(profileImg, handle, screenName);
+
+    let tweetContainer = $("<div>").css({
+      display: "flex",
+      "flex-direction": "column",
+      "justify-content": "center",
+      "align-items": "center",
+      width: "100%"
+    });
+
     let textContainer = $("<div>");
     let analysisContainer = $("<div>");
     let text = $("<p>")
@@ -37,9 +57,12 @@ export class TweetPanel extends Panel {
     analysisContainer
       .append(sentimentText, magnitudeText)
       .css({ "text-align": "center" });
-    this.getMain().append(textContainer, analysisContainer);
+
+    tweetContainer.append(textContainer, analysisContainer);
+    this.getMain().append(profileContainer, tweetContainer);
     this.getMain()
       .css("border", "2px solid gray")
-      .css("border-radius", "5px");
+      .css("border-radius", "5px")
+      .css("flex-direction", "row");
   }
 }

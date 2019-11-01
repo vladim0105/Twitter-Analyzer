@@ -17,7 +17,8 @@ export class Panel {
   protected profilePictureStyle = {
     "border-radius": "50%",
     "margin-top": "2%",
-    "margin-bottom": "2%"
+    "margin-bottom": "2%",
+    zoom: "50%"
   };
   private mainStyle = {
     display: "flex",
