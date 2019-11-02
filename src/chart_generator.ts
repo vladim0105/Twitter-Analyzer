@@ -1,6 +1,7 @@
 import { SummaryData } from "./panels/summary_panel";
 
 import * as ChartJS from "chart.js";
+//import * as ExtractEmoji from "node_modules/extract-emoji";
 
 /*
 declare interface Math{
@@ -10,6 +11,40 @@ const natlog10 = Math.log(10);
 function log10(n: number){
   return (Math.log(n) / natlog10);
 }
+
+const natlog2 = Math.log(2);
+function log2(n: number){
+  return (Math.log(n) / natlog2);
+}
+
+function sigmoid(n: number){
+  return (1 / (1+Math.exp(-n)))
+}
+
+//https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript/43195379
+function randColor(n:number){ 
+  /*
+  return "hsl(" + 360 * Math.random() + ',' +
+             (25 + 70 * Math.random()) + '%,' + 
+             (50 + 45 * Math.random()) + '%)' */
+
+  return "hsl(" + (360 * 1.618*n)%360 + ',' +
+             (35 + 65 * Math.random()) + '%,' + 
+             (30 + 50 * Math.random()) + '%)'
+}
+function randColors(len: number){
+  let colors = [];
+  for (let i=0; i<len; i++){
+    colors.push(randColor(i));
+  }
+  return colors;
+}
+
+function emoji_test(){
+  let a_list = ['🤔 🙈 me así, bla es se 😌 ds 💕👭👙'];
+}
+
+
 let pointColors: string[]= [
   "rgba(215,159,125, 0.8)",
   "rgba(221,215,152, 0.8)",
@@ -35,18 +70,18 @@ pointColors.forEach(color => { //Set 80% --> 40% opacity
 
 let defaultFill: string = "rgba(64, 128, 255, 0.25)";
 let userColors: string[] = [
-  "rgba(0,0,200,0.4)",
-  "rgba(200,0,0,0.4)",
-  "rgba(0,200,0,0.4)",
-  "rgba(200,200,0,0.4)",
-  "rgba(0,200,200,0.4)",
-  "rgba(200,0,200,0.4)",
-  "rgba(0,0,100,0.4)",
-  "rgba(100,0,0,0.4)",
-  "rgba(0,0,100,0.4)",
-  "rgba(100,100,0,0.4)",
-  "rgba(0,100,100,0.4)",
-  "rgba(100,0,100,0.4)",
+  "rgba(0,0,250,0.4)",
+  "rgba(250,0,0,0.4)",
+  "rgba(0,250,0,0.4)",
+  "rgba(250,250,0,0.4)",
+  "rgba(0,250,250,0.4)",
+  "rgba(250,0,250,0.4)",
+  "rgba(0,0,150,0.4)",
+  "rgba(150,0,0,0.4)",
+  "rgba(0,150,0,0.4)",
+  "rgba(150,150,0,0.4)",
+  "rgba(0,150,150,0.4)",
+  "rgba(150,0,150,0.4)",
 ]  
 
 import { Entity } from "./nlp";
@@ -60,17 +95,24 @@ export class ChartGen {
   ) {
     let userdatas: { label: string; data: any[], 
       backgroundColor: string}[] = [];
-
     
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat : SummaryData = summaryData[sd];
       let plotData = [];
+
+      let avg_retweets = 0;
+      sumdat.tweets.forEach(tweet => {
+        avg_retweets += tweet.tweetData.retweet_count; 
+      });
+      avg_retweets /= sumdat.tweets.length;
+      //1+2*log2(tweetData.tweetData.retweet_count)
+
       for (let i = 0; i < sumdat.tweets.length; i++) {
-        let tweetData = sumdat.tweets[i];
+        let tw = sumdat.tweets[i];
         plotData.push({
-          x: tweetData.sentimentData.documentSentiment.score,
-          y: tweetData.sentimentData.documentSentiment.magnitude,
-          r: 1+2*log10(tweetData.tweetData.retweet_count)
+          x: tw.sentimentData.documentSentiment.score,
+          y: tw.sentimentData.documentSentiment.magnitude,
+          r: 3+5*(tw.tweetData.retweet_count / avg_retweets)
         });
       }
       userdatas.push({ label: sumdat.user.screen_name, 
@@ -91,7 +133,7 @@ export class ChartGen {
               position: "bottom"
             }
           ],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }]
+          yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }, ]
         },
 
         tooltips: {
@@ -182,7 +224,8 @@ export class ChartGen {
         title: { display: true, text: "Tweets by time of day" },
         scales: {
           xAxes: [{ scaleLabel: { display: true, labelString: "Time" } }],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets" } }]
+          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets"},
+            ticks: {beginAtZero:true}}]
         }
       }
       /*
@@ -246,7 +289,8 @@ export class ChartGen {
         title: { display: true, text: "Tweets by weekday" },
         scales: {
           xAxes: [{ scaleLabel: { display: true, labelString: "Day" } }],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets" } }]
+          yAxes: [{ scaleLabel: { display: true, labelString: "Tweets"},
+            ticks: {beginAtZero:true}}]
         }
       }
       /*
@@ -373,11 +417,11 @@ export class ChartGen {
           let avgSalience = value.totalSalience / value.count;
           let data = {
             x: value.entity.sentiment.score,
-            y: value.entity.sentiment.magnitude,
-            r:
-              (0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
+            y: sigmoid(value.entity.sentiment.magnitude),
+            r: 2+3*Math.log(value.totalSalience*1000)
+              /*(0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
               ctx.canvas.width *
-              2
+              2*/
           };
 
           plotData.push(data);
@@ -418,9 +462,9 @@ export class ChartGen {
               tootipItem: ChartJS.ChartTooltipItem,
               data: ChartJS.ChartData
             ) {
-              return summaryData[tootipItem.datasetIndex].tweets[
-                tootipItem.index
-              ].tweetData.text;
+              let ent = summaryData[tootipItem.datasetIndex].
+                entityResult.entities[tootipItem.index]
+              return "["+ent.type.toUpperCase()+"] "+ent.name
             }
           }
         }        
@@ -615,8 +659,7 @@ export class ChartGen {
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
-    let userdatas: { label: string; data: any[], 
-      pointBackgroundColor: string[],
+    let userdatas: { label: string; data: any[],
       backgroundColor: string[]}[] = [];
     let tags: string[] = [];
 
@@ -657,7 +700,7 @@ export class ChartGen {
         //let sortedTags = ent.user_mentions.sort(); 
 
         ent.user_mentions.forEach(ht => {
-          let tag = ht.name;
+          let tag = ht.screen_name;
           hashtags_all.push(tag)
           let index = keys.indexOf(tag);
           if (tags.indexOf(tag) == -1) {
@@ -716,9 +759,11 @@ export class ChartGen {
       );
       console.log("Hashtags:"+hashtags_all);
 
+
+
+
       userdatas.push({ label: sumdat.user.screen_name, data: values, 
-        pointBackgroundColor: userColors,
-        backgroundColor: userColors });
+        backgroundColor: randColors(values.length) });
     };
 
     //TODO: Get this sort working
