@@ -157,7 +157,7 @@ img {
 #header2 {
   font-size: 50px;
   font-family: Georgia, "Times New Roman", Times, serif;
-  color: rgb(8, 34, 180);
+  color: rgb(34, 218, 231);
   opacity: 0;
 }
 
@@ -173,14 +173,16 @@ img {
   height: 30px;
   justify-content: center;
   justify-items: center;
+  padding-top: 10px;
 }
 .handle_input {
-  min-width: 40%;
+  min-width: 25%;
   border: none;
   background-color: #f8f8f8;
   padding: 10px 5px;
   border-radius: 5px;
   box-sizing: border-box;
+  border: 2px solid rgb(34, 174, 230);
   font-size: 15px;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
@@ -228,7 +230,7 @@ img {
   pointer-events: none;
 }
 
-#submit:hover {
+.handle_submit:hover {
   color: white;
   background-color: rgb(16, 169, 216);
 }
@@ -271,4 +273,14 @@ img {
   100% {
     transform: rotate(360deg);
   }
+}
+
+ span{
+  font-size: 50px;
+  color: rgb(226, 81, 81);
+} 
+
+li{
+  text-align: center;
+  margin: 0 auto;
 }
