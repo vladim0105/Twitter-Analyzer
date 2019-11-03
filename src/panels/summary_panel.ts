@@ -26,9 +26,9 @@ export class SummaryPanel extends Panel {
     this.getMain().append(this.createProfiles());
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createEntityCharts());
-    this.getMain().append(this.createScatterChart());
+    //this.getMain().append(this.createScatterChart());
     //this.getMain().append(this.createTweetDevCharts());
-    this.getMain().append(this.genHashtagChart());
+    this.getMain().append(this.genMentionChart());
     this.getMain()
       .css("border", "2px solid gray")
       .css("border-radius", "5px");
@@ -139,6 +139,7 @@ export class SummaryPanel extends Panel {
     let tweetTimeContainer = $("<div>").css(doubleChartParent);
     let tweetHourContainer = $("<div>").css(doubleChartChild);
     let bubbleContainer = $("<div>").css(doubleChartChild);
+    
     let tweetHourCanvas = $("<canvas>")[0] as HTMLCanvasElement;
     let tweetHourChart = new ChartGen().genHourLine(
       tweetHourCanvas.getContext("2d"),
@@ -152,8 +153,8 @@ export class SummaryPanel extends Panel {
       ...this.data
     );
     bubbleContainer.append(bubbleCanvas);
-    tweetTimeContainer.append(tweetHourContainer, bubbleContainer);
 
+    tweetTimeContainer.append(tweetHourContainer, bubbleContainer);
     return tweetTimeContainer;
   }
   private createEntityCharts() {
@@ -161,14 +162,14 @@ export class SummaryPanel extends Panel {
     let pieContainer = $("<div>").css(doubleChartChild);
     let bubbleContainer = $("<div>").css(doubleChartChild);
     let pieCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let pieChart = new ChartGen().genEntityTypePie(
+    let pieChart = new ChartGen().genEntitySentiment(
       pieCanvas.getContext("2d"),
       ...this.data
     );
     pieContainer.append(pieCanvas);
 
     let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let bubbleChart = new ChartGen().genEntityBubble(
+    let bubbleChart = new ChartGen().genTweetSentiments(
       bubbleCanvas.getContext("2d"),
       ...this.data
     );
@@ -177,6 +178,7 @@ export class SummaryPanel extends Panel {
 
     return entityChartContainer;
   }
+  /*
   private createScatterChart() {
     let scatterChartHolder = $("<div>").css(doubleChartParent);
     let scatterChartChild = $("<div>")
@@ -192,38 +194,35 @@ export class SummaryPanel extends Panel {
     scatterChartHolder.append(scatterChartChild);
     return scatterChartHolder;
   }
+  */
 
-  private createTweetDevCharts(){
-    let retweetChartHolder = $("<div>").css(doubleChartParent);
-    let retweetChartChild = $("<div>")
+  private genMentionChart(){
+    let mentionChartHolder = $("<div>").css(doubleChartParent);
+    let mentionsContainer = $("<div>")
       .css(doubleChartChild)
       .css({ height: "50vh", margin: "auto" });
-    let retweetCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let retweetChart = new ChartGen().genRetweetLine(
-      retweetCanvas.getContext("2d"),
-      ...this.data
-    );
-
-    retweetChartHolder.append(retweetCanvas);
-    retweetChartHolder.append(retweetChartChild);
-    return retweetChartHolder;
-  }
-
-  private genHashtagChart(){
-    let hashtagChartHolder = $("<div>").css(doubleChartParent);
-    let hashtagChartChild = $("<div>")
+    let radarContainer = $("<div>")
       .css(doubleChartChild)
       .css({ height: "50vh", margin: "auto" });
-    let hashtagCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let hashtagChart = new ChartGen().genHashtags(
-      hashtagCanvas.getContext("2d"),
+
+    let mentionCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let mentionChart = new ChartGen().genMentions(
+      mentionCanvas.getContext("2d"),
       ...this.data
     );
+    mentionsContainer.append(mentionCanvas);
 
-    hashtagChartHolder.append(hashtagCanvas);
-    hashtagChartHolder.append(hashtagChartChild);
-    return hashtagChartHolder;
+    let radarCanvas = $("<canvas>")[0] as HTMLCanvasElement;
+    let radarChart = new ChartGen().genTweetTypes(
+      radarCanvas.getContext("2d"),
+      ...this.data
+    );
+    radarContainer.append(radarCanvas);
+
+    mentionChartHolder.append(mentionsContainer, radarContainer);
+    return mentionChartHolder;
   }
+
 }
 
 const doubleChartParent = {
@@ -235,6 +234,6 @@ const doubleChartParent = {
 const doubleChartChild = {
   "flex-grow": 0,
   "flex-basis": "50%",
-  "margin-left": "5%",
+  "margin-left": "2.5%",
   "margin-right": "2.5%"
 };

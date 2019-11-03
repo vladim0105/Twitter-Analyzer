@@ -21,9 +21,6 @@ export class TweetPanel extends Panel {
         this.data.tweetData.retweet_count +
         " retweets"
     );
-    console.log("Entities:");
-    console.log(this.data.tweetData.entities);
-    console.log(this.data.tweetData);
     let profileContainer = $("<div>").css("margin-left", "5%");
     let profileImg = $("<img>")
       .css(this.profilePictureStyle)
@@ -37,7 +34,7 @@ export class TweetPanel extends Panel {
       "flex-direction": "column",
       "justify-content": "center",
       "align-items": "center",
-      width: "100%"
+      width: "100%",
     });
 
     let textContainer = $("<div>");
@@ -46,16 +43,20 @@ export class TweetPanel extends Panel {
       .text('"' + this.data.tweetData.text + '"')
       .css({ "font-style": "italic" });
     let sentimentText = $("<p>").text(
-      "Overall Sentiment: " + this.data.sentimentData.documentSentiment.score
+      "Sentiment: " + super.sentimentString(this.data.sentimentData.documentSentiment.score,
+                          this.data.sentimentData.documentSentiment.magnitude)
+
     );
+    /*
     let magnitudeText = $("<p>").text(
       "Overall Magnitude: " +
         this.data.sentimentData.documentSentiment.magnitude
     );
+    */
 
     textContainer.append(text).css({ "text-align": "center" });
     analysisContainer
-      .append(sentimentText, magnitudeText)
+      .append(sentimentText, /*magnitudeText*/)
       .css({ "text-align": "center" });
 
     tweetContainer.append(textContainer, analysisContainer);

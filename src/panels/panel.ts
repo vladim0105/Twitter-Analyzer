@@ -39,8 +39,5 @@ export class Panel {
     let scoreStr = (score > 0) ? "+":"" + score.toFixed(2); //Score <-1..1>
     let magnitudeStr = ""+magnitude.toFixed(2); //Magnitude typically < 1, can be above.
     return "["+(score > 0 ? "+":"") + score + " * " + magnitude +"]";
-
-    //let scoreIndex = (1+score)*20
-    //switch 😐
   }
 }

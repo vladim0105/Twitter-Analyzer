@@ -3,10 +3,6 @@ import { SummaryData } from "./panels/summary_panel";
 import * as ChartJS from "chart.js";
 import {extractEmoji, isEmoji} from "extract-emoji";
 
-/*
-declare interface Math{
-  log10(x: number): number;
-}*/
 const natlog10 = Math.log(10);
 function log10(n: number){
   return (Math.log(n) / natlog10);
@@ -23,11 +19,6 @@ function sigmoid(n: number){
 
 //https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript/43195379
 function randColor(n:number){ 
-  /*
-  return "hsl(" + 360 * Math.random() + ',' +
-             (25 + 70 * Math.random()) + '%,' + 
-             (50 + 45 * Math.random()) + '%)' */
-
   return "hsl(" + (360 * 1.618*n)%360 + ',' +
              (35 + 65 * Math.random()) + '%,' + 
              (30 + 50 * Math.random()) + '%)'
@@ -39,14 +30,6 @@ function randColors(len: number){
   }
   return colors;
 }
-
-function emoji_test(str: string){
-  //let str = "🤔 🙈 me así, bla es se 😌 ds 💕👭👙";
-  console.log("String:"+str);
-  let extr = extractEmoji(str);
-  console.log("Emojis: "+extr);
-}
-
 
 let pointColors: string[]= [
   "rgba(215,159,125, 0.8)",
@@ -68,7 +51,7 @@ let pointColors: string[]= [
 
 let fillColors: string[] = []; 
 pointColors.forEach(color => { //Set 80% --> 40% opacity
-  fillColors.push(color.replace("0.8", "0.4"));
+  fillColors.push(color.replace("0.8", "0.5"));
 });
 
 let defaultFill: string = "rgba(64, 128, 255, 0.25)";
@@ -89,10 +72,11 @@ let userColors: string[] = [
 
 import { Entity } from "./nlp";
 import { HashtagObject } from "./twitter";
+import { Panel } from "./panels/panel";
 
 export class ChartGen {
   
-  public genScatter(
+  public genTweetSentiments(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
@@ -175,6 +159,7 @@ export class ChartGen {
       "22:00-24:00"
     ];
 
+    /*
     const daylight : string[] = [
       "#010404",
       "#122136",
@@ -188,7 +173,7 @@ export class ChartGen {
       "#BF4D40",
       "#A13650",
       "#732663",
-    ]
+    ]*/
 
     var gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
     gradientFill.addColorStop(0, "rgba(0, 100, 150, 0.5)");
@@ -319,12 +304,14 @@ export class ChartGen {
   ) {
     let userdatas: { label: string; data: any[], 
       pointBackgroundColor: string[],
-      backgroundColor: string[]}[] = [];
+      backgroundColor: string[],
+      hovertags: string[]}[] = [];
     let typeLabels: string[] = [];
+
 
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat : SummaryData = summaryData[sd];
-
+      let hovertags = [];
       //let plotData: number[] = new Array();
       let entities = sumdat.entityResult.entities;
       let keys: string[] = [];
@@ -346,38 +333,47 @@ export class ChartGen {
 
       userdatas.push({ label: sumdat.user.screen_name, data: values, 
         pointBackgroundColor: pointColors,
-        backgroundColor: fillColors });
+        backgroundColor: fillColors,
+        hovertags: keys });
     };
 
     let chart = new ChartJS(ctx, {
       type: "pie",
-      data: { labels: typeLabels, datasets: userdatas },
+      data: { datasets: userdatas },
       options: {
-        title: { display: true, text: "Text entity composition" }
+        title: { display: true, text: "Text entity composition" },
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+              return userdatas[tootipItem.datasetIndex].hovertags[tootipItem.index];
+            }
+          }
+        }        
       }
-
-      /*
-      data: {
-        labels: keys,
-        datasets: [{ label: "Entity Types", data: values, backgroundColor:pointColors}]
-      }
-      */
     });
+    return chart;
   }
 
-  public genEntityBubble(
+
+  public genEntitySentiment(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
     let userdatas: { label: string; data: any[], 
-      pointBackgroundColor: string,
-      backgroundColor: string}[] = [];
+        pointBackgroundColor: string,
+        backgroundColor: string,
+        hovertags: string[]
+      }[] = [];
       
     for (let sd = 0; sd < summaryData.length; sd++){
       let sumdat: SummaryData = summaryData[sd];
       let plotData: { x: number; y: number; r: number }[] = [];
 
       let keys: string[] = [];
+      let hovertags: string[] = [];
       let values: {
         entity: Entity;
         count: number;
@@ -396,6 +392,7 @@ export class ChartGen {
         let index = keys.indexOf(entity.name);
         if (index == -1) {
           keys.push(entity.name);
+          hovertags.push(entity.name+" ("+entity.type+")");
           values.push({
             entity: entity,
             count: entity.mentions.length,
@@ -411,7 +408,7 @@ export class ChartGen {
         index = entityTypeNames.indexOf(entity.type);
         if (index == -1) {
           entityTypeNames.push(entity.type);
-        }
+          }
         }
         let totalMentions = 0;
         for (let i = 0; i < values.length; i++) {
@@ -423,7 +420,7 @@ export class ChartGen {
           let data = {
             x: value.entity.sentiment.score,
             y: sigmoid(value.entity.sentiment.magnitude),
-            r: 2+3*Math.log(value.totalSalience*1000)
+            r: 2+3*Math.log(value.totalSalience*1000),
               /*(0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
               ctx.canvas.width *
               2*/
@@ -442,9 +439,12 @@ export class ChartGen {
 
         userdatas.push({ label: sumdat.user.screen_name, data: plotData,
           pointBackgroundColor: userColors[sd],
-          backgroundColor: userColors[sd] });
+          backgroundColor: userColors[sd],
+          hovertags: hovertags});
      };
 
+
+    //TODO: Fix misassigned text entities
     let chart = new ChartJS(ctx, {
       type: "bubble",
       data: { datasets: userdatas },
@@ -467,9 +467,7 @@ export class ChartGen {
               tootipItem: ChartJS.ChartTooltipItem,
               data: ChartJS.ChartData
             ) {
-              let ent = summaryData[tootipItem.datasetIndex].
-                entityResult.entities[tootipItem.index]
-              return "["+ent.type.toUpperCase()+"] "+ent.name
+              return userdatas[tootipItem.datasetIndex].hovertags[tootipItem.index];
             }
           }
         }        
@@ -478,141 +476,6 @@ export class ChartGen {
     return chart;
   }
 
-  /*
-  //TODO: Fix this method. Line chart only displays two almost-zero values.
-  public genPopularity(
-    summaryData: SummaryData,
-    ctx: CanvasRenderingContext2D
-  ) {
-    let retweets: number[] = new Array();
-    let favorites: number[] = new Array();
-
-    console.log("Charting retweets of "+summaryData.tweets.length+" tweets...")
-    for (let i = 0; i < summaryData.tweets.length; i++) {
-      let td = summaryData.tweets[i].tweetData;
-      //Todo: If tweet <24h, skip.
-      retweets.push(td.retweet_count);
-    }
-    
-    let chart = new ChartJS(ctx, {
-      type: "line",
-      data: {
-        datasets: [
-          { label: "Retweets", data: retweets, backgroundColor:"#ff6666"}
-        ]
-      },
-      options: {
-        tooltips: {
-          callbacks: {
-            label: function(
-              tootipItem: ChartJS.ChartTooltipItem,
-              data: ChartJS.ChartData
-            ) {
-              return summaryData.tweets[tootipItem.index].tweetData.text
-            }
-          }
-        }
-      }
-    });
-  
-    return chart;
-  }
-
-  //TODO: Fix this method. Line chart only displays two almost-zero values.
-  public genSentimentDevelopment(
-    summaryData: SummaryData,
-    ctx: CanvasRenderingContext2D
-  ) {
-    let mood = [];
-    
-    console.log("Charting sentiment of "+summaryData.tweets.length+" tweets...")
-    for (let i = 0; i < summaryData.tweets.length; i++) {
-      let tw = summaryData.tweets[i];
-      let positivity: number = 0;
-      tw.sentimentData.sentences.forEach(sentence => {
-        positivity += sentence.sentiment.score * (0.1+sentence.sentiment.magnitude);
-      });
-      mood.push({x: i, y: positivity});
-    }
-    console.log("mood.length: "+mood.length);
-    console.log(mood); //debug
-
-    let chart = new ChartJS(ctx, {
-      type: "line",
-      data: {
-        datasets: [
-          { label: "Sentiment", data: mood, backgroundColor:"#6666ff"}
-        ]
-      },
-      
-      options: {
-        tooltips: {
-          callbacks: {
-            label: function(
-              tootipItem: ChartJS.ChartTooltipItem,
-              data: ChartJS.ChartData
-            ) {
-              return summaryData.tweets[tootipItem.index].tweetData.text;
-            }
-          }
-        },
-        scales: {
-          xAxes: [{scaleLabel: { display: true, labelString: "Time" }}],
-          yAxes: [{scaleLabel: { display: true, labelString: "Positivity" }}]
-        }
-      }
-    });
-  
-    return chart;
-  }
-  */
-
- public genRetweetLine1(
-  ctx: CanvasRenderingContext2D,
-  ...summaryData: SummaryData[]
-  ) {
-    let userdatas: { label: string; data: any[], 
-      pointBackgroundColor: string,
-      borderColor: string,
-      backgroundColor: any}[] = []; //string-->any
-
-    for(let sd=0; sd<summaryData.length; sd++){
-      let sumdat : SummaryData = summaryData[sd];
-      let plotData: { x: number; y: number;}[] = [];
-
-      for (let i = 0; i < sumdat.tweets.length; i++) {
-        console.log("Adding tweet #"+i+": "+sumdat.tweets[i].tweetData.text);
-        let tw = sumdat.tweets[i];
-        let date = new Date(tw.tweetData.created_at).getUTCDate;
-        plotData.push({
-          x: i,
-          y: tw.tweetData.retweet_count
-        });
-      }
-      userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
-        pointBackgroundColor: userColors[sd],
-        borderColor: userColors[sd],
-        backgroundColor:userColors[sd]});
-    };
-
-    userdatas.forEach(ud => {
-      console.log(ud.data.length+ " data entries");
-    });
-
-    let chart = new ChartJS(ctx, {
-      type: "line",
-      data: { datasets: userdatas },
-      options: {
-        title: { display: true, text: "Retweets popularity" },
-        scales: {
-          xAxes: [{ scaleLabel: { display: true, labelString: "Post" } }],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Retweets" } }]
-        }
-      }
-    });
-
-    return chart;
-  }
 
   //==== REEEEEEE ====
   public genRetweetLine (
@@ -659,116 +522,41 @@ export class ChartGen {
     return chart;
   }
 
-  //TODO: Fix running outa colors etc
-  public genHashtags(
+  //TODO: Bug: Inner circle gets outer circle's mentions
+  public genMentions(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
   ) {
     let userdatas: { label: string; data: any[],
-      backgroundColor: string[]}[] = [];
-    let tags: string[] = [];
+      backgroundColor: string[],
+      hovertags: string[]}[] = [];
 
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat = summaryData[sd];
-      //let plotData: number[] = new Array();
 
       let keys: string[] = [];
       let values: number[] = [];
-
-      let hashtag_count = 0;
-      let symbol_count = 0;
-      let url_count = 0;
-      let mention_count = 0;
-
-      let hashtags_all : string[] = [];
+      let tags: string[] = [];
       
       for (let i = 0; i < sumdat.tweets.length; i++) {
-        let tw = sumdat.tweets[i].tweetData;
-        let ent = tw.entities;
-        console.log("Tweet text:"+ tw.text);
-        console.log("This tweet has \n-"
-          +ent.hashtags.length+ " hashtags \n-",
-          +"ent.media.length+ " +"media\n-",
-          +ent.symbols.length+ " symbols\n-"
-          +ent.urls.length+ " urls\n-",
-          +ent.user_mentions.length + " mentions."
-          );
-
-        if (tw.hasOwnProperty("extended_entities")){
-          console.log("\n\n>> HOLY SHIT THIS TWEET HAS MEDIA IN IT!! (tw)\n\n");
-        }
-        if (tw.hasOwnProperty("retweeted_status")){
-          console.log("\n\n>>>> WOW, A REAL RETWEET! (tw)\n\n");
-        }
+        let ent = sumdat.tweets[i].tweetData.entities;
 
         //Count mentions
-        //let sortedTags = ent.user_mentions.sort(); 
-
         ent.user_mentions.forEach(mention => {
-          let tag =  mention.name + " ("+mention.screen_name+")";
-          hashtags_all.push(tag)
-          let index = keys.indexOf(tag);
-          if (tags.indexOf(tag) == -1) {
-            tags.push(tag);
+          let name = "@"+mention.screen_name;
+          //mentions.push(name)
+          let index = keys.indexOf(name);
+          if (tags.indexOf(name) == -1) {
+            tags.push(name);
           }
           if (index == -1) {
-            keys.push(tag);
+            keys.push(name);
             values.push(1);
           } else {
             values[index]++;
           }
         });
-
-        /*
-        ent.hashtags.forEach(ht => {
-          let tag = "#"+ht.text.toLowerCase();
-          hashtags_all.push(tag)
-          let index = keys.indexOf(tag);
-          if (typeLabels.indexOf(tag) == -1) {
-            typeLabels.push(tag);
-          }
-          if (index == -1) {
-            keys.push(tag);
-            values.push(1);
-          } else {
-            values[index]++;
-          }
-        });
-        */
-
-        hashtag_count += ent.hashtags.length;
-        symbol_count += ent.symbols.length;
-        url_count += ent.urls.length;
-        mention_count += ent.user_mentions.length;
-
-        /*
-        let index = keys.indexOf(tw.type);
-        if (typeLabels.indexOf(entity.type) == -1) {
-          typeLabels.push(entity.type);
-        }
-        if (index == -1) {
-          keys.push(entity.type);
-          values.push(1);
-        } else {
-          values[index]++;
-        }
-        */
       }
-
-      console.log("=== TOTAL TWEET ENTITIES OF "+sumdat.user.screen_name+" ===");
-      console.log("This user has in total \n-"
-      +hashtag_count+" hashtags \n-",
-      +symbol_count+ " symbols\n-"
-      +url_count+ " urls\n-",
-      +mention_count + " mentions."
-      );
-      console.log("Hashtags:"+hashtags_all);
-
-
-
-      //arrayLabel = tags
-
-      //arrayData = [16, 1, 14, 0, 0, 0, 1];
   
       let arrayOfObj = tags.map(function(d, i) {
         return {
@@ -791,10 +579,9 @@ export class ChartGen {
       console.log(newArrayLabel);
       console.log(newArrayData);
 
-
       userdatas.push({ label: sumdat.user.screen_name, data: newArrayData, 
-        backgroundColor: randColors(values.length) });
-      emoji_test(sumdat.compiledText);
+        backgroundColor: randColors(values.length),
+        hovertags: newArrayLabel });
     };
 
 
@@ -802,9 +589,9 @@ export class ChartGen {
     //https://www.npmjs.com/package/chartjs-plugin-sort
     let chart = new ChartJS(ctx, {
       type: "pie",
-      data: { labels: tags, datasets: userdatas },
+      data: {datasets: userdatas },
       options: {
-        title: { display: true, text: "Hashtag usage" },
+        title: { display: true, text: "User mentions" },
         plugins: {
           sort:
               {
@@ -812,9 +599,110 @@ export class ChartGen {
                   sortBy: 'label',
                   order: 'desc',
               }
+        },
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+
+              let dat = userdatas[tootipItem.datasetIndex];
+              let count = dat.data[tootipItem.index]
+              let poster = "@"+summaryData[tootipItem.datasetIndex].user.screen_name +" ⭢ ";
+              let mentioned = userdatas[tootipItem.datasetIndex].hovertags[tootipItem.index];
+              return ((count > 1) ? count+"* ":"") + poster + mentioned;
+            }
+          }
         }
       }
     });
     return chart;
   }  
+
+
+//== RADAR ==
+  //TODO: Fix running outa colors etc
+  public genTweetTypes(
+    ctx: CanvasRenderingContext2D,
+    ...summaryData: SummaryData[]
+  ) {
+    let userdatas: { label: string; data: any[],
+      backgroundColor: string}[] = [];
+    let tags: string[] = [];
+    let keys: string[] = ["Media %", "Mention %", "Link %", "Hashtag %", "Emoji %", "Retweet %", "Pure text %"];
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat = summaryData[sd];
+
+      //let keys: string[] = ["Media", "Mention", "Link", "Hashtag", "Emoji", "Retweet", "Pure text"];
+      //let values: number[] = [];
+
+
+      let n_media = 0;
+      let n_mention = 0;
+      let n_url = 0;
+      let n_hashtag = 0;
+      let n_emoji = 0;
+      let n_reweeted = 0;
+      let n_text = 0;
+      
+      for (let i = 0; i < sumdat.tweets.length; i++) {
+        let tw = sumdat.tweets[i].tweetData;
+        let ent = tw.entities;
+        let just_text = true;
+
+        if (tw.hasOwnProperty("extended_entities")){
+          n_media++; just_text = false;
+        }
+        if (ent.user_mentions.length > 0){
+          n_mention++; just_text = false;
+        }
+        if (ent.urls.length > 0){
+          n_url++; just_text = false;
+        }
+        if (ent.hashtags.length > 0){
+          n_hashtag++; just_text = false;
+        }
+        if (extractEmoji(tw.text).length > 0){
+          n_emoji++; just_text = false;
+        }
+        if (tw.hasOwnProperty("retweeted_status")){
+          n_reweeted++; just_text = false;
+        }
+        if (just_text == true){
+          n_text++;
+        }
+      }
+
+      console.log("The "+sumdat.tweets.length+" tweets had: "
+          +n_media+ " media\n",
+          +n_mention+" mentions\n",
+          +n_url+ " links\n"
+          +n_hashtag+ " hashtags\n",
+          +n_emoji + " emojis\n"
+          +n_reweeted + "retweeted\n"
+          +n_text + " just text\n"
+          );
+      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_reweeted, n_text];
+      let values = [];
+      counts.forEach(n => {
+        values.push((100 * n / sumdat.tweets.length).toFixed(1))
+      });
+
+
+      userdatas.push({ label: sumdat.user.screen_name, data: values, 
+          backgroundColor: userColors[sd] });
+      }
+
+      let chart = new ChartJS(ctx, {
+        type: 'bar',
+        data: {labels: keys, datasets: userdatas},
+        options: {
+          title: { display: true, text: "Tweet content" },
+        }
+      });
+      return chart;
+    };
+
 }
