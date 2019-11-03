@@ -110,6 +110,7 @@ export class Logic {
   private compileText(data: TweetData[]) {
     let text = data[0].text;
     for (let i = 1; i < data.length; i++) {
+      //if (data[i].retweeted == true) continue;
       text += data[i].text;
     }
     return text;

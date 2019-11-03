@@ -50,9 +50,12 @@ export type TweetData = {
   /** Contents of the tweet */
   text: string;
   created_at: string;
+  favorite_count: number;
   retweet_count: number; 
   coordinates: Coordinates; //?null
   entities: TweetEntities;
+  retweeted_status: any; //Exists only if this post is a retweet
+  retweeted: boolean;
 };
 
 export type TwitterAccessToken = {

@@ -1,7 +1,7 @@
 import { SummaryData } from "./panels/summary_panel";
 
 import * as ChartJS from "chart.js";
-//import * as ExtractEmoji from "node_modules/extract-emoji";
+import {extractEmoji, isEmoji} from "extract-emoji";
 
 /*
 declare interface Math{
@@ -40,8 +40,11 @@ function randColors(len: number){
   return colors;
 }
 
-function emoji_test(){
-  let a_list = ['🤔 🙈 me así, bla es se 😌 ds 💕👭👙'];
+function emoji_test(str: string){
+  //let str = "🤔 🙈 me así, bla es se 😌 ds 💕👭👙";
+  console.log("String:"+str);
+  let extr = extractEmoji(str);
+  console.log("Emojis: "+extr);
 }
 
 
@@ -111,7 +114,7 @@ export class ChartGen {
         let tw = sumdat.tweets[i];
         plotData.push({
           x: tw.sentimentData.documentSentiment.score,
-          y: tw.sentimentData.documentSentiment.magnitude,
+          y: sigmoid(tw.sentimentData.documentSentiment.magnitude),
           r: 3+5*(tw.tweetData.retweet_count / avg_retweets)
         });
       }
@@ -257,6 +260,8 @@ export class ChartGen {
       "Saturday",
       "Sunday"
     ];
+    //Issue: Not accurate if user tweets more per week than number of requested tweets!
+    //Example: Fetching 50 tweets from Trump (>80tw/wk) results in inaccurate zero days.
 
     let userdatas: { label: string; data: any[], 
       pointBackgroundColor: string,
@@ -690,17 +695,17 @@ export class ChartGen {
           );
 
         if (tw.hasOwnProperty("extended_entities")){
-          console.log("\n\nHOLY SHIT THIS TWEET HAS MEDIA IN IT!! (tw)\n\n");
+          console.log("\n\n>> HOLY SHIT THIS TWEET HAS MEDIA IN IT!! (tw)\n\n");
         }
-        if (ent.hasOwnProperty("media")){
-          console.log("\n\nHOLY SHIT THIS TWEET HAS MEDIA IN IT!! (ent)\n\n");
+        if (tw.hasOwnProperty("retweeted_status")){
+          console.log("\n\n>>>> WOW, A REAL RETWEET! (tw)\n\n");
         }
 
         //Count mentions
         //let sortedTags = ent.user_mentions.sort(); 
 
-        ent.user_mentions.forEach(ht => {
-          let tag = ht.screen_name;
+        ent.user_mentions.forEach(mention => {
+          let tag =  mention.name + " ("+mention.screen_name+")";
           hashtags_all.push(tag)
           let index = keys.indexOf(tag);
           if (tags.indexOf(tag) == -1) {
@@ -761,10 +766,37 @@ export class ChartGen {
 
 
 
+      //arrayLabel = tags
 
-      userdatas.push({ label: sumdat.user.screen_name, data: values, 
+      //arrayData = [16, 1, 14, 0, 0, 0, 1];
+  
+      let arrayOfObj = tags.map(function(d, i) {
+        return {
+          label: d,
+          data: values[i] || 0
+        };
+      });
+  
+      let sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
+        return b.data - a.data;
+      });
+  
+      let newArrayLabel = [];
+      let newArrayData = [];
+      sortedArrayOfObj.forEach(function(d){
+        newArrayLabel.push(d.label);
+        newArrayData.push(d.data);
+      });
+  
+      console.log(newArrayLabel);
+      console.log(newArrayData);
+
+
+      userdatas.push({ label: sumdat.user.screen_name, data: newArrayData, 
         backgroundColor: randColors(values.length) });
+      emoji_test(sumdat.compiledText);
     };
+
 
     //TODO: Get this sort working
     //https://www.npmjs.com/package/chartjs-plugin-sort
@@ -783,6 +815,6 @@ export class ChartGen {
         }
       }
     });
+    return chart;
   }  
-
 }

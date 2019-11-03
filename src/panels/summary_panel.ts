@@ -3,6 +3,8 @@ import { TweetData, TwitterUser } from "../twitter";
 import * as $ from "jquery";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
 import { ChartGen } from "../chart_generator";
+import * as moment from 'moment';
+import { strict } from "assert";
 
 export type SummaryData = {
   user: TwitterUser;
@@ -74,13 +76,30 @@ export class SummaryPanel extends Panel {
         .css(this.nameStyle)
         .css("font-size", "20px");
       let handle = $("<p>")
-        .text("@" + value.user.screen_name)
+        .text("@" + value.user.screen_name + (value.user.verified ? " ✔" : "")) 
         .css(this.nameStyle)
         .css("color", "gray");
       let bio = $("<p>")
         .text(value.user.description)
         .css(this.nameStyle)
         .css("color", "gray");
+      let join_time = new Date(value.user.created_at);
+      let age = moment().diff(join_time, 'weeks');
+      let months = ["January","February","March","April","May","June",
+        "July","August","September","October","November","December"]
+      let joined = $("<p>")
+        .text("Joined "+months[join_time.getUTCMonth()]+" "+join_time.getUTCFullYear())
+        .css(this.nameStyle)
+        .css("color", "gray");
+      let activity = $("<p>")
+        .text("Tweets: "+super.bigNumStr(value.user.statuses_count)+" ("+(value.user.statuses_count/age).toFixed(1)+"/wk)")
+        .css(this.nameStyle)
+        .css("color", "gray");
+      let followers = $("<p>")
+        .text("Followers: "+super.bigNumStr(value.user.followers_count))
+        .css(this.nameStyle)
+        .css("color", "gray");
+      /*
       let overallSentimentText = $("<p>").text(
         "Overall Sentiment: " + value.overallSentiment.documentSentiment.score
       );
@@ -88,21 +107,24 @@ export class SummaryPanel extends Panel {
         "Overall Magnitude: " +
           value.overallSentiment.documentSentiment.magnitude
       );
+      */
+        
       let averageSentimentText = $("<p>").text(
-        "Average Sentiment: " + avg.score
+        "Average Sentiment: " + super.sentimentString(avg.score, avg.magnitude)
       );
+      /*
       let averageMagnitudeText = $("<p>").text(
         "Average Magnitude: " + avg.magnitude
-      );
+      );*/
 
-      nameContainer.append(name, handle, bio);
+      nameContainer.append(name, handle, bio, joined, activity, followers);
       imageContainer.append(img);
 
       sentimentContainer.append(
-        overallSentimentText,
-        overallMagnitudeText,
+        /*overallSentimentText,
+        overallMagnitudeText,*/
         averageSentimentText,
-        averageMagnitudeText
+        /*averageMagnitudeText*/
       );
       profileContainer.append(
         nameContainer,
