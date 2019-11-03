@@ -137,6 +137,9 @@ export class ChartGen {
         }
       }
     });
+
+    console.log("===== RETURNING CHART");
+    console.log(chart);
     return chart;
   }
 
@@ -473,6 +476,10 @@ export class ChartGen {
         }        
       }
     });
+
+    console.log("===== RETURNING CHART");
+    console.log(chart);
+
     return chart;
   }
 

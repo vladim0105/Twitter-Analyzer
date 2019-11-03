@@ -24,11 +24,17 @@ export class SummaryPanel extends Panel {
 
   private init() {
     this.getMain().append(this.createProfiles());
+    let cg = new ChartGen();
+    this.addChartRow(cg.genDayLine, cg.genHourLine);
+    this.addChartRow(cg.genEntitySentiment, cg.genTweetSentiments);
+    this.addChartRow(cg.genMentions, cg.genTweetTypes);
+    /*
     this.getMain().append(this.createTimeCharts());
-    this.getMain().append(this.createEntityCharts());
-    //this.getMain().append(this.createScatterChart());
-    //this.getMain().append(this.createTweetDevCharts());
+    this.getMain().append(this.createSentimentCharts());
+    this.getMain().append(this.createScatterChart());
+    this.getMain().append(this.createTweetDevCharts());
     this.getMain().append(this.genMentionChart());
+    */
     this.getMain()
       .css("border", "2px solid gray")
       .css("border-radius", "5px");
@@ -135,92 +141,23 @@ export class SummaryPanel extends Panel {
     });
     return profilesContainer;
   }
-  private createTimeCharts() {
-    let tweetTimeContainer = $("<div>").css(doubleChartParent);
-    let tweetHourContainer = $("<div>").css(doubleChartChild);
-    let bubbleContainer = $("<div>").css(doubleChartChild);
-    
-    let tweetHourCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let tweetHourChart = new ChartGen().genHourLine(
-      tweetHourCanvas.getContext("2d"),
-      ...this.data
-    );
-    tweetHourContainer.append(tweetHourCanvas);
 
-    let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let bubbleChart = new ChartGen().genDayLine(
-      bubbleCanvas.getContext("2d"),
-      ...this.data
-    );
-    bubbleContainer.append(bubbleCanvas);
 
-    tweetTimeContainer.append(tweetHourContainer, bubbleContainer);
-    return tweetTimeContainer;
-  }
-  private createEntityCharts() {
-    let entityChartContainer = $("<div>").css(doubleChartParent);
-    let pieContainer = $("<div>").css(doubleChartChild);
-    let bubbleContainer = $("<div>").css(doubleChartChild);
-    let pieCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let pieChart = new ChartGen().genEntitySentiment(
-      pieCanvas.getContext("2d"),
-      ...this.data
-    );
-    pieContainer.append(pieCanvas);
-
-    let bubbleCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let bubbleChart = new ChartGen().genTweetSentiments(
-      bubbleCanvas.getContext("2d"),
-      ...this.data
-    );
-    bubbleContainer.append(bubbleCanvas);
-    entityChartContainer.append(pieContainer, bubbleContainer);
-
-    return entityChartContainer;
-  }
-  /*
-  private createScatterChart() {
-    let scatterChartHolder = $("<div>").css(doubleChartParent);
-    let scatterChartChild = $("<div>")
-      .css(doubleChartChild)
-      .css({ height: "50vh", margin: "auto" });
-    let scatterCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let scatterChart = new ChartGen().genScatter(
-      scatterCanvas.getContext("2d"),
-      ...this.data
-    );
-
-    scatterChartChild.append(scatterCanvas);
-    scatterChartHolder.append(scatterChartChild);
-    return scatterChartHolder;
-  }
-  */
-
-  private genMentionChart(){
-    let mentionChartHolder = $("<div>").css(doubleChartParent);
-    let mentionsContainer = $("<div>")
-      .css(doubleChartChild)
-      .css({ height: "50vh", margin: "auto" });
-    let radarContainer = $("<div>")
-      .css(doubleChartChild)
-      .css({ height: "50vh", margin: "auto" });
-
-    let mentionCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let mentionChart = new ChartGen().genMentions(
-      mentionCanvas.getContext("2d"),
-      ...this.data
-    );
-    mentionsContainer.append(mentionCanvas);
-
-    let radarCanvas = $("<canvas>")[0] as HTMLCanvasElement;
-    let radarChart = new ChartGen().genTweetTypes(
-      radarCanvas.getContext("2d"),
-      ...this.data
-    );
-    radarContainer.append(radarCanvas);
-
-    mentionChartHolder.append(mentionsContainer, radarContainer);
-    return mentionChartHolder;
+  private addChartRow(...chartFuncs : any[]):void {
+    let chartRow = $("<div>").css(doubleChartParent);
+    chartFuncs.forEach(func => {
+      let container = $("<div>")
+        .css(doubleChartChild)
+        .css({ height: "50vh", margin: "auto" }); //Removing height setting kills scatter charts???!
+      let canvas = $("<canvas>")[0] as HTMLCanvasElement;
+      let chart = func(
+        canvas.getContext("2d"),
+        ...this.data
+      );
+      container.append(canvas);
+      chartRow.append(container);
+    });
+    this.getMain().append(chartRow);
   }
 
 }
@@ -233,7 +170,7 @@ const doubleChartParent = {
 };
 const doubleChartChild = {
   "flex-grow": 0,
-  "flex-basis": "50%",
+  "flex-basis": "47.5%",
   "margin-left": "2.5%",
   "margin-right": "2.5%"
 };
