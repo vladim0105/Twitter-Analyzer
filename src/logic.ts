@@ -19,7 +19,7 @@ export class Logic {
   }
   private setupEvents() {
     this.disableInput(true);
-    $("#entry").on("click", () => {
+    $("#back").on("click", () => {
       this.showOverlay(true);
     });
 
@@ -47,7 +47,7 @@ export class Logic {
         this.onCompare();
       }
     });
-    $("#aboutUs").on("click", () => {
+    $("#aboutus").on("click", () => {
       this.showAboutUs(true);
     });
     $("#returnToSearchPage").on("click", () => {
