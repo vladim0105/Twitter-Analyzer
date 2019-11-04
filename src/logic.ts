@@ -18,6 +18,7 @@ export class Logic {
     this.setupEvents();
   }
   private setupEvents() {
+    this.disableInput(true);
     $("#entry").on("click", () => {
       this.showOverlay(true);
     });
@@ -105,10 +106,16 @@ export class Logic {
   //Get the Authorization token from twitter, this is then used as a password for doing API requests.
   private onReceivedAuthToken(data: TwitterAccessToken) {
     this.twitterAuthToken = data.access_token;
+    this.disableInput(false);
   }
-
+  private disableInput(disable: boolean) {
+    let opacity = disable ? 0.6 : 1;
+    $(".handle_input, .handle_submit")
+      .css({ opacity: opacity })
+      .prop("disabled", disable);
+  }
   private compileText(data: TweetData[]) {
-    if (data == null || data.length == 0 || data[0] == null){
+    if (data == null || data.length == 0 || data[0] == null) {
       console.log("[!] Tweets not found");
     }
     let text = data[0].text;
