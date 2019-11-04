@@ -3,6 +3,7 @@ import { SummaryData } from "./panels/summary_panel";
 import * as ChartJS from "chart.js";
 import {extractEmoji, isEmoji} from "extract-emoji";
 
+
 const natlog10 = Math.log(10);
 function log10(n: number){
   return (Math.log(n) / natlog10);
@@ -19,9 +20,10 @@ function sigmoid(n: number){
 
 //https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript/43195379
 function randColor(n:number){ 
-  return "hsl(" + (360 * 1.618*n)%360 + ',' +
-             (35 + 65 * Math.random()) + '%,' + 
-             (30 + 50 * Math.random()) + '%)'
+  return "hsla(" + (360 * 1.618*n)%360 + ',' +
+              (35 + 65 * Math.random()) + '%,' + 
+              (30 + 50 * Math.random()) + '%,' +
+              0.75 + ")";
 }
 function randColors(len: number){
   let colors = [];
@@ -50,98 +52,36 @@ let pointColors: string[]= [
 ]
 
 let fillColors: string[] = []; 
-pointColors.forEach(color => { //Set 80% --> 40% opacity
-  fillColors.push(color.replace("0.8", "0.5"));
+pointColors.forEach(col => { //Set 80% --> 40% opacity
+  fillColors.push(col.replace("0.8", "0.5"));
 });
 
 let defaultFill: string = "rgba(64, 128, 255, 0.25)";
 let userColors: string[] = [
-  "rgba(0,0,250,0.4)",
-  "rgba(250,0,0,0.4)",
-  "rgba(0,250,0,0.4)",
-  "rgba(250,250,0,0.4)",
-  "rgba(0,250,250,0.4)",
-  "rgba(250,0,250,0.4)",
-  "rgba(0,0,150,0.4)",
-  "rgba(150,0,0,0.4)",
-  "rgba(0,150,0,0.4)",
-  "rgba(150,150,0,0.4)",
-  "rgba(0,150,150,0.4)",
-  "rgba(150,0,150,0.4)",
+  "rgba(0,0,250,0.5)",
+  "rgba(250,0,0,0.5)",
+  "rgba(0,250,0,0.5)",
+  "rgba(250,250,0,0.5)",
+  "rgba(0,250,250,0.5)",
+  "rgba(250,0,250,0.5)",
+  "rgba(0,0,150,0.5)",
+  "rgba(150,0,0,0.5)",
+  "rgba(0,150,0,0.5)",
+  "rgba(150,150,0,0.5)",
+  "rgba(0,150,150,0.5)",
+  "rgba(150,0,150,0.5)",
 ]  
+let userFill : string[] = [];
+userColors.forEach(col => {
+  userFill.push(col.replace("0.5", "0.15"));
+});
 
 import { Entity } from "./nlp";
 import { HashtagObject } from "./twitter";
 import { Panel } from "./panels/panel";
 
 export class ChartGen {
-  
-  public genTweetSentiments(
-    ctx: CanvasRenderingContext2D,
-    ...summaryData: SummaryData[]
-  ) {
-    let userdatas: { label: string; data: any[], 
-      backgroundColor: string}[] = [];
-    
-    for(let sd=0; sd<summaryData.length; sd++){
-      let sumdat : SummaryData = summaryData[sd];
-      let plotData = [];
 
-      let avg_retweets = 0;
-      sumdat.tweets.forEach(tweet => {
-        avg_retweets += tweet.tweetData.retweet_count; 
-      });
-      avg_retweets /= sumdat.tweets.length;
-      //1+2*log2(tweetData.tweetData.retweet_count)
-
-      for (let i = 0; i < sumdat.tweets.length; i++) {
-        let tw = sumdat.tweets[i];
-        plotData.push({
-          x: tw.sentimentData.documentSentiment.score,
-          y: sigmoid(tw.sentimentData.documentSentiment.magnitude),
-          r: 3+5*(tw.tweetData.retweet_count / avg_retweets)
-        });
-      }
-      userdatas.push({ label: sumdat.user.screen_name, 
-        data: plotData, backgroundColor:userColors[sd]});
-    };
-
-    let chart = new ChartJS(ctx, {
-      type: "bubble",
-      data: { datasets: userdatas },
-      options: {
-        title: { display: true, text: "Sentiment of tweets" },
-        maintainAspectRatio: false,
-        scales: {
-          xAxes: [
-            {
-              scaleLabel: { display: true, labelString: "Score" },
-              type: "linear",
-              position: "bottom"
-            }
-          ],
-          yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }, ]
-        },
-
-        tooltips: {
-          callbacks: {
-            label: function(
-              tootipItem: ChartJS.ChartTooltipItem,
-              data: ChartJS.ChartData
-            ) {
-              return summaryData[tootipItem.datasetIndex].tweets[
-                tootipItem.index
-              ].tweetData.text;
-            }
-          }
-        }
-      }
-    });
-
-    console.log("===== RETURNING CHART");
-    console.log(chart);
-    return chart;
-  }
 
   public genHourLine(
     ctx: CanvasRenderingContext2D,
@@ -161,22 +101,6 @@ export class ChartGen {
       "20:00-22:00",
       "22:00-24:00"
     ];
-
-    /*
-    const daylight : string[] = [
-      "#010404",
-      "#122136",
-      "#1B4B50",
-      "#246B4C",
-      "#32956F",
-      "#97AC39",
-      "#D0CE71",
-      "#DBB994",
-      "#C27579",
-      "#BF4D40",
-      "#A13650",
-      "#732663",
-    ]*/
 
     var gradientFill = ctx.createLinearGradient(500, 0, 100, 0);
     gradientFill.addColorStop(0, "rgba(0, 100, 150, 0.5)");
@@ -205,7 +129,7 @@ export class ChartGen {
       userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
         pointBackgroundColor: userColors[sd],
         borderColor: userColors[sd],
-        backgroundColor:gradientFill});
+        backgroundColor: userFill[sd]});
     };
 
     let chart = new ChartJS(ctx, {
@@ -235,6 +159,7 @@ export class ChartGen {
 
     return chart;
   }
+
   public genDayLine(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -271,8 +196,8 @@ export class ChartGen {
       }
       userdatas.push({ label: sumdat.user.screen_name, data: plotData, 
         pointBackgroundColor: userColors[sd], 
-        borderColor: userColors[sd], 
-        backgroundColor: defaultFill });
+        borderColor: userColors[sd],
+        backgroundColor: userFill[sd]});
     };
 
     let chart = new ChartJS(ctx, {
@@ -286,16 +211,6 @@ export class ChartGen {
             ticks: {beginAtZero:true}}]
         }
       }
-      /*
-      data: {
-        labels: labels,
-       
-        backgroundColor: defaultFill,
-        pointBackgroundColor:pointColors,
-        fill: "start",
-        pointRadius: 5
-        }]
-      */
     });
 
     return chart;
@@ -357,6 +272,71 @@ export class ChartGen {
         }        
       }
     });
+    return chart;
+  }
+
+  public genTweetSentiments(
+    ctx: CanvasRenderingContext2D,
+    ...summaryData: SummaryData[]
+  ) {
+    let userdatas: { label: string; data: any[], 
+      backgroundColor: string}[] = [];
+    
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat : SummaryData = summaryData[sd];
+      let plotData = [];
+
+      let avg_retweets = 0;
+      sumdat.tweets.forEach(tweet => {
+        avg_retweets += tweet.tweetData.retweet_count; 
+      });
+      avg_retweets /= sumdat.tweets.length;
+      //1+2*log2(tweetData.tweetData.retweet_count)
+
+      for (let i = 0; i < sumdat.tweets.length; i++) {
+        let tw = sumdat.tweets[i];
+        plotData.push({
+          x: tw.sentimentData.documentSentiment.score,
+          y: sigmoid(tw.sentimentData.documentSentiment.magnitude),
+          r: 4*(1 + tw.tweetData.retweet_count / avg_retweets)
+        });
+      }
+      userdatas.push({ label: sumdat.user.screen_name, 
+        data: plotData, backgroundColor:userColors[sd]});
+    };
+
+    let chart = new ChartJS(ctx, {
+      type: "bubble",
+      data: { datasets: userdatas },
+      options: {
+        title: { display: true, text: "Sentiment of tweets" },
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: { display: true, labelString: "Score" },
+              type: "linear",
+              position: "bottom"
+            }
+          ],
+          yAxes: [{ scaleLabel: { display: true, labelString: "Magnitude" } }, ]
+        },
+
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+              return summaryData[tootipItem.datasetIndex].tweets[
+                tootipItem.index
+              ].tweetData.text;
+            }
+          }
+        }
+      }
+    });
+
     return chart;
   }
 
@@ -423,7 +403,7 @@ export class ChartGen {
           let data = {
             x: value.entity.sentiment.score,
             y: sigmoid(value.entity.sentiment.magnitude),
-            r: 2+3*Math.log(value.totalSalience*1000),
+            r: 2+4*Math.log(value.totalSalience*1000),
               /*(0.75 * avgSalience + (0.25 * value.count) / totalMentions) *
               ctx.canvas.width *
               2*/
@@ -477,9 +457,6 @@ export class ChartGen {
       }
     });
 
-    console.log("===== RETURNING CHART");
-    console.log(chart);
-
     return chart;
   }
 
@@ -529,7 +506,6 @@ export class ChartGen {
     return chart;
   }
 
-  //TODO: Bug: Inner circle gets outer circle's mentions
   public genMentions(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -592,7 +568,6 @@ export class ChartGen {
     };
 
 
-    //TODO: Get this sort working
     //https://www.npmjs.com/package/chartjs-plugin-sort
     let chart = new ChartJS(ctx, {
       type: "pie",
@@ -628,8 +603,6 @@ export class ChartGen {
   }  
 
 
-//== RADAR ==
-  //TODO: Fix running outa colors etc
   public genTweetTypes(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -711,5 +684,74 @@ export class ChartGen {
       });
       return chart;
     };
+
+
+    
+
+    // Popularity
+    public genPopularity(
+      ctx: CanvasRenderingContext2D,
+      ...summaryData: SummaryData[]
+    ) {
+      let userdatas: { label: string; data: any[], 
+        backgroundColor: string}[] = [];
+      
+      for(let sd=0; sd<summaryData.length; sd++){
+        let sumdat : SummaryData = summaryData[sd];
+        let plotData = [];
+  
+  
+        for (let i = 0; i < sumdat.tweets.length; i++) {
+          let tw = sumdat.tweets[i];
+          plotData.push({
+            x: tw.tweetData.retweet_count,
+            y: tw.tweetData.favorite_count,
+            r: 2+(4*sigmoid(tw.sentimentData.documentSentiment.magnitude))
+          });
+        }
+        userdatas.push({ label: sumdat.user.screen_name, 
+          data: plotData, backgroundColor:userColors[sd]});
+      };
+  
+      let chart = new ChartJS(ctx, {
+        type: "bubble",
+        data: { datasets: userdatas },
+        options: {
+          title: { display: true, text: "Tweet popularity" },
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [{ scaleLabel: { display: true, labelString: "Retweeets" },
+                type: "linear",
+                position: "bottom",  
+              }],
+            yAxes: [{ scaleLabel: { display: true, labelString: "Favorites" },
+                type: "linear"
+              }],
+              ticks: {
+                callback: function(value, index, values) {
+                    //trying to improve ticks for type: "logarithmic"
+                    return Number(value.toString()+"REEEEEE?")
+                    //return tick.toLocaleString();
+                }
+              }
+          },
+  
+          tooltips: {
+            callbacks: {
+              label: function(
+                tootipItem: ChartJS.ChartTooltipItem,
+                data: ChartJS.ChartData
+              ) {
+                return summaryData[tootipItem.datasetIndex].tweets[
+                  tootipItem.index
+                ].tweetData.text;
+              }
+            }
+          }
+        }
+      });
+  
+      return chart;
+    }
 
 }

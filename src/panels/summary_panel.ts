@@ -25,9 +25,11 @@ export class SummaryPanel extends Panel {
   private init() {
     this.getMain().append(this.createProfiles());
     let cg = new ChartGen();
+    
     this.addChartRow(cg.genDayLine, cg.genHourLine);
     this.addChartRow(cg.genEntitySentiment, cg.genTweetSentiments);
     this.addChartRow(cg.genMentions, cg.genTweetTypes);
+    this.addChartRow(cg.genPopularity);
     /*
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createSentimentCharts());

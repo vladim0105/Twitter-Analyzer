@@ -108,6 +108,9 @@ export class Logic {
   }
 
   private compileText(data: TweetData[]) {
+    if (data == null || data.length == 0 || data[0] == null){
+      console.log("[!] Tweets not found");
+    }
     let text = data[0].text;
     for (let i = 1; i < data.length; i++) {
       //if (data[i].retweeted == true) continue;

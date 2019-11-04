@@ -17,10 +17,12 @@ export class TweetPanel extends Panel {
 
   private init() {
     console.log(
+      ((this.data.tweetData.hasOwnProperty("retweeted_status"))?"[RT]":"") +
       "🐦 Displaying tweet with " +
         this.data.tweetData.retweet_count +
-        " retweets"
+        " retweets: "
     );
+    console.log(this.data);
     let profileContainer = $("<div>").css("margin-left", "5%");
     let profileImg = $("<img>")
       .css(this.profilePictureStyle)
@@ -42,10 +44,13 @@ export class TweetPanel extends Panel {
     let text = $("<p>")
       .text('"' + this.data.tweetData.text + '"')
       .css({ "font-style": "italic" });
-    let sentimentText = $("<p>").text(
-      "Sentiment: " + super.sentimentString(this.data.sentimentData.documentSentiment.score,
-                          this.data.sentimentData.documentSentiment.magnitude)
-
+    
+    let sentiStr = "Sentiment: " + super.sentimentString(this.data.sentimentData.documentSentiment.score,
+      this.data.sentimentData.documentSentiment.magnitude);
+    let dateStr = " - "+ new Date(this.data.tweetData.created_at).getUTCDate();
+    let retwStr = " - "+ super.bigNumStr(this.data.tweetData.retweet_count) + "⮤⮧"; //"⮬⮯"
+    let tweetStats = $("<p>").text(
+      sentiStr + dateStr + retwStr
     );
     /*
     let magnitudeText = $("<p>").text(
@@ -56,7 +61,7 @@ export class TweetPanel extends Panel {
 
     textContainer.append(text).css({ "text-align": "center" });
     analysisContainer
-      .append(sentimentText, /*magnitudeText*/)
+      .append(tweetStats, /*magnitudeText*/)
       .css({ "text-align": "center" });
 
     tweetContainer.append(textContainer, analysisContainer);
