@@ -19,9 +19,6 @@ export class Logic {
   }
   private setupEvents() {
     this.disableInput(true);
-    $("#back").on("click", () => {
-      this.showOverlay(true);
-    });
 
     $("#search_input_field .handle_submit").on(
       "click",
@@ -86,6 +83,10 @@ export class Logic {
     $("#navbar")
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
+    $("#back").off("click");
+    $("#back").on("click", () => {
+      this.showOverlay(true);
+    });
     if (show) {
       this.showAboutUs(false);
       this.showOverlay(false);
@@ -108,6 +109,10 @@ export class Logic {
       $("#navbar")
         .animate({ opacity: opacity }, "fast")
         .css("pointer-events", pointer);
+      $("#back").off("click");
+      $("#back").on("click", () => {
+        this.showSearch(true);
+      });
       let opacity2 = show ? 0 : 1;
       $("#aboutus")
         .animate({ opacity: opacity2 }, "slow")
