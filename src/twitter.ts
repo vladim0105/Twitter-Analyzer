@@ -3,6 +3,7 @@ import * as isDev from "electron-is-dev";
 import { ErrorPanel } from "./panels/error_panel";
 import * as $ from "jquery";
 import { Logic, displayError } from "./logic";
+import { NaturalLanguageProcessingAPI } from "./nlp";
 export type TwitterUser = {
   // === Identifying data
   id: number; // unique internal numeral ID
@@ -105,6 +106,7 @@ export class TwitterAPI {
   /**
    * Requests the 200 newest tweets from the given user account.
    * It will return them in the callback function when theyre ready.
+   * Or if developmental version, only 50 tweets.
    */
   public fetchTweets(
     authToken: string,

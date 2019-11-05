@@ -168,7 +168,6 @@ export class Logic {
     let handles = [
       $("#search_input_field .handle_input").val() as string,
       $("#compare_input_field .handle_input").val() as string,
-      "elonmusk", "billgates", "barackobama", "cocacola"
     ];
     let summaryDataArr: SummaryData[] = [];
     handles.forEach(handle => {

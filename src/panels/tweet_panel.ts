@@ -50,9 +50,9 @@ export class TweetPanel extends Panel {
       this.data.sentimentData.documentSentiment.magnitude);
     let retwStr = " "+ super.bigNumStr(this.data.tweetData.retweet_count) + "⮤⮧"; //"⮬⮯"
     let date = new Date(this.data.tweetData.created_at);
-    let dateStr = " ("+(date.getDate()<9?"0":"")+date.getDate() + "/" + super.month(date, 3) + "/" + date.getFullYear()+")";
+    let dateStr = (date.getDate()<9?"0":"")+date.getDate() + "/" + super.month(date, 3) + "/" + date.getFullYear();
     let tweetStats = $("<p>").text(
-      dateStr + retwStr + "\t" + dateStr
+      dateStr +" - "+ retwStr + " - " + sentiStr
     );
     /*
     let magnitudeText = $("<p>").text(

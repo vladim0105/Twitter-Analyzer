@@ -412,14 +412,6 @@ export class ChartGen {
           plotData.push(data);
         }
 
-        //TODO: Use KeyColors if single users, otherwise color each user different
-        /*
-        let keyColors: string[] = [];
-        values.forEach(val => {
-          let colorIndex = entityTypeNames.indexOf(val.entityType);
-          keyColors.push(pointColors[colorIndex]);
-        });*/
-
         userdatas.push({ label: sumdat.user.screen_name, data: plotData,
           pointBackgroundColor: userColors[sd],
           backgroundColor: userColors[sd],
@@ -602,7 +594,7 @@ export class ChartGen {
     return chart;
   }  
 
-  /*
+  /*  
   public genPlaces(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -619,23 +611,28 @@ export class ChartGen {
       let tags: string[] = [];
       
       for (let i = 0; i < sumdat.tweets.length; i++) {
-        let ent = sumdat.tweets[i].tweetData.;
+        if (sumdat.tweets[i].tweetData.hasOwnProperty("place") == false){
+          console.log("No place");
+          continue;
+        }
+        if (sumdat.tweets[i].tweetData.place.hasOwnProperty("name") == false){
+          console.log("No place name");
+          continue;
+        }
 
-        //Count mentions
-        ent.user_mentions.forEach(mention => {
-          let place = "@"+mention.screen_name;
-          //mentions.push(name)
-          let index = keys.indexOf(name);
-          if (tags.indexOf(name) == -1) {
-            tags.push(name);
-          }
-          if (index == -1) {
-            keys.push(name);
-            values.push(1);
-          } else {
-            values[index]++;
-          }
-        });
+        let thisPlace = sumdat.tweets[i].tweetData.place.name;
+        console.log("Tweet has place:"+thisPlace);
+        //mentions.push(name)
+        let index = keys.indexOf(thisPlace);
+        if (tags.indexOf(thisPlace) == -1) {
+          tags.push(thisPlace);
+        }
+        if (index == -1) {
+          keys.push(thisPlace);
+          values.push(1);
+        } else {
+          values[index]++;
+        }
       }
   
       let arrayOfObj = tags.map(function(d, i) {
@@ -670,7 +667,7 @@ export class ChartGen {
       type: "pie",
       data: {datasets: userdatas },
       options: {
-        title: { display: true, text: "User mentions" },
+        title: { display: true, text: "Geotags" },
         plugins: {
           sort:
               {
@@ -815,7 +812,7 @@ export class ChartGen {
       };
   
       let chart = new ChartJS(ctx, {
-        type: "bubble",
+        type: "bubble", 
         data: { datasets: userdatas },
         options: {
           title: { display: true, text: "Tweet popularity" },
