@@ -707,7 +707,7 @@ export class ChartGen {
     let tags: string[] = [];
     let keys: string[] = ["Media %", "Mention %", "Link %", 
                           "Hashtag %", "Emoji %", "Retweet %", 
-                          "Pure text %", "Coordinates %"];
+                          "Pure text %"/*, "Place %"*/];
 
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat = summaryData[sd];
@@ -763,7 +763,7 @@ export class ChartGen {
           +n_text + " just text\n",
           +n_place +" places"
           );
-      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_reweeted, n_text, n_place];
+      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_reweeted, n_text];
       let values = [];
       counts.forEach(n => {
         values.push((100 * n / sumdat.tweets.length).toFixed(1))
