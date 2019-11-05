@@ -18,9 +18,7 @@ export class Logic {
     this.setupEvents();
   }
   private setupEvents() {
-    $("#entry").on("click", () => {
-      this.showOverlay(true);
-    });
+    this.disableInput(true);
 
     $("#search_input_field .handle_submit").on(
       "click",
@@ -46,7 +44,7 @@ export class Logic {
         this.onCompare();
       }
     });
-    $("#aboutUs").on("click", () => {
+    $("#aboutus").on("click", () => {
       this.showAboutUs(true);
     });
     $("#returnToSearchPage").on("click", () => {
@@ -85,9 +83,17 @@ export class Logic {
     $("#navbar")
       .animate({ opacity: opacity }, "slow")
       .css("pointer-events", pointer);
+    $("#back").off("click");
+    $("#back").on("click", () => {
+      this.showOverlay(true);
+    });
     if (show) {
       this.showAboutUs(false);
       this.showOverlay(false);
+      let opacity2 = show ? 1 : 0;
+      $("#aboutus")
+        .animate({ opacity: opacity2 }, "fast")
+        .css("pointer-events", pointer);
     }
   }
 
@@ -100,15 +106,32 @@ export class Logic {
     if (show) {
       this.showSearch(false);
       this.showOverlay(false);
+      $("#navbar")
+        .animate({ opacity: opacity }, "fast")
+        .css("pointer-events", pointer);
+      $("#back").off("click");
+      $("#back").on("click", () => {
+        this.showSearch(true);
+      });
+      let opacity2 = show ? 0 : 1;
+      $("#aboutus")
+        .animate({ opacity: opacity2 }, "slow")
+        .css("pointer-events", pointer);
     }
   }
   //Get the Authorization token from twitter, this is then used as a password for doing API requests.
   private onReceivedAuthToken(data: TwitterAccessToken) {
     this.twitterAuthToken = data.access_token;
+    this.disableInput(false);
   }
-
+  private disableInput(disable: boolean) {
+    let opacity = disable ? 0.6 : 1;
+    $(".handle_input, .handle_submit")
+      .css({ opacity: opacity })
+      .prop("disabled", disable);
+  }
   private compileText(data: TweetData[]) {
-    if (data == null || data.length == 0 || data[0] == null){
+    if (data == null || data.length == 0 || data[0] == null) {
       console.log("[!] Tweets not found");
     }
     let text = data[0].text;

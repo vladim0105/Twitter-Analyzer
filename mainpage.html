@@ -2,24 +2,30 @@
   <head>
     <title>Twitter Analyzer</title>
     <link href="mainstyle.css" rel="stylesheet" />
-    <meta charset="UTF-8"><!--To support emojis-->
+    <meta charset="UTF-8" />
+    <!--To support emojis-->
   </head>
   <!-- This is for styling the overlay (for design purposes)-->
   <!-- Note that overlay transition not made yet lol-->
 
   <body>
-    <div
-      id="navbar"
-      style="width: 100%; top: 0; z-index: 5000; position: sticky;"
-    >
-      <div id="entry">
-        ⬅
+    <div id="navbar">
+      <div class="nav_button_container">
+        <div id="back" class="nav_button">
+          ⬅
+        </div>
       </div>
-      <div id="backtotop">
-        Back to top ↑
+      <div class="nav_button_container">
+        <div id="backtotop" class="nav_button">
+          <p>
+            ↑ Back to top ↑
+          </p>
+        </div>
       </div>
-      <div id="aboutUs">
-        i
+      <div class="nav_button_container">
+        <div id="aboutus" class="nav_button">
+          i
+        </div>
       </div>
     </div>
     <!-- Intro Page-->
@@ -33,7 +39,7 @@
             type="text"
             name="Twitter handle"
             class="handle_input"
-            placeholder='Search Twitter Handle'
+            placeholder='Search Twitter Handle, e.g. "realDonaldTrump"'
           />
           <input type="button" value="Submit" class="handle_submit" />
         </div>
@@ -42,14 +48,9 @@
 
     <!-- About Us Page-->
     <div class="aboutUsBg" id="aboutUsPage">
-      <i
-        id="returnToSearchPage"
-        class="fa fa-arrow-circle-o-left"
-        style="font-size:40px"
-      ></i>
       <p id="GroupName">About Us</p>
       <div class="hero-text">
-        <h1>The Twitter Analyzer</h1>
+        <h1>Twitter Analyzer</h1>
         <h2>
           CZ2006 Project by Team FSDV:
           <ul>
@@ -59,7 +60,7 @@
             <li><span>D</span>onghui Sun</li>
             <li><span>V</span>ladimir Monakhov</li>
           </ul>
-          Made using nodejs, chartjs, [tech], [tech]
+          Made using NodeJS, ChartJS, JQuery and Google NLP API
         </h2>
       </div>
     </div>
@@ -77,7 +78,7 @@
           type="text"
           name="Twitter handle"
           class="handle_input"
-          placeholder='Search Twitter Handle'
+          placeholder='Search Twitter Handle, e.g. "realDonaldTrump"'
         />
         <input type="button" value="Submit" class="handle_submit" />
       </div>
@@ -86,7 +87,7 @@
           type="text"
           name="Twitter handle"
           class="handle_input"
-          placeholder='Search Another Twitter Handle'
+          placeholder="Search Another Twitter Handle"
         />
         <input type="button" value="Compare" class="handle_submit" />
       </div>
