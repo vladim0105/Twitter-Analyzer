@@ -8,14 +8,20 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     height: 600,
-    width: 800
+    width: 800,
+    icon: "res/icon.ico",
+    show: false
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../mainpage.html"));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.setMenu(null);
+  }
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {
@@ -23,6 +29,9 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+  });
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
   });
 }
 
@@ -39,7 +48,6 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
-
 app.on("activate", () => {
   // On OS X it"s common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.

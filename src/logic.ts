@@ -221,6 +221,7 @@ export class Logic {
     handle: string,
     callback: (data: SummaryData) => void
   ) {
+    hasShownError = false;
     this.twitter.fetchTweets(
       this.twitterAuthToken,
       handle,
@@ -245,8 +246,8 @@ export class Logic {
         let overallDone = 0;
         this.nlp.fetchSentimentAnalysis(text, (result: NLPSentimentData) => {
           //Error occurs when result is null
-          if (!result || !result.documentSentiment) {
-            displayError("Error fetching sentiment data from Google.");
+          if (result.error) {
+            displayError(result.error.message);
             return;
           }
           summaryData.overallSentiment = result;
@@ -258,9 +259,8 @@ export class Logic {
           }
         });
         this.nlp.fetchEntityAnalysis(text, (result: NLPEntityData) => {
-          //Error occurs when result is null
-          if (!result) {
-            displayError("Error fetching entity data from Google.");
+          if (result.error) {
+            displayError(result.error.message);
             return;
           }
           summaryData.entityResult = result;
@@ -272,14 +272,15 @@ export class Logic {
           }
         });
         let tweetsDone = 0;
+
         for (let i = 0; i < tweets.length; i++) {
           let tweet = tweets[i];
           this.nlp.fetchSentimentAnalysis(
             tweet.text,
             (result: NLPSentimentData) => {
               //Error occurs when result is null
-              if (!result || !result.documentSentiment) {
-                displayError("Error fetching sentiment data from Google.");
+              if (result.error) {
+                displayError(result.error.message);
                 return;
               }
               summaryData.tweets[i] = {
@@ -299,9 +300,14 @@ export class Logic {
     );
   }
 }
+let hasShownError = false;
 export function displayError(msg: string) {
+  if (hasShownError) {
+    return;
+  }
   let errorPanel = new ErrorPanel(msg);
   errorPanel.appendTo($("#resultContainer"));
   $("#resultContainer").fadeIn("slow");
   $(".loader").animate({ opacity: 0 }, "slow");
+  hasShownError = true;
 }

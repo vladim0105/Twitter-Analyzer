@@ -4,7 +4,6 @@ import * as $ from "jquery";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
 import { ChartGen } from "../chart_generator";
 import * as moment from "moment";
-import { strict } from "assert";
 
 export type SummaryData = {
   user: TwitterUser;
@@ -170,7 +169,9 @@ export class SummaryPanel extends Panel {
   }
 
   private addChartRow(...chartFuncs: any[]): void {
-    let chartRow = $("<div>").css(doubleChartParent).css("margin-bottom", 0);
+    let chartRow = $("<div>")
+      .css(doubleChartParent)
+      .css("margin-bottom", 0);
     chartFuncs.forEach(func => {
       let container = $("<div>")
         .css(doubleChartChild)
