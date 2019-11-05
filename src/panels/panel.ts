@@ -40,4 +40,15 @@ export class Panel {
     let magnitudeStr = ""+magnitude.toFixed(2); //Magnitude typically < 1, can be above.
     return "["+(score > 0 ? "+":"") + score + " * " + magnitude +"]";
   }
+
+  protected month(mDate : Date, chars?: number){
+    let months = ["January","February","March",
+                  "April","May","June",
+                  "July","August","September",
+                  "October","November","December"]
+    let str = months[mDate.getMonth()];
+    return months[mDate.getMonth()];
+    return chars? str.slice(3,chars) : str; 
+  }
+
 }

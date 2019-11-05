@@ -2,6 +2,7 @@ import { Panel } from "./panel";
 import { TweetData } from "../twitter";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
 import * as $ from "jquery";
+import { months } from "moment";
 export type TweetSummaryData = {
   tweetData: TweetData;
   sentimentData: NLPSentimentData;
@@ -47,10 +48,11 @@ export class TweetPanel extends Panel {
     
     let sentiStr = "Sentiment: " + super.sentimentString(this.data.sentimentData.documentSentiment.score,
       this.data.sentimentData.documentSentiment.magnitude);
-    let dateStr = " - "+ new Date(this.data.tweetData.created_at).getUTCDate();
-    let retwStr = " - "+ super.bigNumStr(this.data.tweetData.retweet_count) + "⮤⮧"; //"⮬⮯"
+    let retwStr = " "+ super.bigNumStr(this.data.tweetData.retweet_count) + "⮤⮧"; //"⮬⮯"
+    let date = new Date(this.data.tweetData.created_at);
+    let dateStr = " "+date.getDate() + "/" + super.month(date, 3) + "/" + date.getFullYear() ;
     let tweetStats = $("<p>").text(
-      sentiStr + dateStr + retwStr
+      sentiStr + retwStr + dateStr
     );
     /*
     let magnitudeText = $("<p>").text(
