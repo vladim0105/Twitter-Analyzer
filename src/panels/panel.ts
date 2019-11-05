@@ -55,8 +55,8 @@ export class Panel {
                   "July","August","September",
                   "October","November","December"]
     let str = months[mDate.getMonth()];
-    return months[mDate.getMonth()];
-    return chars? str.slice(3,chars) : str; 
+    if (!chars) chars = 0;
+    return months[mDate.getMonth()].substr(0, chars) ;
   }
 
 }
