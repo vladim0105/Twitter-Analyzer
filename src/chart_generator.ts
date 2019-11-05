@@ -298,7 +298,7 @@ export class ChartGen {
         plotData.push({
           x: tw.sentimentData.documentSentiment.score,
           y: sigmoid(tw.sentimentData.documentSentiment.magnitude),
-          r: 4*(1 + tw.tweetData.retweet_count / avg_retweets)
+          r: 3 + 4 * log2(1 + tw.tweetData.retweet_count / avg_retweets)
         });
       }
       userdatas.push({ label: sumdat.user.screen_name, 
@@ -602,6 +602,104 @@ export class ChartGen {
     return chart;
   }  
 
+  /*
+  public genPlaces(
+    ctx: CanvasRenderingContext2D,
+    ...summaryData: SummaryData[]
+  ) {
+    let userdatas: { label: string; data: any[],
+      backgroundColor: string[],
+      hovertags: string[]}[] = [];
+
+    for(let sd=0; sd<summaryData.length; sd++){
+      let sumdat = summaryData[sd];
+
+      let keys: string[] = [];
+      let values: number[] = [];
+      let tags: string[] = [];
+      
+      for (let i = 0; i < sumdat.tweets.length; i++) {
+        let ent = sumdat.tweets[i].tweetData.;
+
+        //Count mentions
+        ent.user_mentions.forEach(mention => {
+          let place = "@"+mention.screen_name;
+          //mentions.push(name)
+          let index = keys.indexOf(name);
+          if (tags.indexOf(name) == -1) {
+            tags.push(name);
+          }
+          if (index == -1) {
+            keys.push(name);
+            values.push(1);
+          } else {
+            values[index]++;
+          }
+        });
+      }
+  
+      let arrayOfObj = tags.map(function(d, i) {
+        return {
+          label: d,
+          data: values[i] || 0
+        };
+      });
+  
+      let sortedArrayOfObj = arrayOfObj.sort(function(a, b) {
+        return b.data - a.data;
+      });
+  
+      let newArrayLabel = [];
+      let newArrayData = [];
+      sortedArrayOfObj.forEach(function(d){
+        newArrayLabel.push(d.label);
+        newArrayData.push(d.data);
+      });
+  
+      console.log(newArrayLabel);
+      console.log(newArrayData);
+
+      userdatas.push({ label: sumdat.user.screen_name, data: newArrayData, 
+        backgroundColor: randColors(values.length),
+        hovertags: newArrayLabel });
+    };
+
+
+    //https://www.npmjs.com/package/chartjs-plugin-sort
+    let chart = new ChartJS(ctx, {
+      type: "pie",
+      data: {datasets: userdatas },
+      options: {
+        title: { display: true, text: "User mentions" },
+        plugins: {
+          sort:
+              {
+                  enable: true,
+                  sortBy: 'label',
+                  order: 'desc',
+              }
+        },
+        tooltips: {
+          callbacks: {
+            label: function(
+              tootipItem: ChartJS.ChartTooltipItem,
+              data: ChartJS.ChartData
+            ) {
+
+              let dat = userdatas[tootipItem.datasetIndex];
+              let count = dat.data[tootipItem.index]
+              let poster = "@"+summaryData[tootipItem.datasetIndex].user.screen_name +" ⭢ ";
+              let mentioned = userdatas[tootipItem.datasetIndex].hovertags[tootipItem.index];
+              return ((count > 1) ? count+"* ":"") + poster + mentioned;
+            }
+          }
+        }
+      }
+    });
+    return chart;
+  } 
+  */
+
 
   public genTweetTypes(
     ctx: CanvasRenderingContext2D,
@@ -610,13 +708,12 @@ export class ChartGen {
     let userdatas: { label: string; data: any[],
       backgroundColor: string}[] = [];
     let tags: string[] = [];
-    let keys: string[] = ["Media %", "Mention %", "Link %", "Hashtag %", "Emoji %", "Retweet %", "Pure text %"];
+    let keys: string[] = ["Media %", "Mention %", "Link %", 
+                          "Hashtag %", "Emoji %", "Retweet %", 
+                          "Pure text %", "Coordinates %"];
 
     for(let sd=0; sd<summaryData.length; sd++){
       let sumdat = summaryData[sd];
-
-      //let keys: string[] = ["Media", "Mention", "Link", "Hashtag", "Emoji", "Retweet", "Pure text"];
-      //let values: number[] = [];
 
 
       let n_media = 0;
@@ -626,6 +723,7 @@ export class ChartGen {
       let n_emoji = 0;
       let n_reweeted = 0;
       let n_text = 0;
+      let n_place = 0;
       
       for (let i = 0; i < sumdat.tweets.length; i++) {
         let tw = sumdat.tweets[i].tweetData;
@@ -647,8 +745,11 @@ export class ChartGen {
         if (extractEmoji(tw.text).length > 0){
           n_emoji++; just_text = false;
         }
-        if (tw.hasOwnProperty("retweeted_status")){
-          n_reweeted++; just_text = false;
+        if (tw.hasOwnProperty("place")){
+          n_place++;
+        }
+        if (tw.hasOwnProperty("extended_entities")){
+          n_media++; just_text = false;
         }
         if (just_text == true){
           n_text++;
@@ -662,14 +763,14 @@ export class ChartGen {
           +n_hashtag+ " hashtags\n",
           +n_emoji + " emojis\n"
           +n_reweeted + "retweeted\n"
-          +n_text + " just text\n"
+          +n_text + " just text\n",
+          +n_place +" places"
           );
-      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_reweeted, n_text];
+      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_reweeted, n_text, n_place];
       let values = [];
       counts.forEach(n => {
         values.push((100 * n / sumdat.tweets.length).toFixed(1))
       });
-
 
       userdatas.push({ label: sumdat.user.screen_name, data: values, 
           backgroundColor: userColors[sd] });
@@ -753,5 +854,12 @@ export class ChartGen {
   
       return chart;
     }
+
+
+    /* TODO FROM DOC:
+    The gathered tweets must be summarized to give the
+    account’s personality,  the mood within a week, 
+    the places visited or posted about and the 
+    other twitter users involved. */
 
 }

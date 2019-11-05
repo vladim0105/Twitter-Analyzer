@@ -35,6 +35,14 @@ export type MentionObject = {
   name: string; //Display name of mentioned
   screen_name: string; //Unique handle of mentioned
 }
+export type Place = {
+  id: number; 
+  place_type: string; //"city"
+  name: string; //human-readable
+  full_name: string; //Manhattan, NY
+  country_code: string; //US
+  country: string; //United States
+}
 
 //TODO: Fix experimental export:
 export type TweetEntities = {
@@ -56,6 +64,7 @@ export type TweetData = {
   entities: TweetEntities;
   retweeted_status: any; //Exists only if this post is a retweet
   retweeted: boolean;
+  place: Place;
 };
 
 export type TwitterAccessToken = {

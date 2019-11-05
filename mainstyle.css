@@ -17,7 +17,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("res/legalhexagons2.png");
+  background-image: url("res/bluehex2.png");
   overflow-y: scroll;
 }
 
