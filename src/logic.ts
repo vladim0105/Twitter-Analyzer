@@ -101,6 +101,13 @@ export class Logic {
     if (show) {
       this.showSearch(false);
       this.showOverlay(false);
+      $("#navbar")
+        .animate({ opacity: opacity }, "fast")
+        .css("pointer-events", pointer);
+      let opacity2 = show ? 0 : 1;
+      $("#aboutus")
+        .animate({ opacity: opacity2 }, "slow")
+        .css("pointer-events", pointer);
     }
   }
   //Get the Authorization token from twitter, this is then used as a password for doing API requests.
