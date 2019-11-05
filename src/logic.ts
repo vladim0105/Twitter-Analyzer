@@ -89,6 +89,10 @@ export class Logic {
     if (show) {
       this.showAboutUs(false);
       this.showOverlay(false);
+      let opacity2 = show ? 1 : 0;
+      $("#aboutus")
+        .animate({ opacity: opacity2 }, "fast")
+        .css("pointer-events", pointer);
     }
   }
 
