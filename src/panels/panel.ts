@@ -20,6 +20,14 @@ export class Panel {
     "margin-bottom": "2%",
     zoom: "50%"
   };
+
+  protected tweetPictureStyle = {
+    "border-radius": "50%",
+    display: "block",
+    "margin": "0%",
+    zoom: "50%"
+  };
+
   private mainStyle = {
     display: "flex",
     "flex-direction": "column",

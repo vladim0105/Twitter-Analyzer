@@ -25,7 +25,7 @@ export class TweetPanel extends Panel {
     console.log(this.data);
     let profileContainer = $("<div>").css("margin-left", "5%");
     let profileImg = $("<img>")
-      .css(this.profilePictureStyle)
+      .css(this.tweetPictureStyle)
       .attr("src", this.data.tweetData.user.profile_image_url_https);
     let displayName = $("<p>").text(this.data.tweetData.user.name);
     let screenName = $("<p>").text("@"+this.data.tweetData.user.screen_name);
