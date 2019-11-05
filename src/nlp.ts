@@ -7,10 +7,12 @@ export type NLPSentimentData = {
   language: String;
   /** The sentences that make up this text */
   sentences: Sentence[];
+  error: Error;
 };
 export type NLPEntityData = {
   entities: Entity[];
   language: String;
+  error: Error;
 };
 export type Entity = {
   name: string;
@@ -26,6 +28,10 @@ export type Sentiment = {
   magnitude: number;
   /** Represent positivity, is in range [-1, 1] */
   score: number;
+};
+export type Error = {
+  code: number;
+  message: string;
 };
 type Sentence = {
   text: string;
@@ -48,7 +54,8 @@ let sente: Sentence = {
 export const TEST_DATA: NLPSentimentData = {
   documentSentiment: sentipos,
   language: "US-EN",
-  sentences: [sente, sente]
+  sentences: [sente, sente],
+  error: null
 };
 let TEST_ENTITY: Entity = {
   name: "positive-thing",
@@ -59,7 +66,8 @@ let TEST_ENTITY: Entity = {
 };
 export const TEST_ENTITYDATA: NLPEntityData = {
   entities: [TEST_ENTITY, TEST_ENTITY, TEST_ENTITY],
-  language: "EN-US"
+  language: "EN-US",
+  error: null
 };
 
 // ===== Test Data above ====
@@ -85,6 +93,7 @@ export class NaturalLanguageProcessingAPI {
         body: { document: postData }
       },
       function(error, response, body) {
+        console.log(response);
         if (error) {
           console.log(error);
           displayError("Error connecting to the Google API.");

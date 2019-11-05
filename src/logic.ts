@@ -131,9 +131,6 @@ export class Logic {
       .prop("disabled", disable);
   }
   private compileText(data: TweetData[]) {
-    if (data == null || data.length == 0 || data[0] == null) {
-      console.log("[!] Tweets not found");
-    }
     let text = data[0].text;
     for (let i = 1; i < data.length; i++) {
       //if (data[i].retweeted == true) continue;
@@ -221,13 +218,19 @@ export class Logic {
     handle: string,
     callback: (data: SummaryData) => void
   ) {
+    hasShownError = false;
     this.twitter.fetchTweets(
       this.twitterAuthToken,
       handle,
       (tweets: TweetData[]) => {
         //Convert tweets to any-type in order to check if an error has been returned.
         let error = tweets as any;
-        if (error.error) {
+        if (
+          error.error ||
+          tweets == null ||
+          tweets.length == 0 ||
+          tweets[0] == null
+        ) {
           displayError(
             "Error fetching tweets from Twitter, this is usually caused by searching for nonexisting Twitter-accounts."
           );
@@ -245,8 +248,8 @@ export class Logic {
         let overallDone = 0;
         this.nlp.fetchSentimentAnalysis(text, (result: NLPSentimentData) => {
           //Error occurs when result is null
-          if (!result || !result.documentSentiment) {
-            displayError("Error fetching sentiment data from Google.");
+          if (result.error) {
+            displayError(result.error.message);
             return;
           }
           summaryData.overallSentiment = result;
@@ -258,9 +261,8 @@ export class Logic {
           }
         });
         this.nlp.fetchEntityAnalysis(text, (result: NLPEntityData) => {
-          //Error occurs when result is null
-          if (!result) {
-            displayError("Error fetching entity data from Google.");
+          if (result.error) {
+            displayError(result.error.message);
             return;
           }
           summaryData.entityResult = result;
@@ -272,14 +274,15 @@ export class Logic {
           }
         });
         let tweetsDone = 0;
+
         for (let i = 0; i < tweets.length; i++) {
           let tweet = tweets[i];
           this.nlp.fetchSentimentAnalysis(
             tweet.text,
             (result: NLPSentimentData) => {
               //Error occurs when result is null
-              if (!result || !result.documentSentiment) {
-                displayError("Error fetching sentiment data from Google.");
+              if (result.error) {
+                displayError(result.error.message);
                 return;
               }
               summaryData.tweets[i] = {
@@ -299,9 +302,14 @@ export class Logic {
     );
   }
 }
+let hasShownError = false;
 export function displayError(msg: string) {
+  if (hasShownError) {
+    return;
+  }
   let errorPanel = new ErrorPanel(msg);
   errorPanel.appendTo($("#resultContainer"));
   $("#resultContainer").fadeIn("slow");
   $(".loader").animate({ opacity: 0 }, "slow");
+  hasShownError = true;
 }
