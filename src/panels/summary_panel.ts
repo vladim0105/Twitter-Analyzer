@@ -170,7 +170,7 @@ export class SummaryPanel extends Panel {
   }
 
   private addChartRow(...chartFuncs: any[]): void {
-    let chartRow = $("<div>").css(doubleChartParent);
+    let chartRow = $("<div>").css(doubleChartParent).css("margin-bottom", 0);
     chartFuncs.forEach(func => {
       let container = $("<div>")
         .css(doubleChartChild)
