@@ -29,6 +29,28 @@ export class SummaryPanel extends Panel {
     this.addChartRow(cg.genEntitySentiment, cg.genTweetSentiments);
     this.addChartRow(cg.genMentions, cg.genTweetTypes);
     this.addChartRow(cg.genPopularity);
+
+    this.getMain()
+      .css("border", "2px solid gray")
+      .css("border-radius", "5px");
+  }
+
+  private addChartRow(...chartFuncs: any[]): void {
+    let chartRow = $("<div>")
+      .css(doubleChartParent)
+      .css("margin-bottom", 0);
+    chartFuncs.forEach(func => {
+      let container = $("<div>")
+        .css(doubleChartChild)
+        .css({ height: "50vh", margin: "auto" }); 
+      let canvas = $("<canvas>")[0] as HTMLCanvasElement;
+      let chart = func(canvas.getContext("2d"), ...this.data);
+      container.append(canvas);
+      chartRow.append(container);
+    });
+    this.getMain().append(chartRow);
+  }
+
     /*
     this.getMain().append(this.createTimeCharts());
     this.getMain().append(this.createSentimentCharts());
@@ -36,10 +58,7 @@ export class SummaryPanel extends Panel {
     this.getMain().append(this.createTweetDevCharts());
     this.getMain().append(this.genMentionChart());
     */
-    this.getMain()
-      .css("border", "2px solid gray")
-      .css("border-radius", "5px");
-  }
+
 
   private nameStyle = { display: "block", margin: 0 };
 
@@ -149,21 +168,6 @@ export class SummaryPanel extends Panel {
     return profilesContainer;
   }
 
-  private addChartRow(...chartFuncs: any[]): void {
-    let chartRow = $("<div>")
-      .css(doubleChartParent)
-      .css("margin-bottom", 0);
-    chartFuncs.forEach(func => {
-      let container = $("<div>")
-        .css(doubleChartChild)
-        .css({ height: "50vh", margin: "auto" }); //Removing height setting kills scatter charts???!
-      let canvas = $("<canvas>")[0] as HTMLCanvasElement;
-      let chart = func(canvas.getContext("2d"), ...this.data);
-      container.append(canvas);
-      chartRow.append(container);
-    });
-    this.getMain().append(chartRow);
-  }
 }
 
 const doubleChartParent = {

@@ -237,6 +237,16 @@ export class Logic {
           return;
         }
         //If no error, proceed as normal:
+        //Clean away any non-alphanumerical values
+        tweets.forEach(tw => {
+          let filteredText = "";
+          for (let i=0; i<tw.text.length; i++){
+            let c = tw.text[i].match("^[a-zA-Z0-9 ]*$");
+            if (c.length > 0) filteredText += c;
+          }
+          tw.text = filteredText;
+        });
+
         let text = this.compileText(tweets);
         let summaryData: SummaryData = {
           user: tweets[0].user,
@@ -304,9 +314,6 @@ export class Logic {
 }
 let hasShownError = false;
 export function displayError(msg: string) {
-  if (hasShownError) {
-    return;
-  }
   let errorPanel = new ErrorPanel(msg);
   errorPanel.appendTo($("#resultContainer"));
   $("#resultContainer").fadeIn("slow");

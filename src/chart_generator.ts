@@ -706,7 +706,7 @@ export class ChartGen {
       backgroundColor: string}[] = [];
     let tags: string[] = [];
     let keys: string[] = ["Media %", "Mention %", "Link %", 
-                          "Hashtag %", "Emoji %", "Retweet %", 
+                          "Hashtag %", "Emoji %",  
                           "Pure text %"/*, "Place %"*/];
 
     for(let sd=0; sd<summaryData.length; sd++){
@@ -743,7 +743,10 @@ export class ChartGen {
           n_emoji++; just_text = false;
         }
         if (tw.hasOwnProperty("place")){
-          n_place++;
+          n_place++; //WHY WONT PLACE WORK?
+        }
+        if (tw.hasOwnProperty("retweeted_status")){
+          n_reweeted++; just_text = false;
         }
         if (tw.hasOwnProperty("extended_entities")){
           n_media++; just_text = false;
@@ -763,7 +766,7 @@ export class ChartGen {
           +n_text + " just text\n",
           +n_place +" places"
           );
-      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_reweeted, n_text];
+      let counts = [n_media, n_mention, n_url, n_hashtag, n_emoji, n_text];
       let values = [];
       counts.forEach(n => {
         values.push((100 * n / sumdat.tweets.length).toFixed(1))

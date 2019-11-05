@@ -11,7 +11,7 @@ export type TwitterUser = {
   screen_name: string; // unique twitter handle, eg: realDonaldTrump
   description: string; // bio/description
 
-  profile_image_url_https: string; //url to profiile pic
+  profile_image_url_https: string; //url to profile pic
 
   // === Stats
   verified: boolean; // Verified public figure
@@ -65,7 +65,8 @@ export type TweetData = {
   entities: TweetEntities;
   retweeted_status: any; //Exists only if this post is a retweet
   retweeted: boolean;
-  place: Place;
+  place: Place; //Nullable location either present or tagged
+  lang: string; //Language code. "en" is English. 
 };
 
 export type TwitterAccessToken = {

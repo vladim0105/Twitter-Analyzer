@@ -54,12 +54,6 @@ export class TweetPanel extends Panel {
     let tweetStats = $("<p>").text(
       dateStr +" - "+ retwStr + " - " + sentiStr
     );
-    /*
-    let magnitudeText = $("<p>").text(
-      "Overall Magnitude: " +
-        this.data.sentimentData.documentSentiment.magnitude
-    );
-    */
 
     textContainer.append(text).css({ "text-align": "center" });
     analysisContainer
