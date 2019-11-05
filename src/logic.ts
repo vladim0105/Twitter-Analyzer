@@ -164,7 +164,7 @@ export class Logic {
 
     let handles = [
       $("#search_input_field .handle_input").val() as string,
-      $("#compare_input_field .handle_input").val() as string,
+      $("#compare_input_field .handle_input").val() as string
     ];
     let summaryDataArr: SummaryData[] = [];
     handles.forEach(handle => {
@@ -235,6 +235,12 @@ export class Logic {
             "Error fetching tweets from Twitter, this is usually caused by searching for nonexisting Twitter-accounts."
           );
           return;
+        }
+        for (let i = 0; i < tweets.length; i++) {
+          if (tweets[i].hasOwnProperty("retweeted_status")) {
+            console.log(tweets[i].text);
+            tweets.splice(i, 1);
+          }
         }
         //If no error, proceed as normal:
         let text = this.compileText(tweets);

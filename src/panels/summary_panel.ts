@@ -93,9 +93,11 @@ export class SummaryPanel extends Panel {
         .css(this.nameStyle)
         .css("color", "gray");
       let join_time = new Date(value.user.created_at);
-      let age = moment().diff(join_time, 'weeks');
+      let age = moment().diff(join_time, "weeks");
       let joined = $("<p>")
-        .text("Joined "+super.month(join_time) +" "+join_time.getUTCFullYear())
+        .text(
+          "Joined " + super.month(join_time) + " " + join_time.getUTCFullYear()
+        )
         .css(this.nameStyle)
         .css("color", "gray");
       let activity = $("<p>")
