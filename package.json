@@ -1,7 +1,7 @@
 {
   "name": "twitter-analyzer",
-  "version": "0.0.1",
-  "description": "Description",
+  "version": "1.0.0",
+  "description": "Analyzes Twitter Accounts",
   "icon": "res/icon.ico",
   "main": "./dist/main.js",
   "scripts": {
@@ -17,7 +17,8 @@
     },
     "directories": {
       "output": "bin"
-    }
+    },
+    "productName": "Twitter Analyzer"
   },
   "devDependencies": {
     "@types/chart.js": "^2.8.9",
@@ -26,7 +27,6 @@
     "cross-env": "^6.0.3",
     "electron": "^2.0.2",
     "electron-builder": "^22.1.0",
-    "electron-is-dev": "^1.1.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
   },
@@ -37,6 +37,7 @@
     "extract-emoji": "^1.0.2",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "electron-is-dev": "^1.1.0"
   }
 }

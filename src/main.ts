@@ -15,12 +15,10 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../mainpage.html"));
-
-  // Open the DevTools.
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
-  } else {
+  console.log(isDev);
+  if (!isDev) {
     mainWindow.setMenu(null);
+    mainWindow.webContents.closeDevTools();
   }
 
   // Emitted when the window is closed.
