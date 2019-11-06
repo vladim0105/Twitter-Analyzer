@@ -16,6 +16,7 @@ function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../mainpage.html"));
   console.log(isDev);
+  mainWindow.setMenu(null);
   if (!isDev) {
     mainWindow.setMenu(null);
     mainWindow.webContents.closeDevTools();
