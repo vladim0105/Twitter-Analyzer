@@ -10,6 +10,10 @@ export type TweetSummaryData = {
 };
 export class TweetPanel extends Panel {
   private data: TweetSummaryData;
+  /**
+   * Creates a panel displaying a single tweet and its corresponding analysis.
+   * @param data The tweet data and analysis.
+   */
   constructor(data: TweetSummaryData) {
     super("100%", "auto");
     this.data = data;
@@ -18,8 +22,8 @@ export class TweetPanel extends Panel {
 
   private init() {
     console.log(
-      ((this.data.tweetData.hasOwnProperty("retweeted_status"))?"[RT]":"") +
-      "🐦 Displaying tweet with " +
+      (this.data.tweetData.hasOwnProperty("retweeted_status") ? "[RT]" : "") +
+        "🐦 Displaying tweet with " +
         this.data.tweetData.retweet_count +
         " retweets: "
     );
@@ -29,7 +33,7 @@ export class TweetPanel extends Panel {
       .css(this.tweetPictureStyle)
       .attr("src", this.data.tweetData.user.profile_image_url_https);
     let displayName = $("<p>").text(this.data.tweetData.user.name);
-    let screenName = $("<p>").text("@"+this.data.tweetData.user.screen_name);
+    let screenName = $("<p>").text("@" + this.data.tweetData.user.screen_name);
     profileContainer.append(profileImg, displayName, screenName);
 
     let tweetContainer = $("<div>").css({
@@ -37,7 +41,7 @@ export class TweetPanel extends Panel {
       "flex-direction": "column",
       "justify-content": "center",
       "align-items": "center",
-      width: "100%",
+      width: "100%"
     });
 
     let textContainer = $("<div>");
@@ -45,14 +49,25 @@ export class TweetPanel extends Panel {
     let text = $("<p>")
       .text('"' + this.data.tweetData.text + '"')
       .css({ "font-style": "italic" });
-    
-    let sentiStr = "Sentiment: " + super.sentimentString(this.data.sentimentData.documentSentiment.score,
-      this.data.sentimentData.documentSentiment.magnitude);
-    let retwStr = " "+ super.bigNumStr(this.data.tweetData.retweet_count) + "⮤⮧"; //"⮬⮯"
+
+    let sentiStr =
+      "Sentiment: " +
+      super.sentimentString(
+        this.data.sentimentData.documentSentiment.score,
+        this.data.sentimentData.documentSentiment.magnitude
+      );
+    let retwStr =
+      " " + super.bigNumStr(this.data.tweetData.retweet_count) + "⮤⮧"; //"⮬⮯"
     let date = new Date(this.data.tweetData.created_at);
-    let dateStr = (date.getDate()<9?"0":"")+date.getDate() + "/" + super.month(date, 3) + "/" + date.getFullYear();
+    let dateStr =
+      (date.getDate() < 9 ? "0" : "") +
+      date.getDate() +
+      "/" +
+      super.month(date, 3) +
+      "/" +
+      date.getFullYear();
     let tweetStats = $("<p>").text(
-      dateStr +" - "+ retwStr + " - " + sentiStr
+      dateStr + " - " + retwStr + " - " + sentiStr
     );
     /*
     let magnitudeText = $("<p>").text(
@@ -63,7 +78,7 @@ export class TweetPanel extends Panel {
 
     textContainer.append(text).css({ "text-align": "center" });
     analysisContainer
-      .append(tweetStats, /*magnitudeText*/)
+      .append(tweetStats /*magnitudeText*/)
       .css({ "text-align": "center" });
 
     tweetContainer.append(textContainer, analysisContainer);

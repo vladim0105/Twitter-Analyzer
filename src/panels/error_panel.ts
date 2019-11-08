@@ -3,6 +3,10 @@ import { Panel } from "./panel";
 import * as $ from "jquery";
 export class ErrorPanel extends Panel {
   private msg: string;
+  /**
+   * Creates an error panel
+   * @param msg The error message
+   */
   constructor(msg: string) {
     super("100%", "auto");
     this.msg = msg;

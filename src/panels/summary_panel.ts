@@ -4,7 +4,10 @@ import * as $ from "jquery";
 import { NLPSentimentData, NLPEntityData } from "../nlp";
 import { ChartGen } from "../chart_generator";
 import * as moment from "moment";
-
+/**
+ * A generall struct containing everything that might be needed
+ * when constructing a panel
+ */
 export type SummaryData = {
   user: TwitterUser;
   compiledText: string;
@@ -14,6 +17,10 @@ export type SummaryData = {
 };
 export class SummaryPanel extends Panel {
   private data: SummaryData[];
+  /**
+   * Creates a new Summary Panel
+   * @param data The data to display
+   */
   constructor(data: SummaryData[]) {
     super("100%", "auto");
     this.data = data;
