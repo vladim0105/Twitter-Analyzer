@@ -66,6 +66,11 @@ export class Panel {
     return "[" + (score > 0 ? "+" : "") + score + " * " + magnitude + "]";
   }
 
+  /**
+   * Returns index month as string with a specific number of characters
+   * @param mDate Index of date. 0: January, 1: Febrary...
+   * @param chars (Optional) Number of strings to use. None: "January", 3: "Jan"
+   */
   protected month(mDate: Date, chars?: number) {
     let months = [
       "January",

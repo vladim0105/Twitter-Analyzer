@@ -28,6 +28,9 @@ export class SummaryPanel extends Panel {
     this.init();
   }
 
+  /**
+   * Initialize and setup the main Twitter Analyzer page's summary charts.
+   */
   private init() {
     this.getMain().append(this.createProfiles());
     let cg = new ChartGen();

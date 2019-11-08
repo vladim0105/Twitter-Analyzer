@@ -3,21 +3,24 @@ import { SummaryData } from "./panels/summary_panel";
 import * as ChartJS from "chart.js";
 import {extractEmoji, isEmoji} from "extract-emoji";
 
-
+// Returns the base 10 logarithm of parameter number. Used to logarithmly scale chart dimension.
 const natlog10 = Math.log(10);
 function log10(n: number){
   return (Math.log(n) / natlog10);
 }
-
+// Returns the base 2 logarithm of parameter number. Used to logarithmly scale chart dimension.
 const natlog2 = Math.log(2);
 function log2(n: number){
   return (Math.log(n) / natlog2);
 }
 
+//Performs a sigmoid function on n, returning value 0..1, asymptopic to both ends.
 function sigmoid(n: number){
   return (1 / (1+Math.exp(-n)))
 }
 
+//Generates a somewhat random color from HSL rotation. Based on golden ratio for even distribution.
+//Base code from this SO post below. Parameter n is index of data object, to be increased each iteration.
 //https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript/43195379
 function randColor(n:number){ 
   return "hsla(" + (360 * 1.618*n)%360 + ',' +
@@ -25,6 +28,8 @@ function randColor(n:number){
               (30 + 50 * Math.random()) + '%,' +
               0.75 + ")";
 }
+
+//Generates len number of colors using randColor, returning string array of HSLA colors.
 function randColors(len: number){
   let colors = [];
   for (let i=0; i<len; i++){
@@ -51,6 +56,8 @@ let pointColors: string[]= [
   "rgba(106,46,138, 0.8)"
 ]
 
+//Generate some default fill colors
+//Less opacity than border colors
 let fillColors: string[] = []; 
 pointColors.forEach(col => { //Set 80% --> 40% opacity
   fillColors.push(col.replace("0.8", "0.5"));
@@ -71,6 +78,9 @@ let userColors: string[] = [
   "rgba(0,150,150,0.5)",
   "rgba(150,0,150,0.5)",
 ]  
+
+//Generate some default colors for each new twitter handle. 
+//Less opacity than their main border color.
 let userFill : string[] = [];
 userColors.forEach(col => {
   userFill.push(col.replace("0.5", "0.15"));
@@ -81,8 +91,23 @@ import { HashtagObject } from "./twitter";
 import { Panel } from "./panels/panel";
 
 export class ChartGen {
+  /* ======================
+   * CHART GENERATOR CLASS
+   * ======================
+   * All methods in ChartGen return a ChartJs chart object, ready to be displayed.
+   * They also all have the same parameters:
+   * Parameter ctx is the CanvasRenderingContext2D where the chart will show up
+   * Parameter summaryData is an array of SummaryData (see src/panels/summary_panel)
+   *    the array can be of any non-zero length. Typically one or two. 
+   *    Longer arrays are possible, but the generated chart might get messy.
+   */
 
 
+  /**
+   * returns a line chart showing tweet frequency by 2h intervals in 24h day
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genHourLine(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -160,6 +185,11 @@ export class ChartGen {
     return chart;
   }
 
+  /**
+   * Returns a line chart showing tweet frequency for every of 7 weekdays.
+   * @param ctx 
+   * @param summaryData 
+   */
   public genDayLine(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -216,6 +246,11 @@ export class ChartGen {
     return chart;
   }
 
+  /**.
+   * Returns pie chart of text entity types detected in tweets by NLP.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genEntityTypePie(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -275,6 +310,13 @@ export class ChartGen {
     return chart;
   }
 
+
+  /**
+   * Returns bubble chart plotting NLP sentiment of entire tweet text. .
+   * Y:magnitude (emotional intensity), X:score (positivity), R:retweets, log-scaled.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genTweetSentiments(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -340,7 +382,12 @@ export class ChartGen {
     return chart;
   }
 
-
+  /**
+   * Returns bubble chart plotting NLP sentiment of particular entities.
+   * Similar to genTweetSentiment, but R is now scaled to salience, the sentence importence of this entity.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genEntitySentiment(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -387,7 +434,7 @@ export class ChartGen {
           values[index].totalSalience += entity.salience;
         }
 
-        //Register entity type
+        //Register unknown entity type
         index = entityTypeNames.indexOf(entity.type);
         if (index == -1) {
           entityTypeNames.push(entity.type);
@@ -453,7 +500,11 @@ export class ChartGen {
   }
 
 
-  //==== REEEEEEE ====
+  /**
+   * Unfinished method. Supposed to linechart retweets over time to spot popularity change.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genRetweetLine (
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -498,6 +549,12 @@ export class ChartGen {
     return chart;
   }
 
+  /**
+   * Returns pie chart of what users the handle have mentioned. May include self-mentions if retweets.
+   * Hovering slices provides accurate count in tooltip.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genMentions(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -594,7 +651,12 @@ export class ChartGen {
     return chart;
   }  
 
-  /*  
+  /**
+   * Unfinished method. Supposed to return pie chart of geotagged places. 
+   * Trouble with extraction of place and cooridnates values of TweetData object.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genPlaces(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -695,9 +757,14 @@ export class ChartGen {
     });
     return chart;
   } 
-  */
+  
 
-
+  /**
+   * Returns bar chart plotting percentage-wise element types content in tweets.
+   * Counted elements: media, mentions, urls, hashtags, emoji, retweet, puretext.
+   * @param ctx: Canvas' Context2D to display chart
+   * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+   */
   public genTweetTypes(
     ctx: CanvasRenderingContext2D,
     ...summaryData: SummaryData[]
@@ -789,7 +856,11 @@ export class ChartGen {
 
     
 
-    // Popularity
+    /**
+     * Returns unbiased linear bubble chart of any/all tweets and their retweet and favorite count (x, y)
+     * @param ctx: Canvas' Context2D to display chart
+     * @param summaryData: Non-zero array of SummaryData to visualize with returned chart.
+     */
     public genPopularity(
       ctx: CanvasRenderingContext2D,
       ...summaryData: SummaryData[]
@@ -854,12 +925,5 @@ export class ChartGen {
   
       return chart;
     }
-
-
-    /* TODO FROM DOC:
-    The gathered tweets must be summarized to give the
-    account’s personality,  the mood within a week, 
-    the places visited or posted about and the 
-    other twitter users involved. */
 
 }
