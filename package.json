@@ -1,6 +1,6 @@
 {
   "name": "twitter-analyzer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Analyzes Twitter Accounts",
   "icon": "res/icon.ico",
   "main": "./dist/main.js",

@@ -15,7 +15,8 @@ function createWindow() {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../mainpage.html"));
-  console.log(isDev);
+
+  mainWindow.setMenu(null);
   if (!isDev) {
     mainWindow.setMenu(null);
     mainWindow.webContents.closeDevTools();
@@ -53,6 +54,3 @@ app.on("activate", () => {
     createWindow();
   }
 });
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.

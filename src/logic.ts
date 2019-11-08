@@ -11,12 +11,15 @@ import { ErrorPanel } from "./panels/error_panel";
 export class Logic {
   private nlp = new NaturalLanguageProcessingAPI();
   private twitter = new TwitterAPI();
-
+  /** This is the Twitter Auth Token that every Twitter API request requires. */
   private twitterAuthToken = "";
   constructor() {
     this.twitter.getAuthToken(this.onReceivedAuthToken.bind(this));
     this.setupEvents();
   }
+  /**
+   * This sets up all the HTML events. This is run once the page is fully initialized.
+   */
   private setupEvents() {
     this.disableInput(true);
 
@@ -62,6 +65,10 @@ export class Logic {
       }
     });
   }
+  /**
+   * Show the overlay "page"
+   * @param show  Whether to show or hide
+   */
   private showOverlay(show: boolean) {
     let opacity = show ? 1 : 0;
     let pointer = show ? "auto" : "none";
@@ -73,6 +80,11 @@ export class Logic {
       this.showAboutUs(false);
     }
   }
+
+  /**
+   * Show the search "page"
+   * @param show  Whether to show or hide
+   */
   private showSearch(show: boolean) {
     let opacity = show ? 1 : 0;
     let pointer = show ? "auto" : "none";
@@ -97,6 +109,10 @@ export class Logic {
     }
   }
 
+  /**
+   * Show the about us "page"
+   * @param show  Whether to show or hide
+   */
   private showAboutUs(show: boolean) {
     let opacity = show ? 1 : 0;
     let pointer = show ? "auto" : "none";
@@ -124,12 +140,20 @@ export class Logic {
     this.twitterAuthToken = data.access_token;
     this.disableInput(false);
   }
+  /**
+   * A function that disables all the inputs
+   * @param disable Whether to disable or enable
+   */
   private disableInput(disable: boolean) {
     let opacity = disable ? 0.6 : 1;
     $(".handle_input, .handle_submit")
       .css({ opacity: opacity })
       .prop("disabled", disable);
   }
+  /**
+   * Compiles all the tweets into a single string
+   * @param data The tweets
+   */
   private compileText(data: TweetData[]) {
     let text = data[0].text;
     for (let i = 1; i < data.length; i++) {
@@ -138,7 +162,9 @@ export class Logic {
     }
     return text;
   }
-
+  /**
+   * What happens when the user searches for an account
+   */
   private onSearch() {
     //Hide Overlay
     this.showOverlay(false);
@@ -153,6 +179,9 @@ export class Logic {
       this.displayPanels(data);
     });
   }
+  /**
+   * What happens when the user compares accounts
+   */
   private onCompare() {
     //Hide Overlay
     this.showOverlay(false);
@@ -164,7 +193,7 @@ export class Logic {
 
     let handles = [
       $("#search_input_field .handle_input").val() as string,
-      $("#compare_input_field .handle_input").val() as string,
+      $("#compare_input_field .handle_input").val() as string
     ];
     let summaryDataArr: SummaryData[] = [];
     handles.forEach(handle => {
@@ -176,12 +205,20 @@ export class Logic {
       });
     });
   }
+  /**
+   * What happens when the user searches on the entry/landing page.
+   */
   private overlaySearch() {
     $("#search_input_field .handle_input").val(
       $("#overlay .handle_input").val()
     );
     this.onSearch();
   }
+  /**
+   * Creates the tweet panels
+   * @param dataArr An array of tweet analysis data.
+   * @param numTweets Number of tweet panels to generate
+   */
   private createTweetPanels(dataArr: SummaryData[], numTweets: number) {
     let tweetSummaries: TweetSummaryData[] = [];
     dataArr.forEach(value => {
@@ -206,6 +243,10 @@ export class Logic {
       panel.appendTo($("#resultContainer"));
     });
   }
+  /**
+   * Creates and displays panels on the DOM
+   * @param data
+   */
   private displayPanels(...data: SummaryData[]) {
     let panel = new SummaryPanel(data);
     panel.appendTo($("#resultContainer"));
@@ -214,6 +255,11 @@ export class Logic {
     $(".loader").animate({ opacity: 0 }, "slow");
     $("#compare_input_field").css({ opacity: 1, "pointer-events": "all" });
   }
+  /**
+   * Fetches the summary data for a handle using Twitter API and Google NLP API
+   * @param handle The Twitter Handle
+   * @param callback Callback function to run once data has been fetched.
+   */
   private fetchSummaryData(
     handle: string,
     callback: (data: SummaryData) => void
@@ -235,6 +281,12 @@ export class Logic {
             "Error fetching tweets from Twitter, this is usually caused by searching for nonexisting Twitter-accounts."
           );
           return;
+        }
+        for (let i = 0; i < tweets.length; i++) {
+          if (tweets[i].hasOwnProperty("retweeted_status")) {
+            console.log(tweets[i].text);
+            tweets.splice(i, 1);
+          }
         }
         //If no error, proceed as normal:
         //Clean away any non-alphanumerical values
@@ -313,6 +365,10 @@ export class Logic {
   }
 }
 let hasShownError = false;
+/**
+ * A global function that creates and displays an error panel.
+ * @param msg
+ */
 export function displayError(msg: string) {
   let errorPanel = new ErrorPanel(msg);
   errorPanel.appendTo($("#resultContainer"));

@@ -26,33 +26,33 @@ export type TwitterUser = {
 
 export type HashtagObject = {
   text: string;
-}
+};
 export type URLObject = {
   display_url: string; //url as displayed
   expanded_url: string; //expanded into browser
-}
+};
 export type MentionObject = {
   id: number; //id of mentioned user
   name: string; //Display name of mentioned
   screen_name: string; //Unique handle of mentioned
-}
+};
 export type Place = {
-  id: number; 
+  id: number;
   place_type: string; //"city"
   name: string; //human-readable
   full_name: string; //Manhattan, NY
   country_code: string; //US
   country: string; //United States
-}
+};
 
 //TODO: Fix experimental export:
 export type TweetEntities = {
   hashtags: HashtagObject[]; // #hashtag
   media: any[]; // Note: Nonexistent if no embedded media
   urls: URLObject[];
-  user_mentions: MentionObject[]; 
+  user_mentions: MentionObject[];
   symbols: any[]; // ???
-}
+};
 
 export type TweetData = {
   user: TwitterUser;
@@ -60,7 +60,7 @@ export type TweetData = {
   text: string;
   created_at: string;
   favorite_count: number;
-  retweet_count: number; 
+  retweet_count: number;
   coordinates: Coordinates; //?null
   entities: TweetEntities;
   retweeted_status: any; //Exists only if this post is a retweet
@@ -120,7 +120,7 @@ export class TwitterAPI {
         method: "GET",
         qs: {
           screen_name: username,
-          count: isDev ? 50 : 200 //Max amount of tweets we can request.
+          count: 150 //Max amount of tweets we can request.
         },
         headers: {
           Authorization: "Bearer " + authToken

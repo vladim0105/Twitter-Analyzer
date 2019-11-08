@@ -93,7 +93,6 @@ export class NaturalLanguageProcessingAPI {
         body: { document: postData }
       },
       function(error, response, body) {
-        console.log(response);
         if (error) {
           console.log(error);
           displayError("Error connecting to the Google API.");

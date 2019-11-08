@@ -263,7 +263,16 @@ li {
   margin: 0 auto;
 }
 
-#GroupName{
+#GroupName {
   padding-left: 15px;
-  padding-top: 50px
+  padding-top: 50px;
+}
+.info {
+  width: 40%;
+  color: black;
+  font-weight: 800;
+  font-size: 125%;
+
+  background-color: rgba(100, 100, 100, 0.7);
+  border-radius: 5%;
 }
