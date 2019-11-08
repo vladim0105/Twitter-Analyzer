@@ -3,18 +3,28 @@ import { SummaryData } from "./panels/summary_panel";
 import * as ChartJS from "chart.js";
 import {extractEmoji, isEmoji} from "extract-emoji";
 
-// Returns the base 10 logarithm of parameter number. Used to logarithmly scale chart dimension.
+/**
+ * Returns the base 2 log of n. Used to logarithmically scale chart dimensions.
+ * @param n 
+ */
 const natlog10 = Math.log(10);
 function log10(n: number){
   return (Math.log(n) / natlog10);
 }
-// Returns the base 2 logarithm of parameter number. Used to logarithmly scale chart dimension.
+
 const natlog2 = Math.log(2);
+/**
+ * Returns the base 2 log of n. Used to logarithmically scale chart dimensions.
+ * @param n 
+ */
 function log2(n: number){
   return (Math.log(n) / natlog2);
 }
 
-//Performs a sigmoid function on n, returning value 0..1, asymptopic to both ends.
+/**
+ * Performs sigmoid function on n, returning always within range 0..1 asymptopically.
+ * @param n 
+ */
 function sigmoid(n: number){
   return (1 / (1+Math.exp(-n)))
 }
@@ -22,6 +32,10 @@ function sigmoid(n: number){
 //Generates a somewhat random color from HSL rotation. Based on golden ratio for even distribution.
 //Base code from this SO post below. Parameter n is index of data object, to be increased each iteration.
 //https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript/43195379
+/**
+ * Semi-randomly generates a colors by HSLA method. (Saturation and light random). 
+ * @param n Index of currently generated color. Used to determine non-random hue.
+ */
 function randColor(n:number){ 
   return "hsla(" + (360 * 1.618*n)%360 + ',' +
               (35 + 65 * Math.random()) + '%,' + 
@@ -30,6 +44,10 @@ function randColor(n:number){
 }
 
 //Generates len number of colors using randColor, returning string array of HSLA colors.
+/**
+ * Returns an array of semi-randomly generated colors. First three are always shades of R, G, B.
+ * @param len The number of colors to generate. 
+ */
 function randColors(len: number){
   let colors = [];
   for (let i=0; i<len; i++){
