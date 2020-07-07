@@ -25,7 +25,7 @@
     "@types/jquery": "^3.3.31",
     "@types/request": "^2.48.3",
     "cross-env": "^6.0.3",
-    "electron": "^2.0.2",
+    "electron": "^9.1.0",
     "electron-builder": "^22.1.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
